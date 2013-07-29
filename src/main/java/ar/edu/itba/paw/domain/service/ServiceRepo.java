@@ -17,4 +17,9 @@ public interface ServiceRepo {
 	public List<Service> getCourses();
 	
 	public List<Service> getOthers();
+	public List<Service> getLockers();
+	
+	public List<Service> getActive();
+	public List<Service> getInactive();
+	public List<Service> search(String s);
 }

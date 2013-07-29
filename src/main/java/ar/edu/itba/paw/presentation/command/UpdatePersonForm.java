@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.presentation.command;
 
-public class RegisterPersonForm {
 
+public class UpdatePersonForm {
+
+	int id;
 	String firstName;
 	String lastName;
 	String legacy;
@@ -74,5 +76,13 @@ public class RegisterPersonForm {
 
 	public void setLegacy(String legacy) {
 		this.legacy = legacy;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

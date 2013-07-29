@@ -7,17 +7,17 @@ import org.springframework.validation.Validator;
 
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
-import ar.edu.itba.paw.presentation.command.RegisterPersonForm;
+import ar.edu.itba.paw.presentation.command.UpdatePersonForm;
 import ar.edu.itba.paw.presentation.command.UpdateUserForm;
 import ar.edu.itba.paw.validators.CeitbaValidator;
 
 @Component
-public class RegisterPersonFormValidator implements Validator {
+public class UpdatePersonFormValidator implements Validator {
 
 	private PersonRepo personRepo;
 
 	@Autowired
-	public RegisterPersonFormValidator(PersonRepo personRepo) {
+	public UpdatePersonFormValidator(PersonRepo personRepo) {
 		super();
 		this.personRepo = personRepo;
 	}
@@ -29,9 +29,9 @@ public class RegisterPersonFormValidator implements Validator {
 
 	@Override
 	public void validate(Object obj, Errors errors) {
-		RegisterPersonForm target = (RegisterPersonForm) obj;
+		UpdatePersonForm target = (UpdatePersonForm) obj;
 		Person p = personRepo.getByDni(target.getDni());
-		if (p != null) {
+		if (p != null && p.getId() != target.getId()) {
 			errors.rejectValue("dni", "exists");
 		}
 		try {
@@ -40,7 +40,7 @@ public class RegisterPersonFormValidator implements Validator {
 				errors.rejectValue("legacy", "negative");
 			}
 			p = personRepo.getByLegacy(legacy);
-			if (p != null) {
+			if (p != null && p.getId() != target.getId()) {
 				errors.rejectValue("legacy", "exists");
 			}
 		} catch (NumberFormatException e) {

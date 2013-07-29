@@ -16,7 +16,6 @@ import org.joda.time.DateTime;
 import ar.edu.itba.paw.domain.PersistentEntity;
 import ar.edu.itba.paw.domain.enrollment.Enrollment;
 import ar.edu.itba.paw.domain.service.Service;
-import ar.edu.itba.paw.validators.ValidateNull;
 import ar.edu.itba.paw.validators.CeitbaValidator;
 
 @Entity
@@ -27,36 +26,25 @@ public class Person extends PersistentEntity {
 	private String firstName;
 	@Column(name="last_name", unique=false, nullable=true)
 	private String lastName;
-	@Column(name="email", unique=true, nullable=true)
+	@Column(name="email", unique=false, nullable=true)
 	private String email;
-	@Column(name="legacy", unique=true, nullable=false)
+	@Column(name="legacy", unique=false, nullable=false)
 	private int legacy;
-	@Column(name="phone", unique=true, nullable=true)
+	@Column(name="phone", unique=false, nullable=true)
 	private String phone;
-	@Column(name="cellphone", unique=true, nullable=true)
+	@Column(name="cellphone", unique=false, nullable=true)
 	private String cellphone;
-	@Column(name="email2", unique=true, nullable=true)
+	@Column(name="email2", unique=false, nullable=true)
 	private String email2;
-	@Column(name="dni", unique=true, nullable=true)
-	private int dni;
+	@Column(name="dni", unique=false, nullable=true)
+	private String dni;
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	@Column(name="registration", nullable=false)
 	private DateTime registration;
 	
-//	@Column(name="username", unique=true, nullable=false)
-//	private String username;
-//	@Column(name="password", nullable=false)
-//	private String password;
-
-//	public static enum Level {ADMINISTRATOR, REGULAR};
-//	@Enumerated(EnumType.STRING)
-//	@Column(name="level", nullable=false)
-//	private Level level;
 	@ManyToMany
-	@JoinTable(name="service_person", inverseJoinColumns={@JoinColumn(name="person")}, joinColumns={@JoinColumn(name="id")})
+	@JoinTable(name="service_enrollment", inverseJoinColumns={@JoinColumn(name="person")}, joinColumns={@JoinColumn(name="id")})
 	private List<Enrollment> enrolledServices = new ArrayList<Enrollment>();
-//	@OneToMany(mappedBy="user", cascade = CascadeType.REMOVE)
-//	private Set<Comment> comments = new HashSet<Comment>();
 
 	// Hibernate requirement
 	Person() {
@@ -81,14 +69,21 @@ public class Person extends PersistentEntity {
 		this.email2 = email2;
 	}
 	
-	public int getDni() {
+	public String getEmail() {
+		return email;
+	}
+	
+	public String getDni() {
 		return dni;
 	}
 	
-	public void setDni(int dni) {
+	public void setDni(String dni) {
 		this.dni = dni;
 	}
 
+	public void setLegacy(int legacy){
+		this.legacy = legacy;
+	}
 	/* Getters */
 
 	public String getFirstName() {
@@ -119,18 +114,12 @@ public class Person extends PersistentEntity {
 		return this.cellphone;
 	}
 
-//	public List<Comment> getComments() {
-//		List<Comment> ans = new ArrayList<Comment>();
-//		ans.addAll(comments);
-//		Collections.sort(ans, new CommentRatingComparator());
-//		return ans;
-//	}
-
 	@Override
 	public String toString() {
 		return "Name: " + firstName + "\n Surname: " + lastName + "\n Mail: " + email
 				+ "\n Id: " + getId();
 	}
+	
 
 	/* Setters */
 
@@ -165,11 +154,8 @@ public class Person extends PersistentEntity {
 	
 	@Override
 	public boolean equals(Object obj) {
-		try {
-			ValidateNull.validate(obj);
-		} catch (NullPointerException e) {
+		if(obj == null)
 			return false;
-		}
 		Person user = (Person) obj;
 		return this.legacy == (user.getLegacy());
 	}
@@ -186,114 +172,33 @@ public class Person extends PersistentEntity {
 		return;
 	}
 
-	/**
-	 * 
-	 * @return - a list with all the active enrollments
-	 */
-	public List<Enrollment> getEnrollments(){
-//	first update to clear the expired enrollments
-		for(Enrollment e: enrolledServices){
-			if(e.hasExpired()){
-				enrolledServices.remove(e);
-				//TODO: add the enrollments to the history section
-			}
-		}
+	public List<Enrollment> getActiveEnrollments(){
+		List<Enrollment> ans = new ArrayList<Enrollment>();
+		for(Enrollment e: enrolledServices)
+			if(e.isActive())
+				ans.add(e);
+		return ans;
+	}
+	
+	public List<Enrollment> getEnrollmentsHistory(){
 		List<Enrollment> ans = new ArrayList<Enrollment>();
 		ans.addAll(enrolledServices);
 		return ans;
 	}
-	
 	/**
 	 * SHOULD ONLY BE CALLED BY THE ENROLLMENT REPO!!!
 	 * @param s
 	 */
 	public void enroll(Enrollment e){
-		if(!enrolledServices.contains(e))
-			enrolledServices.add(e);
-		return;
+		for(Enrollment active: enrolledServices)
+			if(active.getService().equals(e.getService()) && e.isActive())
+				return;
+		enrolledServices.add(e);
 	}
 	
 	public void unenroll(Service s){
-		enrolledServices.remove(s);
-		//TODO: check if it has to be removed directly or it 
-		// has to be saved to take it for cost in the last month
-//		if(enrolledServices.remove(s))
-//			TODO: add it to history
+		for(Enrollment e: enrolledServices)
+			if(e.getService().equals(s))
+				e.cancel();
 	}
-	
-	/**
-	 * @return - the list with all the favourite {@link Restaurant} for this
-	 *         {@link Person}
-	 */
-//	public List<Restaurant> getFavourites() {
-//		List<Restaurant> list = new ArrayList<Restaurant>();
-//		list.addAll(favourites);
-//		return list;
-//	}
-
-	/**
-	 * @param restaurant
-	 *            - the restaurant that has to be considered as a favourite.
-	 *            IMPORTANT: this {@link Restaurant} has to be persisted (IF
-	 *            NOT, I AM NOT RESPONSIBLE FOR THE SHIT THAT WILL COME)!!!!
-	 * @return - true if it was added as a favourite false if it was already a
-	 *         favourite.
-	 */
-//	public boolean addFavourite(Restaurant restaurant) {
-//		return favourites.add(restaurant);
-//	}
-
-	/**
-	 * @param restaurant
-	 *            - the {@link Restaurant} that has to be removed from the
-	 *            {@link Person}'s favourites.
-	 * @return - true if the {@link Restaurant} was removed from favourites,
-	 *         false if not (the {@link Restaurant} was not in the favourites).
-	 */
-//	public boolean removeFavourite(Restaurant restaurant) {
-//		return favourites.remove(restaurant);
-//	}
-//
-//	public boolean isFavourite(Restaurant restaurant) {
-//		return favourites.contains(restaurant);
-//	}
-
-	/**
-	 * @param c
-	 *            the comment made by the user
-	 */
-//	public void addComment(Comment c) {
-//		comments.add(c);
-//		return;
-//	}
-//
-//	public void removeComment(Comment c) {
-//		comments.remove(c);
-//		return;
-//	}
-
-	/**
-	 * @param n
-	 *            - the number of favourite {@link Restaurant} required.
-	 * @return a {@link List} with n restaurants taken randomly from the
-	 *         {@link Person}'s favourites.
-	 */
-//	public List<Restaurant> getNFavouriteRestaurants(int n) {
-//		return RandomSublist.getRandomNFromList(getFavourites(), n);
-//	}
-
-	/**
-	 * @param restaurant
-	 *            - the restaurant that has to be checked for comments.
-	 * @return - a boolean representing if the {@link Person} has commented the
-	 *         {@link Restaurant} provided.
-	 */
-//	public boolean hasCommented(Restaurant restaurant) {
-//		for(Comment c: comments){
-//			if(c.getRestaurant().equals(restaurant)){
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 }

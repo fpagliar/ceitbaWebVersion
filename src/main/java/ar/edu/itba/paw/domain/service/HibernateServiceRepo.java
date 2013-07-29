@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -19,7 +20,7 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements Servi
 
 	@Override
 	public void add(Service service) {
-		if (duplicatedData("name", "" + service.getName())) {
+		if (duplicatedData("name", service.getName())) {
 			throw new DuplicatedDataException(service);
 		}
 		save(service);
@@ -47,21 +48,44 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements Servi
 	
 	@Override
 	public List<Service> getSports(){
-		return getByType("SPORT");
+		return getByType(Service.Type.SPORT);
 	}
 	
 	@Override
 	public List<Service> getCourses(){
-		return getByType("COURSE");
+		return getByType(Service.Type.COURSE);
 	}
 
 	@Override
 	public List<Service> getOthers(){
-		return getByType("OTHER");
+		return getByType(Service.Type.OTHER);
 	}
 
-	private List<Service> getByType(String type){
-		return find("from Service where type = ?", type);		
+	@Override
+	public List<Service> getLockers(){
+		return getByType(Service.Type.LOCKER);
+	}
+
+	private List<Service> getByType(Service.Type type){
+		return find("from Service where type = ?", type);
+	}
+	
+	@Override
+	public List<Service> getActive(){
+		return find("from Service where status = 'ACTIVE'");
+	}
+
+	@Override
+	public List<Service> getInactive(){
+		return find("from Service where status = 'INACTIVE'");
+	}
+
+	@Override
+	public List<Service> search(String s) {
+		List<Service> ans = new ArrayList<Service>();
+		List<Service> all = find("from Service where name like ?", "%"+ s + "%");
+		ans.addAll(all);
+		return ans;
 	}
 	
 	private boolean duplicatedData(String field, String value) {

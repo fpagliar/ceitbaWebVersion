@@ -36,6 +36,26 @@ public class Service extends PersistentEntity {
 		this.status = Status.ACTIVE;
 		this.monthsDuration = monthsDuration;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setValue(double value) {
+		this.value = value;
+	}
+	
+	public void setType(Type type) {
+		this.type = type;
+	}
+	
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	
+	public void setMonthsDuration(int monthsDuration) {
+		this.monthsDuration = monthsDuration;
+	}
 	
 	public String getName(){
 		return name;
@@ -59,5 +79,15 @@ public class Service extends PersistentEntity {
 	
 	public int getMonthsDuration(){
 		return monthsDuration;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null)
+			return false;
+		if(!(obj instanceof Service))
+			return false;
+		Service other = (Service) obj;
+		return other.getName() == name;
 	}
 }

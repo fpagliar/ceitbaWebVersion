@@ -55,7 +55,48 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return find("from Enrollment");
 	}
 
+	@Override
+	public List<Enrollment> getExpired() {
+		updateActive();
+		return find("from Enrollment where end is not null");		
+	}
+
+	@Override
+	public List<Enrollment> getExpired(Person p) {
+		updateActive();
+		return find("from Enrollment where person = ? and end is not null", p.getId());
+	}
+
+	@Override
+	public List<Enrollment> getExpired(Service s) {
+		updateActive();
+		return find("from Enrollment where service = ? and end is not null", s.getId());
+	}
+
+	@Override
+	public List<Enrollment> getActive() {
+		updateActive();
+		return find("from Enrollment where end is null");		
+	}
+
+	@Override
+	public List<Enrollment> getActive(Person p) {
+		updateActive();
+		return find("from Enrollment where person = ? and end is null", p.getId());
+	}
+
+	@Override
+	public List<Enrollment> getActive(Service s) {
+		updateActive();
+		return find("from Enrollment where service = ? and end is null", s.getId());
+	}
+
 	private boolean duplicatedData(String field, String value) {
 		return !find("from Enrollment where ? = ?", field, value).isEmpty();
+	}
+	
+	private void updateActive(){
+		for(Enrollment e: getAll())
+			e.checkActive();
 	}
 }

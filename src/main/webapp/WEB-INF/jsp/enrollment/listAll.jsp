@@ -15,8 +15,8 @@
 	<div class="container">
 		<%@ include file="upperMenu.jsp"%>
 
-		<!-- Jumbotron -->	
-		<div class="jumbotron">		
+		<!-- Jumbotron -->
+		<div class="jumbotron">
 			<form class="form-search" action="listAll" method="get" name="search">
 				<input type="text" class="input-medium search-query" placeholder="Filtrar resultados" name="search">
 					<button type="submit">
@@ -28,15 +28,10 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<c:if test="${search==true}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="register">Nuevo Usuario</a></li>
-								<li class="active"><a href="#">Busqueda</a></li>
-							</c:if>
-							<c:if test="${search!=true}">
-								<li class="active"><a href="listAll">Listar Todos</a></li>
-								<li><a href="register">Nuevo Usuario</a></li>
-							</c:if>
+								<li class="active"><a href="listAll">Listar Todas</a></li>
+								<li><a href="listAll?list=active">Listar Activas</a></li>
+								<li><a href="listAll?list=inactive">Listar Inactivas</a></li>
+							<li><a href="register">Nueva subscripcion</a></li>
 						</ul>
 					</div>
 					<div class="span10">
@@ -46,17 +41,19 @@
 									<th>Legajo</th>
 									<th>Nombre</th>
 									<th>Apellido</th>
+									<th>Servicio</th>
 									<th></th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="person" items="${persons}"
+								<c:forEach var="enrollment" items="${enrollments}"
 									varStatus="rowCounter">
 									<tr>
-										<td>${person.legacy}</td>
-										<td>${person.firstName}</td>
-										<td>${person.lastName}</td>
-										<td><a href="update?id=${person.id}"><i class="icon-edit"></i></a></td>
+										<td>${enrollment.person.legacy}</td>
+										<td>${enrollment.person.firstName}</td>
+										<td>${enrollment.person.lastName}</td>
+										<td>${enrollment.service.name}</td>
+										<td><a href="update?id=${enrollment.id}"><i class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -74,4 +71,3 @@
 
 </body>
 </html>
-
