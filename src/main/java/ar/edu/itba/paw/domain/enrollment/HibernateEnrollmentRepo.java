@@ -1,4 +1,5 @@
 package ar.edu.itba.paw.domain.enrollment;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -27,8 +28,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 	 */
 	@Override
 	public void add(Enrollment enrollment) {
-		if (duplicatedData("person", "" + enrollment.getPerson().getId()) || 
-				duplicatedData("service", "" + enrollment.getService().getId()) ) {
+		if (duplicatedData("person", "" + enrollment.getPerson()) || 
+				duplicatedData("service", "" + enrollment.getService()) ) {
 			throw new DuplicatedDataException(enrollment);
 		}
 		save(enrollment);
@@ -42,13 +43,20 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 	
 	@Override
 	public List<Enrollment> get(Person p){
-		return find("from Enrollment where person = ?", p.getId());
+		return find("from Enrollment where person = ?", p);
 	}
 
 	@Override
 	public List<Enrollment> get(Service s){
-		return find("from Enrollment where service = ?", s.getId());
+		return find("from Enrollment where service = ?", s);
 	}
+	
+
+	@Override
+	public List<Enrollment> get(Person p, Service s) {
+		return find("from Enrollment where person = ? and service = ?", p, s);
+	}
+
 
 	@Override
 	public List<Enrollment> getAll() {
@@ -58,37 +66,46 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Enrollment> getExpired() {
 		updateActive();
-		return find("from Enrollment where end is not null");		
+		return find("from Enrollment where endDate is not null");		
 	}
 
 	@Override
 	public List<Enrollment> getExpired(Person p) {
 		updateActive();
-		return find("from Enrollment where person = ? and end is not null", p.getId());
+		return find("from Enrollment where person = ? and endDate is not null", p);
 	}
 
 	@Override
 	public List<Enrollment> getExpired(Service s) {
 		updateActive();
-		return find("from Enrollment where service = ? and end is not null", s.getId());
+		return find("from Enrollment where service = ? and endDate is not null", s);
 	}
 
 	@Override
 	public List<Enrollment> getActive() {
 		updateActive();
-		return find("from Enrollment where end is null");		
+		return find("from Enrollment where endDate is null");		
 	}
 
 	@Override
 	public List<Enrollment> getActive(Person p) {
 		updateActive();
-		return find("from Enrollment where person = ? and end is null", p.getId());
+		return find("from Enrollment where person = ? and endDate is null", p);
+	}
+
+	@Override
+	public List<Enrollment> getActive(List<Person> persons) {
+		updateActive();
+		List<Enrollment> all = new ArrayList<Enrollment>();
+		for(Person p : persons)
+			all.addAll(getActive(p));
+		return all;
 	}
 
 	@Override
 	public List<Enrollment> getActive(Service s) {
 		updateActive();
-		return find("from Enrollment where service = ? and end is null", s.getId());
+		return find("from Enrollment where service = ? and endDate is null", s);
 	}
 
 	private boolean duplicatedData(String field, String value) {

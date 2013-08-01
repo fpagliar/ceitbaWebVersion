@@ -52,8 +52,18 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements Servi
 	}
 	
 	@Override
+	public List<Service> getActiveSports(){
+		return getActiveByType(Service.Type.SPORT);
+	}
+
+	@Override
 	public List<Service> getCourses(){
 		return getByType(Service.Type.COURSE);
+	}
+
+	@Override
+	public List<Service> getActiveCourses(){
+		return getActiveByType(Service.Type.COURSE);
 	}
 
 	@Override
@@ -62,14 +72,28 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements Servi
 	}
 
 	@Override
+	public List<Service> getActiveOthers(){
+		return getActiveByType(Service.Type.OTHER);
+	}
+
+	@Override
 	public List<Service> getLockers(){
 		return getByType(Service.Type.LOCKER);
+	}
+
+	@Override
+	public List<Service> getActiveLockers(){
+		return getActiveByType(Service.Type.LOCKER);
 	}
 
 	private List<Service> getByType(Service.Type type){
 		return find("from Service where type = ?", type);
 	}
 	
+	private List<Service> getActiveByType(Service.Type type){
+		return find("from Service where type = ? AND status = 'ACTIVE'", type);
+	}
+
 	@Override
 	public List<Service> getActive(){
 		return find("from Service where status = 'ACTIVE'");

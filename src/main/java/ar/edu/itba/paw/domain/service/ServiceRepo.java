@@ -13,11 +13,16 @@ public interface ServiceRepo {
 	public List<Service> getAll();
 
 	public List<Service> getSports();
-	
+	public List<Service> getActiveSports();
+
 	public List<Service> getCourses();
+	public List<Service> getActiveCourses();
 	
 	public List<Service> getOthers();
+	public List<Service> getActiveOthers();
+
 	public List<Service> getLockers();
+	public List<Service> getActiveLockers();
 	
 	public List<Service> getActive();
 	public List<Service> getInactive();

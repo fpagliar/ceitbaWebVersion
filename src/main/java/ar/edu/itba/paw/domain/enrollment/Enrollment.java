@@ -74,7 +74,8 @@ public class Enrollment extends PersistentEntity {
 	}
 	
 	public void cancel(){
-		endDate = DateTime.now();
+		if(endDate == null)
+			endDate = DateTime.now();
 	}
 	
 	@Override

@@ -17,5 +17,7 @@ public interface EnrollmentRepo {
 	public List<Enrollment> getExpired(Service s);
 	public List<Enrollment> getActive();
 	public List<Enrollment> getActive(Person p);
+	public List<Enrollment> getActive(List<Person> persons);
 	public List<Enrollment> getActive(Service s);
+	public List<Enrollment> get(Person p, Service s);
 }

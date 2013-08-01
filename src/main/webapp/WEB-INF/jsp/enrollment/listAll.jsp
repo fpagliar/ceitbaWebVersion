@@ -17,21 +17,86 @@
 
 		<!-- Jumbotron -->
 		<div class="jumbotron">
+			<h2>Filtrar Busqueda</h2>
 			<form class="form-search" action="listAll" method="get" name="search">
-				<input type="text" class="input-medium search-query" placeholder="Filtrar resultados" name="search">
+				Usuarios:
+				<input type="text" class="input-medium search-query" placeholder="Nombre" name="search">
 					<button type="submit">
 						<i class="icon-search"></i>
 					</button>
+			</form>
+			
+			<form method="get" action="listAll" class="form-horizontal">
+				Cursos:
+				<select>
+					<c:forEach var="service" items="${courses}" varStatus="rowCounter">
+						<option value="${service.name}">${service.name}</option>
+					</c:forEach>
+				</select>
+				<button type="submit">
+						<i class="icon-search"></i>
+				</button>
+			</form>
+			<form method="get" action="listAll" class="form-horizontal">
+				Deportes:
+				<select>
+					<c:forEach var="service" items="${sports}" varStatus="rowCounter">
+						<option value="${service.name}">${service.name}</option>
+					</c:forEach>
+				</select>
+				<button type="submit">
+						<i class="icon-search"></i>
+				</button>
+			</form>
+			<form method="get" action="listAll" class="form-horizontal">
+				Lockers:
+				<select>
+					<c:forEach var="service" items="${lockers}" varStatus="rowCounter">
+						<option value="${service.name}">${service.name}</option>
+					</c:forEach>
+				</select>
+				<button type="submit">
+						<i class="icon-search"></i>
+				</button>
+			</form>
+			<form method="get" action="listAll" class="form-horizontal">
+				Otros:
+				<select>
+					<c:forEach var="service" items="${others}" varStatus="rowCounter">
+						<option value="${service.name}">${service.name}</option>
+					</c:forEach>
+				</select>
+				<button type="submit">
+						<i class="icon-search"></i>
+				</button>
 			</form>
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-								<li class="active"><a href="listAll">Listar Todas</a></li>
-								<li><a href="listAll?list=active">Listar Activas</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivas</a></li>
-							<li><a href="register">Nueva subscripcion</a></li>
+							<c:if test="${history==true}">
+								<li><a href="listAll">Listar Activas</a></li>
+								<li class="active"><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li><a href="register">Nueva subscripcion</a></li>
+							</c:if>
+							<c:if test="${service!=null}">
+								<li><a href="listAll">Listar Activas</a></li>
+								<li><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li class="active"><a href="#">${service}</a></li>
+								<li><a href="register">Nueva subscripcion</a></li>
+							</c:if>
+							<c:if test="${search==true}">
+								<li><a href="listAll">Listar Activas</a></li>
+								<li><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li class="active"><a href="#">Busqueda</a></li>
+								<li><a href="register">Nueva subscripcion</a></li>							
+							</c:if>
+							<c:if test="${search!=true&&service==null&&history!=true}">							
+								<li class="active"><a href="listAll">Listar Activas</a></li>
+								<li><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li><a href="register">Nueva subscripcion</a></li>
+							</c:if>
 						</ul>
 					</div>
 					<div class="span10">

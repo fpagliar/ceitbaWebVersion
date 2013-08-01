@@ -187,7 +187,7 @@ public class Person extends PersistentEntity {
 	}
 	/**
 	 * SHOULD ONLY BE CALLED BY THE ENROLLMENT REPO!!!
-	 * @param s
+	 * @param serviceName
 	 */
 	public void enroll(Enrollment e){
 		for(Enrollment active: enrolledServices)
