@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
+import ar.edu.itba.paw.domain.service.Service;
 
 @Repository
 public class HibernatePersonRepo extends AbstractHibernateRepo implements

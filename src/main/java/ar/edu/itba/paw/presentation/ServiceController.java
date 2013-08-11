@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.presentation.command.RegisterServiceForm;
@@ -23,14 +24,16 @@ public class ServiceController {
 	private ServiceRepo serviceRepo;
 	private UpdateServiceFormValidator updateValidator;
 	private RegisterServiceFormValidator registerValidator;
+	private EnrollmentRepo enrollmentRepo;
 	
 	@Autowired
 	public ServiceController(ServiceRepo serviceRepo, UpdateServiceFormValidator updateValidator, 
-			RegisterServiceFormValidator registerValidator) {
+			RegisterServiceFormValidator registerValidator, EnrollmentRepo enrollmentRepo) {
 		super();
 		this.serviceRepo = serviceRepo;
 		this.updateValidator = updateValidator;
 		this.registerValidator = registerValidator;
+		this.enrollmentRepo = enrollmentRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -78,6 +81,7 @@ public class ServiceController {
 			mav.addObject("successmsg", "La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updateServiceForm", new UpdateServiceForm());
+		mav.addObject("enrollments", enrollmentRepo.getActive(service));
 		return mav;
 	}
 

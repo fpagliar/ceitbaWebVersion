@@ -24,96 +24,131 @@
 							<li class="nav-header">Opciones</li>
 							<li><a href="listAll">Listar Todos</a></li>
 							<li><a href="register">Nuevo Usuario</a></li>
-							<li class="active">Editar</li>
+							<li class="active"><a href="#">Editar</a></li>
 						</ul>
 					</div>
-					<div class="span10">
-					<c:if test="${success==true}">
-					<div class="alert alert-success">${successmsg}</div>
-					</c:if>
-					<c:if test="${new==true}">
-					<div class="alert alert-success">${newmsg}</div>
-					</c:if>
-						<form:form method="post" action="update" commandName="updatePersonForm" class="form-horizontal">
+					<div class="span5">
+						<c:if test="${success==true}">
+							<div class="alert alert-success">${successmsg}</div>
+						</c:if>
+						<c:if test="${new==true}">
+							<div class="alert alert-success">${newmsg}</div>
+						</c:if>
+						<form:form method="post" action="update"
+							commandName="updatePersonForm" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Legajo</label>
 								<div class="controls">
-										<form:input name="legacy" path="legacy" type="text" value="${person.legacy}"/>
+									<form:input name="legacy" path="legacy" type="text"
+										value="${person.legacy}" />
 								</div>
 							</div>
 							<div class="control-group">
- 										<form:errors path="legacy" class="error alert alert-error"/>
- 							</div>
+								<form:errors path="legacy" class="error alert alert-error" />
+							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Nombre</label>
 								<div class="controls">
-										<form:input name="firstName" path="firstName" type="text" placeholder="Nombre" value="${person.firstName}"/>
+									<form:input name="firstName" path="firstName" type="text"
+										placeholder="Nombre" value="${person.firstName}" />
 								</div>
 							</div>
 							<div class="control-group">
-									   <form:errors path="firstName" class="error alert alert-error" />
+								<form:errors path="firstName" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Apellido</label>
 								<div class="controls">
-									<form:input name="lastName" path="lastName" type="text" placeholder="Apellido" value="${person.lastName}"/>
+									<form:input name="lastName" path="lastName" type="text"
+										placeholder="Apellido" value="${person.lastName}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="lastName" class="error alert alert-error" />
+								<form:errors path="lastName" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Email</label>
 								<div class="controls">
-									<form:input name="email" path="email" type="text" placeholder="Email" value="${person.email}"/>
+									<form:input name="email" path="email" type="text"
+										placeholder="Email" value="${person.email}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="email" class="error alert alert-error" />
+								<form:errors path="email" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Telefono</label>
 								<div class="controls">
-									<form:input name="phone" path="phone" type="text" placeholder="Telefono" value="${person.phone}"/>
+									<form:input name="phone" path="phone" type="text"
+										placeholder="Telefono" value="${person.phone}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="phone" class="error alert alert-error" />
+								<form:errors path="phone" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Celular</label>
 								<div class="controls">
-									<form:input name="cellphone" path="cellphone" type="text" placeholder="Celular" value="${person.cellphone}"/>
+									<form:input name="cellphone" path="cellphone" type="text"
+										placeholder="Celular" value="${person.cellphone}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="cellphone" class="error alert alert-error" />
+								<form:errors path="cellphone" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">DNI</label>
 								<div class="controls">
-									<form:input name="dni" path="dni" type="text" placeholder="DNI" value="${person.dni}"/>
+									<form:input name="dni" path="dni" type="text" placeholder="DNI"
+										value="${person.dni}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="dni" class="error alert alert-error" />
+								<form:errors path="dni" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Email2</label>
 								<div class="controls">
-									<form:input name="email2" path="email2" type="text" placeholder="Email2" value="${person.email2}"/>
+									<form:input name="email2" path="email2" type="text"
+										placeholder="Email2" value="${person.email2}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="email2" class="error alert alert-error" />
+								<form:errors path="email2" class="error alert alert-error" />
 							</div>
-							<form:input name="id" type="hidden" value="${person.id}" path="id"/>
+							<form:input name="id" type="hidden" value="${person.id}"
+								path="id" />
 							<div class="control-group">
 								<div class="controls">
 									<button type="submit" class="btn">Confirmar</button>
 								</div>
 							</div>
 						</form:form>
+					</div>
+					<div class="span3 pull-right">
+						<h2>Subscripciones</h2>
+						<hr/>
+						<c:if test="${fn:length(enrollments) == 0}">
+							<h5>El usuario no tiene subscripciones vigentes</h5>
+						</c:if>
+						<table class="table table-striped pull-right">
+							<thead>
+								<tr>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="enrollment" items="${enrollments}"
+									varStatus="rowCounter">
+									<tr>
+										<td>${enrollment.service.name}</td>
+										<td><a href="../enrollment/show?id=${enrollment.id}"><i
+												class="icon-remove"></i></a></td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>

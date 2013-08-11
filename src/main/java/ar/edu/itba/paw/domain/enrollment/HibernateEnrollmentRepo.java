@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
-import ar.edu.itba.paw.domain.DuplicatedDataException;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.user.Person;
 
@@ -28,10 +27,11 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 	 */
 	@Override
 	public void add(Enrollment enrollment) {
-		if (duplicatedData("person", "" + enrollment.getPerson()) || 
-				duplicatedData("service", "" + enrollment.getService()) ) {
-			throw new DuplicatedDataException(enrollment);
-		}
+		List<Enrollment> list = find("from Enrollment where person = ? and service = ?", enrollment.getPerson(), enrollment.getService()); 
+		for(Enrollment e: list)
+				if(e.isActive() && !Service.Type.OTHER.equals(e.getService().getType())){
+					return;		// The subscriptions typed OTHER can have unlimited active enrollments in the same period				
+				}
 		save(enrollment);
 		enrollment.getPerson().enroll(enrollment);
 	}
@@ -94,11 +94,20 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 	}
 
 	@Override
-	public List<Enrollment> getActive(List<Person> persons) {
+	public List<Enrollment> getActivePersonsList(List<Person> persons) {
 		updateActive();
 		List<Enrollment> all = new ArrayList<Enrollment>();
 		for(Person p : persons)
 			all.addAll(getActive(p));
+		return all;
+	}
+
+	@Override
+	public List<Enrollment> getActiveServiceList(List<Service> services) {
+		updateActive();
+		List<Enrollment> all = new ArrayList<Enrollment>();
+		for(Service s : services)
+			all.addAll(getActive(s));
 		return all;
 	}
 

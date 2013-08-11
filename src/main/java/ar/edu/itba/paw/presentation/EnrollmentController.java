@@ -17,6 +17,7 @@ import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
 import ar.edu.itba.paw.presentation.command.RegisterEnrollmentForm;
+import ar.edu.itba.paw.presentation.command.SearchServiceForm;
 import ar.edu.itba.paw.presentation.command.validator.RegisterEnrollmentFormValidator;
 
 @Controller
@@ -59,15 +60,23 @@ public class EnrollmentController {
 			mav.addObject("service", serviceName);
 		}
 		if (search != null) {
-			mav.addObject("enrollments",
-					enrollmentRepo.getActive(personRepo.search(search)));
+			mav.addObject("personEnrollments",
+					enrollmentRepo.getActivePersonsList(personRepo.search(search)));
+			mav.addObject("serviceEnrollments",
+					enrollmentRepo.getActiveServiceList(serviceRepo.search(search)));
 			mav.addObject("search", true);
 		}
 		if (value == null && search == null && serviceName == null)
 			mav.addObject("enrollments", enrollmentRepo.getActive());
+		mav.addObject("searchEnrollmentForm", new SearchServiceForm());
 		return mav;
 	}
 
+//	@RequestMapping(method = RequestMethod.POST)
+//	public ModelAndView listAll(HttpSession session, SearchServiceForm form){
+//		return new ModelAndView("redirect:listAll?serviceName=" + form.getService());
+//	}
+			
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView show(@RequestParam("id") Enrollment enrollment,
 			HttpSession session,
@@ -98,6 +107,7 @@ public class EnrollmentController {
 		Enrollment e = new Enrollment(personRepo.getByLegacy(legacy),
 				serviceRepo.get(form.getServiceName()));
 		enrollmentRepo.add(e);
+		
 		return new ModelAndView("redirect:show?id=" + e.getId() + "&neww=true");
 	}
 
@@ -115,12 +125,10 @@ public class EnrollmentController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView delete(HttpSession session,
-			@RequestParam(value = "person", required = true) String legacy,
-			@RequestParam(value = "service", required = true) String serviceName) {
+			@RequestParam(value = "person", required = true) Person person,
+			@RequestParam(value = "service", required = true) Service service) {
 		UserManager usr = new SessionManager(session);
-		Person p = personRepo.getByLegacy(Integer.valueOf(legacy));
-		Service s = serviceRepo.get(serviceName);
-		for (Enrollment e : enrollmentRepo.get(p, s)) {
+		for (Enrollment e : enrollmentRepo.get(person, service)) {
 			e.cancel(); // cancels all the subscriptions instead of looking for
 						// the active one
 		}

@@ -63,6 +63,9 @@ public class Enrollment extends PersistentEntity {
 	}
 	
 	private void checkExpiration(){
+		// It means that the service is infinite, the enrollment does not expire
+		if(service.getMonthsDuration() == 0)
+			return;
 		DateTime expirationDate = startDate.plusMonths(service.getMonthsDuration());
 		if(DateTime.now().isAfter(expirationDate)){
 			endDate = expirationDate;

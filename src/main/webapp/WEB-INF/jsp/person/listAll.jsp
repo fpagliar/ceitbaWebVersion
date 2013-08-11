@@ -15,14 +15,8 @@
 	<div class="container">
 		<%@ include file="upperMenu.jsp"%>
 
-		<!-- Jumbotron -->	
-		<div class="jumbotron">		
-			<form class="form-search" action="listAll" method="get" name="search">
-				<input type="text" class="input-medium search-query" placeholder="Filtrar resultados" name="search">
-					<button type="submit">
-						<i class="icon-search"></i>
-					</button>
-			</form>
+		<!-- Jumbotron -->
+		<div class="jumbotron">
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
@@ -40,6 +34,14 @@
 						</ul>
 					</div>
 					<div class="span10">
+						<form class="form-search" action="listAll" method="get"
+							name="search">
+							<input type="text" class="input-medium search-query"
+								placeholder="Filtrar resultados" name="search">
+								<button type="submit">
+									<i class="icon-search"></i>
+								</button>
+						</form>
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
@@ -56,7 +58,8 @@
 										<td>${person.legacy}</td>
 										<td>${person.firstName}</td>
 										<td>${person.lastName}</td>
-										<td><a href="update?id=${person.id}"><i class="icon-edit"></i></a></td>
+										<td><a href="update?id=${person.id}"><i
+												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

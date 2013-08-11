@@ -38,7 +38,8 @@ public class RegisterServiceFormValidator implements Validator {
 		}
 		try {
 			int duration = Integer.parseInt(target.getMonthsDuration());
-			if (duration <= 0) {
+			// The service duration set to 0 implies infinite service, enrollments don't expire
+			if (duration < 0) {
 				errors.rejectValue("monthsDuration", "negative");
 			}
 		} catch (NumberFormatException e) {

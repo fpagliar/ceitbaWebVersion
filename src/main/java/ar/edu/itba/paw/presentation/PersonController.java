@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
 import ar.edu.itba.paw.presentation.command.RegisterPersonForm;
@@ -23,14 +24,16 @@ public class PersonController {
 	private RegisterPersonFormValidator registerValidator;
 	private UpdatePersonFormValidator updateValidator;
 	private PersonRepo personRepo;
+	private EnrollmentRepo enrollmentRepo;
 
 	@Autowired
 	public PersonController(RegisterPersonFormValidator validator,
-			UpdatePersonFormValidator updateValidator, PersonRepo personRepo) {
+			UpdatePersonFormValidator updateValidator, PersonRepo personRepo, EnrollmentRepo enrollmentRepo) {
 		super();
 		this.registerValidator = validator;
 		this.personRepo = personRepo;
 		this.updateValidator = updateValidator;
+		this.enrollmentRepo = enrollmentRepo;
 	}
 
 //	@RequestMapping(method = RequestMethod.GET)
@@ -72,6 +75,7 @@ public class PersonController {
 			mav.addObject("successmsg", "La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updatePersonForm", new UpdatePersonForm());
+		mav.addObject("enrollments", enrollmentRepo.getActive(person));
 		return mav;
 	}
 

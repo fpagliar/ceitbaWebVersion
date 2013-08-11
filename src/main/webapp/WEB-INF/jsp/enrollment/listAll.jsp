@@ -17,59 +17,6 @@
 
 		<!-- Jumbotron -->
 		<div class="jumbotron">
-			<h2>Filtrar Busqueda</h2>
-			<form class="form-search" action="listAll" method="get" name="search">
-				Usuarios:
-				<input type="text" class="input-medium search-query" placeholder="Nombre" name="search">
-					<button type="submit">
-						<i class="icon-search"></i>
-					</button>
-			</form>
-			
-			<form method="get" action="listAll" class="form-horizontal">
-				Cursos:
-				<select>
-					<c:forEach var="service" items="${courses}" varStatus="rowCounter">
-						<option value="${service.name}">${service.name}</option>
-					</c:forEach>
-				</select>
-				<button type="submit">
-						<i class="icon-search"></i>
-				</button>
-			</form>
-			<form method="get" action="listAll" class="form-horizontal">
-				Deportes:
-				<select>
-					<c:forEach var="service" items="${sports}" varStatus="rowCounter">
-						<option value="${service.name}">${service.name}</option>
-					</c:forEach>
-				</select>
-				<button type="submit">
-						<i class="icon-search"></i>
-				</button>
-			</form>
-			<form method="get" action="listAll" class="form-horizontal">
-				Lockers:
-				<select>
-					<c:forEach var="service" items="${lockers}" varStatus="rowCounter">
-						<option value="${service.name}">${service.name}</option>
-					</c:forEach>
-				</select>
-				<button type="submit">
-						<i class="icon-search"></i>
-				</button>
-			</form>
-			<form method="get" action="listAll" class="form-horizontal">
-				Otros:
-				<select>
-					<c:forEach var="service" items="${others}" varStatus="rowCounter">
-						<option value="${service.name}">${service.name}</option>
-					</c:forEach>
-				</select>
-				<button type="submit">
-						<i class="icon-search"></i>
-				</button>
-			</form>
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
@@ -77,7 +24,8 @@
 							<li class="nav-header">Opciones</li>
 							<c:if test="${history==true}">
 								<li><a href="listAll">Listar Activas</a></li>
-								<li class="active"><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li class="active"><a href="listAll?list=history">Listar
+										Inactivas</a></li>
 								<li><a href="register">Nueva subscripcion</a></li>
 							</c:if>
 							<c:if test="${service!=null}">
@@ -90,9 +38,9 @@
 								<li><a href="listAll">Listar Activas</a></li>
 								<li><a href="listAll?list=history">Listar Inactivas</a></li>
 								<li class="active"><a href="#">Busqueda</a></li>
-								<li><a href="register">Nueva subscripcion</a></li>							
+								<li><a href="register">Nueva subscripcion</a></li>
 							</c:if>
-							<c:if test="${search!=true&&service==null&&history!=true}">							
+							<c:if test="${search!=true&&service==null&&history!=true}">
 								<li class="active"><a href="listAll">Listar Activas</a></li>
 								<li><a href="listAll?list=history">Listar Inactivas</a></li>
 								<li><a href="register">Nueva subscripcion</a></li>
@@ -100,6 +48,14 @@
 						</ul>
 					</div>
 					<div class="span10">
+						<h2 class="text-center">Filtrar Busqueda</h2>
+						<form action="listAll" method="get" name="search">
+							<input type="text" class="form-control"
+								placeholder="Nombre, legajo o servicio" name="search">
+								<button type="submit">
+									<i class="icon-search"></i>
+								</button>
+						</form>
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
@@ -118,9 +74,48 @@
 										<td>${enrollment.person.firstName}</td>
 										<td>${enrollment.person.lastName}</td>
 										<td>${enrollment.service.name}</td>
-										<td><a href="update?id=${enrollment.id}"><i class="icon-edit"></i></a></td>
+										<td><a href="show?id=${enrollment.id}"><i
+												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
+								<c:if test="${serviceEnrollments!=null}">
+										<tr>
+											<td></td>
+											<td></td>
+											<td><strong>Servicios</strong></td>
+											<td></td>
+											<td></td>
+										</tr>
+									<c:forEach var="enrollment" items="${serviceEnrollments}"
+										varStatus="rowCounter">
+										<tr>
+											<td>${enrollment.person.legacy}</td>
+											<td>${enrollment.person.firstName}</td>
+											<td>${enrollment.person.lastName}</td>
+											<td>${enrollment.service.name}</td>
+											<td><a href="show?id=${enrollment.id}"><i
+													class="icon-edit"></i></a></td>
+										</tr>
+									</c:forEach>
+										<tr>
+											<td></td>
+											<td></td>
+											<td><strong>Usuarios</strong></td>
+											<td></td>
+											<td></td>
+										</tr>
+									<c:forEach var="enrollment" items="${personEnrollments}"
+										varStatus="rowCounter">
+										<tr>
+											<td>${enrollment.person.legacy}</td>
+											<td>${enrollment.person.firstName}</td>
+											<td>${enrollment.person.lastName}</td>
+											<td>${enrollment.service.name}</td>
+											<td><a href="show?id=${enrollment.id}"><i
+													class="icon-edit"></i></a></td>
+										</tr>
+									</c:forEach>
+								</c:if>
 							</tbody>
 						</table>
 					</div>

@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import ar.edu.itba.paw.domain.enrollment.Enrollment;
+import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
+import ar.edu.itba.paw.domain.service.Service;
+import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
 import ar.edu.itba.paw.presentation.command.RegisterEnrollmentForm;
@@ -14,11 +18,15 @@ import ar.edu.itba.paw.presentation.command.UpdateUserForm;
 public class RegisterEnrollmentFormValidator implements Validator {
 
 	private PersonRepo personRepo;
-
+	private EnrollmentRepo enrollmentRepo;
+	private ServiceRepo serviceRepo;
+	
 	@Autowired
-	public RegisterEnrollmentFormValidator(PersonRepo personRepo) {
+	public RegisterEnrollmentFormValidator(PersonRepo personRepo, EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo) {
 		super();
 		this.personRepo = personRepo;
+		this.enrollmentRepo = enrollmentRepo;
+		this.serviceRepo = serviceRepo;
 	}
 
 	@Override
@@ -36,6 +44,9 @@ public class RegisterEnrollmentFormValidator implements Validator {
 			Person p = personRepo.getByLegacy(legacy);
 			if (p == null)
 				errors.rejectValue("legacy", "inexistent");
+			Service s = serviceRepo.get(target.getServiceName());
+			if (s == null || ! s.isActive())
+				errors.rejectValue("service", "inexistent");
 		} catch (NumberFormatException e) {
 			errors.rejectValue("legacy", "invalid");
 		}

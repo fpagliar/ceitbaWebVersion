@@ -62,9 +62,9 @@
 									<form:errors path="value" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Duracion</label>
+								<label class="control-label" for="inputEmail">Duracion(meses)</label>
 								<div class="controls">
-									<form:input name="monthsDuration" path="monthsDuration" type="text" placeholder="Duracion"/>
+									<form:input name="monthsDuration" path="monthsDuration" type="text" placeholder="Duracion" value="0"/>
 								</div>
 							</div>
 							<div class="control-group">

@@ -32,7 +32,6 @@
 						<c:if test="${new==true}">
 							<div class="alert alert-success">${newmsg}</div>
 						</c:if>
-						<h2>Filtrar Busqueda</h2>
 						<form class="form-horizontal" action="listAll" method="get"
 							name="search">
 							<div class="control-group">
@@ -53,7 +52,7 @@
 						</form>
 						<form class="form" action="delete" method="post" name="search">
 						<input name="person" type="hidden" value="${enrollment.person.id}" path="person"/>
-						<input name="service" type="hidden" value="${enrollment.service.name}" path="service"/>
+						<input name="service" type="hidden" value="${enrollment.service.id}" path="service"/>
 						
 							<div class="control-group">
 								<div class="controls">

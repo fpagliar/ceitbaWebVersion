@@ -38,7 +38,10 @@ public class UpdateServiceFormValidator implements Validator {
 		}
 		try {
 			int duration = Integer.parseInt(target.getMonthsDuration());
-			if (duration <= 0) {
+			System.out.println("target:" + target.getMonthsDuration());
+			System.out.println("duration:" + duration);
+			// The service duration set to 0 implies infinite service, enrollments don't expire
+			if (duration < 0) {
 				errors.rejectValue("monthsDuration", "negative");
 			}
 		} catch (NumberFormatException e) {

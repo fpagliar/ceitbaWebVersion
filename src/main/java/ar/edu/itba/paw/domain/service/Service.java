@@ -24,11 +24,15 @@ public class Service extends PersistentEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(name="status", nullable=false)
 	private Status status;
+	// set value to 0 for infinite service
+	@Column(name="months_duration", nullable=false)
 	private int monthsDuration;
 
 	Service(){
 	}
 	
+	// IMPORTANT: if the duration is set to 0, the service is suppossed to be infinite,
+	// the enrollments do not end if not cancelled!!!
 	public Service(String name, Double value, Type type, int monthsDuration){
 		this.name = name;
 		this.value = value;
@@ -36,7 +40,7 @@ public class Service extends PersistentEntity {
 		this.status = Status.ACTIVE;
 		this.monthsDuration = monthsDuration;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}

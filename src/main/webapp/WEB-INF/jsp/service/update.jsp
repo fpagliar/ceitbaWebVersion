@@ -26,101 +26,136 @@
 							<li><a href="listAll?list=active">Listar Activos</a></li>
 							<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
 							<li><a href="register">Nuevo Servicio</a></li>
-							<li class="active">Editar</li>
+							<li class="active"><a href="#">Editar</a></li>
 						</ul>
 					</div>
-					<div class="span10">
-					<c:if test="${success==true}">
-					<div class="alert alert-success">${successmsg}</div>
-					</c:if>
-					<c:if test="${new==true}">
-					<div class="alert alert-success">${newmsg}</div>
-					</c:if>
-						<form:form method="post" action="update" commandName="updateServiceForm" class="form-horizontal">
+					<div class="span5">
+						<c:if test="${success==true}">
+							<div class="alert alert-success">${successmsg}</div>
+						</c:if>
+						<c:if test="${new==true}">
+							<div class="alert alert-success">${newmsg}</div>
+						</c:if>
+						<form:form method="post" action="update"
+							commandName="updateServiceForm" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Nombre</label>
 								<div class="controls">
-										<form:input name="name" path="name" type="text" value="${service.name}"/>
+									<form:input name="name" path="name" type="text"
+										value="${service.name}" />
 								</div>
 							</div>
 							<div class="control-group">
- 										<form:errors path="name" class="error alert alert-error"/>
- 							</div>
+								<form:errors path="name" class="error alert alert-error" />
+							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Tipo</label>
 								<div class="controls">
 									<form:select name="type" path="type">
 										<c:if test="${service.type == 'SPORT'}">
-											<form:option value="SPORT" selected="selected"/>
-											<form:option value="COURSE"/>
-											<form:option value="LOCKER"/>
-											<form:option value="OTHER"/>
+											<form:option value="SPORT" selected="selected" />
+											<form:option value="COURSE" />
+											<form:option value="LOCKER" />
+											<form:option value="OTHER" />
 										</c:if>
 										<c:if test="${service.type == 'COURSE'}">
-											<form:option value="SPORT"/>
-											<form:option value="COURSE" selected="selected"/>
-											<form:option value="LOCKER"/>
-											<form:option value="OTHER"/>
+											<form:option value="SPORT" />
+											<form:option value="COURSE" selected="selected" />
+											<form:option value="LOCKER" />
+											<form:option value="OTHER" />
 										</c:if>
 										<c:if test="${service.type == 'LOCKER'}">
-											<form:option value="SPORT"/>
-											<form:option value="COURSE"/>
-											<form:option value="LOCKER" selected="selected"/>
-											<form:option value="OTHER"/>
+											<form:option value="SPORT" />
+											<form:option value="COURSE" />
+											<form:option value="LOCKER" selected="selected" />
+											<form:option value="OTHER" />
 										</c:if>
-										<c:if test="${service.type != 'LOCKER' && service.type != 'COURSE' && service.type != 'SPORT'}">
-											<form:option value="SPORT"/>
-											<form:option value="COURSE"/>
-											<form:option value="LOCKER"/>
-											<form:option value="OTHER" selected="selected"/>
+										<c:if
+											test="${service.type != 'LOCKER' && service.type != 'COURSE' && service.type != 'SPORT'}">
+											<form:option value="SPORT" />
+											<form:option value="COURSE" />
+											<form:option value="LOCKER" />
+											<form:option value="OTHER" selected="selected" />
 										</c:if>
 									</form:select>
 								</div>
 							</div>
-							<div class="control-group">
-							</div>
+							<div class="control-group"></div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Precio</label>
 								<div class="controls">
-									<form:input name="value" path="value" type="text" placeholder="Precio" value="${service.value}"/>
+									<form:input name="value" path="value" type="text"
+										placeholder="Precio" value="${service.value}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="value" class="error alert alert-error" />
+								<form:errors path="value" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Duracion</label>
 								<div class="controls">
-									<form:input name="monthsDuration" path="monthsDuration" type="text" placeholder="Duracion" value="${service.monthsDuration}"/>
+									<form:input name="monthsDuration" path="monthsDuration"
+										type="text" placeholder="Duracion (meses)"
+										value="${service.monthsDuration}" />
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="monthsDuration" class="error alert alert-error" />
+								<form:errors path="monthsDuration"
+									class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Status</label>
 								<div class="controls">
 									<form:select name="status" path="status">
 										<c:if test="${service.status == 'ACTIVE'}">
-											<form:option value="ACTIVE" selected="selected"/>
-											<form:option value="INACTIVE"/>								
+											<form:option value="ACTIVE" selected="selected" />
+											<form:option value="INACTIVE" />
 										</c:if>
 										<c:if test="${service.status == 'INACTIVE'}">
-											<form:option value="ACTIVE"/>
-											<form:option value="INACTIVE" selected="selected"/>								
+											<form:option value="ACTIVE" />
+											<form:option value="INACTIVE" selected="selected" />
 										</c:if>
 									</form:select>
 								</div>
 							</div>
-							<div class="control-group">
-							</div>
-							<form:input name="id" type="hidden" value="${service.id}" path="id"/>
+							<div class="control-group"></div>
+							<form:input name="id" type="hidden" value="${service.id}"
+								path="id" />
 							<div class="control-group">
 								<div class="controls">
 									<button type="submit" class="btn">Confirmar</button>
 								</div>
 							</div>
 						</form:form>
+					</div>
+					<div class="span4 pull-right">
+						<h2>Anotados</h2>
+						<hr />
+						<c:if test="${fn:length(enrollments) == 0}">
+							<h5>El servicio no tiene subscripciones vigentes</h5>
+						</c:if>
+						<table class="table table-striped pull-right">
+							<thead>
+								<tr>
+									<th>Legajo</th>
+									<th>Nombre</th>
+									<th>Apellido</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="enrollment" items="${enrollments}"
+									varStatus="rowCounter">
+									<tr>
+										<td>${enrollment.person.legacy}</td>
+										<td>${enrollment.person.firstName}</td>
+										<td>${enrollment.person.lastName}</td>
+										<td><a href="../enrollment/show?id=${enrollment.id}"><i
+												class="icon-remove"></i></a></td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>

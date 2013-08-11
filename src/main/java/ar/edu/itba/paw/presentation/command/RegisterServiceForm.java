@@ -8,6 +8,11 @@ public class RegisterServiceForm {
 	String type;
 	String status;
 	String monthsDuration;
+
+	public RegisterServiceForm(){
+		this.monthsDuration = "0"; // Default value, implies a service that doesn't end 
+								   // (Enrollments don't expire).
+	}
 	public String getName() {
 		return name;
 	}

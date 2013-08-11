@@ -17,12 +17,6 @@
 
 		<!-- Jumbotron -->
 		<div class="jumbotron">
-			<form class="form-search" action="listAll" method="get" name="search">
-				<input type="text" class="input-medium search-query" placeholder="Filtrar resultados" name="search">
-					<button type="submit">
-						<i class="icon-search"></i>
-					</button>
-			</form>
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
@@ -39,7 +33,8 @@
 							</c:if>
 							<c:if test="${list=='active'}">
 								<li><a href="listAll">Listar Todos</a></li>
-								<li class="active"><a href="listAll?list=active">Listar Activos</a></li>
+								<li class="active"><a href="listAll?list=active">Listar
+										Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
@@ -49,7 +44,8 @@
 							<c:if test="${list=='inactive'}">
 								<li><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li class="active"><a href="listAll?list=inactive">Listar Inactivos</a></li>
+								<li class="active"><a href="listAll?list=inactive">Listar
+										Inactivos</a></li>
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
@@ -59,7 +55,8 @@
 								<li><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li class="active"><a href="listAll?list=SPORT">Listar Deportes</a></li>
+								<li class="active"><a href="listAll?list=SPORT">Listar
+										Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
@@ -69,7 +66,8 @@
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li class="active"><a href="listAll?list=COURSE">Listar Cursos</a></li>
+								<li class="active"><a href="listAll?list=COURSE">Listar
+										Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
@@ -79,7 +77,8 @@
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li class="active"><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li class="active"><a href="listAll?list=LOCKER">Listar
+										Lockers</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='OTHER'}">
@@ -89,12 +88,21 @@
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li class="active"><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
+								<li class="active"><a href="listAll?list=OTHER">Listar
+										Otros Servicios</a></li>
 							</c:if>
 							<li><a href="register">Nuevo Servicio</a></li>
 						</ul>
 					</div>
 					<div class="span10">
+						<form class="form-search" action="listAll" method="get"
+							name="search">
+							<input type="text" class="input-medium search-query"
+								placeholder="Filtrar resultados" name="search">
+								<button type="submit">
+									<i class="icon-search"></i>
+								</button>
+						</form>
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
@@ -113,7 +121,8 @@
 										<td>${service.type}</td>
 										<td>${service.value}</td>
 										<td>${service.status}</td>
-										<td><a href="update?id=${service.id}"><i class="icon-edit"></i></a></td>
+										<td><a href="update?id=${service.id}"><i
+												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
