@@ -1,0 +1,3 @@
+databasePath=jdbc:postgresql://localhost/paw1
+username=paw
+password=paw
