@@ -56,7 +56,12 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements
 		return !find("from User where ? = ?", field, value).isEmpty();
 	}
 
-//	@Override
+	
+	public void remove(User user){
+		delete(user);
+	}
+
+	//	@Override
 //	public List<Person> getAllAdministrators() {
 //		return find("from User where level = '" + Person.Level.ADMINISTRATOR + "'");
 //	}

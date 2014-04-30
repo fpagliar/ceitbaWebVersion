@@ -3,6 +3,15 @@ package ar.edu.itba.paw.presentation.command;
 public class LoginForm {
 	private String username;
 	private String password;
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	private String path;
 	
 	public LoginForm() {
 	}

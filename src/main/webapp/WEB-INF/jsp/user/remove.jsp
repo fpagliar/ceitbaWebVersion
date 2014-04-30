@@ -22,16 +22,26 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Activas</a></li>
-							<li><a href="listAll?list=history">Historial</a></li>
-							<li><a href="register">Nueva Subscripcion</a></li>
-							<li class="active">Ver Subscripcion</li>
+							<li><a href="listAll">Listar Todos</a></li>
+							<li><a href="register">Nuevo Usuario</a></li>
+							<li><a href="update">Mi perfil</a></li>
+							<li class="active"><a href="#">Eliminar</a></li>
 						</ul>
 					</div>
 					<div class="span10">
-						<div class="alert alert-success">
-							<h4>La subscripcion fue borrada con exito</h4>
-						</div>
+					</div>
+					<div class="span10">
+					</div>
+					<div class="span10">
+						<form class="form" action="delete" method="post" name="search">
+							<input name="id" type="hidden" value="${user.id}" path="id"/>
+							<div class="control-group">
+								<div class="controls">
+									<button type="submit" class="btn">Eliminar</button>
+								</div>
+							</div>
+						</form>
+						
 					</div>
 				</div>
 			</div>
@@ -42,5 +52,7 @@
 		</div>
 
 	</div>
+
 </body>
 </html>
+

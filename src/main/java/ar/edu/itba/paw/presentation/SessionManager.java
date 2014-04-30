@@ -23,18 +23,17 @@ public class SessionManager implements UserManager {
 	}
 	
 	@Override
-	public String getName() {
+	public String getUsername() {
 		return (String)session.getAttribute(NAME_ID);
 	}
 	
 	@Override
-	public void setUser(String name) {
-		session.setAttribute(NAME_ID, name);
+	public void setUser(String username) {
+		session.setAttribute(NAME_ID, username);
 	}
 	
 	@Override
-	public void resetUser(String name) {
+	public void resetUser(String username) {
 		session.setAttribute(NAME_ID, null);
 	}
-
 }

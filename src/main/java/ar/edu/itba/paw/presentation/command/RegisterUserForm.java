@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.presentation.command;
 
-import ar.edu.itba.paw.domain.user.User.Level;
 
 public class RegisterUserForm {
 
 	String username;
 	String password;
-	String retipedPassword;
-	Level level;
+	String rePassword;
+	String level;
 
 	public RegisterUserForm() {
 	}
@@ -28,19 +27,19 @@ public class RegisterUserForm {
 		this.password = pass;
 	}
 	
-	public String getRetipedPassword(){
-		return this.retipedPassword;
+	public String getRePassword(){
+		return this.rePassword;
 	}
 	
-	public void setRetipedPassword(String pass){
-		this.retipedPassword = pass;
+	public void setRePassword(String pass){
+		this.rePassword = pass;
 	}
 	
-	public Level getLevel(){
+	public String getLevel(){
 		return level;
 	}
 	
-	public void setLevel(Level l){
+	public void setLevel(String l){
 		this.level = l;
 	}
 }

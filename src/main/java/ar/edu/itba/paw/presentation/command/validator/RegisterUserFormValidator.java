@@ -39,10 +39,10 @@ public class RegisterUserFormValidator implements Validator{
 		if (target.getPassword().equals("")) {
 			errors.rejectValue("password", "missing");
 		}
-		if(target.getRetipedPassword().equals("")){
+		if(target.getRePassword().equals("")){
 			errors.rejectValue("rePassword", "missing");
 		}
-		if (!target.getPassword().equals(target.getRetipedPassword())) {
+		if (!target.getPassword().equals(target.getRePassword())) {
 			errors.rejectValue("password", "match");
 			errors.rejectValue("rePassword", "match");
 		}

@@ -145,33 +145,15 @@ body {
       <!-- Jumbotron -->
       <div class="jumbotron">
         <h2>Bienvenido al Sistema de Base de Datos de CEITBA</h2>
-        <p class="lead">Si necesita modificar informacion, por favor haga el login</p>
-        <a class="btn btn-large btn-success" href="#">Login</a>
+        <p class="lead">Si necesita modificar informacion, por favor inicie sesion</p>
+        <a class="btn btn-large btn-success" href="data/user/login">Iniciar sesion</a>
       </div>
 
       <div class="footer">
         <p>&copy; CEITBA 2013</p>
       </div>
 
-    </div> <!-- /container -->
+    </div>
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- 
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/bootstrap-transition.js"></script>
-    <script src="assets/js/bootstrap-alert.js"></script>
-    <script src="assets/js/bootstrap-modal.js"></script>
-    <script src="assets/js/bootstrap-dropdown.js"></script>
-    <script src="assets/js/bootstrap-scrollspy.js"></script>
-    <script src="assets/js/bootstrap-tab.js"></script>
-    <script src="assets/js/bootstrap-tooltip.js"></script>
-    <script src="assets/js/bootstrap-popover.js"></script>
-    <script src="assets/js/bootstrap-button.js"></script>
-    <script src="assets/js/bootstrap-collapse.js"></script>
-    <script src="assets/js/bootstrap-carousel.js"></script>
-    <script src="assets/js/bootstrap-typeahead.js"></script>
-	-->
   </body>
 </html>

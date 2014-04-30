@@ -2,6 +2,8 @@ package ar.edu.itba.paw.domain.service;
 
 import java.util.List;
 
+import ar.edu.itba.paw.domain.user.User;
+
 public interface ServiceRepo {
 
 	public void add(Service service);
@@ -27,4 +29,6 @@ public interface ServiceRepo {
 	public List<Service> getActive();
 	public List<Service> getInactive();
 	public List<Service> search(String s);
+	
+
 }

@@ -118,6 +118,18 @@
 									varStatus="rowCounter">
 									<tr>
 										<td>${service.name}</td>
+										<c:if test="${service.type == 'OTHER'}">
+											<td>Otro</td>
+										</c:if>
+										<c:if test="${service.type == 'SPORT'}">
+											<td>Deporte</td>
+										</c:if>
+										<c:if test="${service.type == 'COURSE'}">
+											<td>Curso</td>
+										</c:if>
+										<c:if test="${service.type == 'LOCKER'}">
+											<td>Locker</td>
+										</c:if>
 										<td>${service.type}</td>
 										<td>${service.value}</td>
 										<td>${service.status}</td>

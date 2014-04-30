@@ -41,8 +41,8 @@ public class TransactionFilter extends OncePerRequestFilter {
 			
 			UserManager userMan = new SessionManager(request.getSession());
 			if(userMan.existsUser()){
-				request.setAttribute("user", userRepo.get(userMan.getName()));
-				request.setAttribute("level", userRepo.get(userMan.getName()).getLevel());
+				request.setAttribute("user", userRepo.get(userMan.getUsername()));
+				request.setAttribute("level", userRepo.get(userMan.getUsername()).getLevel());
 			}
 //			request.setAttribute("foodTypes", foodTypeRepo.getAll());
 			

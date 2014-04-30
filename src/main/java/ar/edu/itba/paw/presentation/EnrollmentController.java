@@ -16,8 +16,8 @@ import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.RegisterEnrollmentForm;
-import ar.edu.itba.paw.presentation.command.SearchServiceForm;
 import ar.edu.itba.paw.presentation.command.validator.RegisterEnrollmentFormValidator;
 
 @Controller
@@ -26,13 +26,15 @@ public class EnrollmentController {
 	private EnrollmentRepo enrollmentRepo;
 	private ServiceRepo serviceRepo;
 	private PersonRepo personRepo;
+	private UserRepo userRepo;
 	private RegisterEnrollmentFormValidator validator;
 
 	@Autowired
-	public EnrollmentController(EnrollmentRepo enrollmentRepo,
+	public EnrollmentController(UserRepo userRepo, EnrollmentRepo enrollmentRepo,
 			ServiceRepo serviceRepo, PersonRepo personRepo,
 			RegisterEnrollmentFormValidator validator) {
 		super();
+		this.userRepo = userRepo;
 		this.enrollmentRepo = enrollmentRepo;
 		this.serviceRepo = serviceRepo;
 		this.personRepo = personRepo;
@@ -45,6 +47,11 @@ public class EnrollmentController {
 			@RequestParam(value = "list", required = false) String value,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "serviceName", required = false) String serviceName) {
+
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("courses", serviceRepo.getActiveCourses());
 		mav.addObject("sports", serviceRepo.getActiveSports());
@@ -68,32 +75,36 @@ public class EnrollmentController {
 		}
 		if (value == null && search == null && serviceName == null)
 			mav.addObject("enrollments", enrollmentRepo.getActive());
-		mav.addObject("searchEnrollmentForm", new SearchServiceForm());
 		return mav;
 	}
 
-//	@RequestMapping(method = RequestMethod.POST)
-//	public ModelAndView listAll(HttpSession session, SearchServiceForm form){
-//		return new ModelAndView("redirect:listAll?serviceName=" + form.getService());
-//	}
-			
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView show(@RequestParam("id") Enrollment enrollment,
 			HttpSession session,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
+
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("enrollment", enrollment);
 		if (neww != null && neww) {
 			mav.addObject("new", true);
 			mav.addObject("newmsg", "Subscripcion creada correctamente");
 		}
+		mav.addObject("isActive", enrollment.isActive());
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView register(HttpSession session,
 			RegisterEnrollmentForm form, Errors errors) {
+
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		validator.validate(form, errors);
 		if (errors.hasErrors()) {
@@ -112,13 +123,28 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView register(HttpSession session) {
+	public ModelAndView register(HttpSession session,
+			@RequestParam(value = "service", required = false) String serviceCategory) {
+		
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("courses", serviceRepo.getActiveCourses());
-		mav.addObject("sports", serviceRepo.getActiveSports());
-		mav.addObject("others", serviceRepo.getActiveOthers());
-		mav.addObject("lockers", serviceRepo.getActiveLockers());
+		if("sport".equals(serviceCategory)){
+			mav.addObject("services", serviceRepo.getActiveSports());
+			mav.addObject("sport", "sport");
+		}else if("course".equals(serviceCategory)){
+			mav.addObject("services", serviceRepo.getActiveCourses());
+			mav.addObject("course", "course");
+		}else if("other".equals(serviceCategory)){
+			mav.addObject("services", serviceRepo.getActiveOthers());
+			mav.addObject("other", "other");
+		}else{
+			mav.addObject("services", serviceRepo.getActive());
+			mav.addObject("all", "all");
+		}
+		mav.addObject("registerCategory", serviceCategory);
 		mav.addObject("registerEnrollmentForm", new RegisterEnrollmentForm());
 		return mav;
 	}
@@ -127,7 +153,11 @@ public class EnrollmentController {
 	public ModelAndView delete(HttpSession session,
 			@RequestParam(value = "person", required = true) Person person,
 			@RequestParam(value = "service", required = true) Service service) {
+
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		for (Enrollment e : enrollmentRepo.get(person, service)) {
 			e.cancel(); // cancels all the subscriptions instead of looking for
 						// the active one
@@ -138,6 +168,9 @@ public class EnrollmentController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView delete(HttpSession session) {
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		return mav;
 	}

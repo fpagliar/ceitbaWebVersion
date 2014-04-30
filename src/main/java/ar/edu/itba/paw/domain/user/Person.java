@@ -43,7 +43,7 @@ public class Person extends PersistentEntity {
 	private DateTime registration;
 	
 	@ManyToMany
-	@JoinTable(name="service_enrollment", inverseJoinColumns={@JoinColumn(name="person")}, joinColumns={@JoinColumn(name="id")})
+	@JoinTable(name="person_enrollment", inverseJoinColumns={@JoinColumn(name="person")}, joinColumns={@JoinColumn(name="id")})
 	private List<Enrollment> enrolledServices = new ArrayList<Enrollment>();
 
 	// Hibernate requirement

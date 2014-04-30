@@ -11,4 +11,7 @@ public interface UserRepo {
 	public User get(String username);
 	
 	public List<User> getAll();
+	
+	public void remove(User user);
+	
 }

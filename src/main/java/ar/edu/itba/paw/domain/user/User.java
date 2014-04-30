@@ -56,6 +56,14 @@ public class User extends PersistentEntity {
 		this.password = password;
 	}
 	
+	public void setUsername(String username){
+		this.username = username;
+	}
+	
+	public void setLevel(Level level){
+		this.level = level;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null)
@@ -74,5 +82,13 @@ public class User extends PersistentEntity {
 			throw new IllegalArgumentException();
 		}
 		return;
+	}
+	
+	public boolean isAdmin(){
+		return Level.ADMINISTRATOR == level;
+	}
+
+	public boolean isModerator(){
+		return Level.MODERATOR == level || isAdmin();
 	}
 }

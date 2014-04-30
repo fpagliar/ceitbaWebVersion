@@ -23,67 +23,73 @@
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
 							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="listAll?list=active">Listar Activos</a></li>
-							<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-							<li class="active"><a href="register">Nuevo Servicio</a></li>
+							<li><a href="register">Nuevo Usuario</a></li>
+							<c:if test="${profile == true}">
+								<li class="active"><a href="#">Mi Perfil</a></li>
+							</c:if>
+							<c:if test="${profile != true}">
+								<li class="active"><a href="#">Editar</a></li>
+							</c:if>
 						</ul>
 					</div>
-					<div class="span10">
-						<form:form method="post" action="register" commandName="registerServiceForm" class="form-horizontal">
+					<div class="span5">
+						<c:if test="${successMsg!=null}">
+							<div class="alert alert-success">${successMsg}</div>
+						</c:if>
+ 						<form:form method="post" action="update"
+							commandName="updateUserForm" class="form-horizontal">
+
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Nombre</label>
 								<div class="controls">
-										<form:input name="name" path="name" type="text" placeHolder="Nombre"/>
+									<form:input name="currentUsername" path="currentUsername" type="text" class="hidden"
+										value="${user.username}" />
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label disabled" for="username">Nombre de usuario</label>
+								<div class="controls">
+									<form:input name="username" path="username" type="text"
+										value="${user.username}" />
 								</div>
 							</div>
 							<div class="control-group">
- 										<form:errors path="name" class="error alert alert-error"/>
- 							</div>
+								<form:errors path="username" class="error alert alert-error" />
+							</div>
+
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Tipo</label>
+								<label class="control-label" for="oldPassword">Password anterior</label>
 								<div class="controls">
-									<form:select name="type" path="type">
-										<form:option value="SPORT"> Deporte </form:option>
-										<form:option value="COURSE"> Curso </form:option>
-										<form:option value="LOCKER"> Locker </form:option>
-										<form:option value="OTHER" selected="selected"> Otro </form:option>
-									</form:select>
+									<form:input name="oldPassword" path="oldPassword" type="password"
+										value="" />
 								</div>
 							</div>
 							<div class="control-group">
+								<form:errors path="oldPassword" class="error alert alert-error" />
 							</div>
+
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Precio</label>
+								<label class="control-label" for="newPassword">Password nueva</label>
 								<div class="controls">
-									<form:input name="value" path="value" type="text" placeholder="Precio"/>
+									<form:input name="newPassword" path="newPassword" type="password"/>
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="value" class="error alert alert-error" />
+								<form:errors path="newPassword" class="error alert alert-error" />
 							</div>
+
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Duracion(meses)</label>
+								<label class="control-label" for="reNewPassword">Repetir password nueva</label>
 								<div class="controls">
-									<form:input name="monthsDuration" path="monthsDuration" type="text" placeholder="Duracion" value="0"/>
+									<form:input name="reNewPassword" path="reNewPassword" type="password"/>
 								</div>
 							</div>
 							<div class="control-group">
-									<form:errors path="monthsDuration" class="error alert alert-error" />
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="inputEmail">Status</label>
-								<div class="controls">
-									<form:select name="status" path="status">
-											<form:option value="ACTIVE" selected="selected"/>
-											<form:option value="INACTIVE"/>								
-									</form:select>
-								</div>
-							</div>
-							<div class="control-group">
+								<form:errors path="reNewPassword" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<button type="submit" class="btn">Crear</button>
+									<button type="submit" class="btn">Confirmar</button>
 								</div>
 							</div>
 						</form:form>

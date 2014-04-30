@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
+import ar.edu.itba.paw.domain.enrollment.Enrollment;
 import ar.edu.itba.paw.domain.service.Service;
 
 @Repository
@@ -25,7 +26,7 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 	 *            - the user that has to be added.
 	 * @throws DuplicatedUserException
 	 *             if the username or mail already exists for another user
-	 */
+	 */	
 	@Override
 	public void add(Person person) {
 		if (duplicatedData("legacy", "" + person.getLegacy())) {
@@ -83,7 +84,7 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 			return ans;
 		}catch (NumberFormatException e) {
 		}
-		List<Person> allByName = find("from Person where firstName like ? or lastName like ?", "%"+ s + "%", "%" + s + "%");
+		List<Person> allByName = find("from Person where UPPER(firstName) like ? or UPPER(lastName) like ?", "%"+ s.toUpperCase() + "%", "%" + s.toUpperCase() + "%");
 		ans.addAll(allByName);
 		return ans;
 	}

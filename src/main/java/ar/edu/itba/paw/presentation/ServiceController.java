@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
+import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.RegisterServiceForm;
 import ar.edu.itba.paw.presentation.command.UpdateServiceForm;
 import ar.edu.itba.paw.presentation.command.validator.RegisterServiceFormValidator;
@@ -25,11 +26,13 @@ public class ServiceController {
 	private UpdateServiceFormValidator updateValidator;
 	private RegisterServiceFormValidator registerValidator;
 	private EnrollmentRepo enrollmentRepo;
+	private UserRepo userRepo;
 	
 	@Autowired
-	public ServiceController(ServiceRepo serviceRepo, UpdateServiceFormValidator updateValidator, 
+	public ServiceController(UserRepo userRepo, ServiceRepo serviceRepo, UpdateServiceFormValidator updateValidator, 
 			RegisterServiceFormValidator registerValidator, EnrollmentRepo enrollmentRepo) {
 		super();
+		this.userRepo = userRepo;
 		this.serviceRepo = serviceRepo;
 		this.updateValidator = updateValidator;
 		this.registerValidator = registerValidator;
@@ -40,6 +43,11 @@ public class ServiceController {
 	public ModelAndView listAll(HttpSession session,
 			@RequestParam(value = "list", required = false) String value,
 			@RequestParam(value = "search", required = false) String search) {
+
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+	
 		ModelAndView mav = new ModelAndView();
 		if("active".equals(value))
 			mav.addObject("services", serviceRepo.getActive());
@@ -68,6 +76,8 @@ public class ServiceController {
 			@RequestParam(value = "success", required = false) Boolean success,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("service", service);
 		if(neww != null && neww){
@@ -88,8 +98,13 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView update(HttpSession session, UpdateServiceForm form,
 			Errors errors) {
-		ModelAndView mav = new ModelAndView();
+
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		updateValidator.validate(form, errors);
+
+		ModelAndView mav = new ModelAndView();
 		Service updatedService = serviceRepo.get(form.getId());
 		if (errors.hasErrors()) {
 			mav.addObject("service", serviceRepo.get(form.getId()));
@@ -99,9 +114,11 @@ public class ServiceController {
 		updatedService.setValue(Double.parseDouble(form.getValue()));
 		updatedService.setMonthsDuration(Integer.parseInt(form.getMonthsDuration()));
 		if(form.getStatus().equals("ACTIVE"))
-			updatedService.setStatus(Service.Status.ACTIVE);
+			updatedService.activate();
+//			updatedService.setStatus(Service.Status.ACTIVE);
 		else
-			updatedService.setStatus(Service.Status.INACTIVE);
+			updatedService.deactivate();
+//			updatedService.setStatus(Service.Status.INACTIVE);
 		if(form.getType().equals("SPORT"))
 			updatedService.setType(Service.Type.SPORT);
 		else if(form.getType().equals("COURSE"))
@@ -117,6 +134,11 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView register(HttpSession session, RegisterServiceForm form,
 			Errors errors) {
+
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login");
+
 		ModelAndView mav = new ModelAndView();
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
@@ -140,6 +162,9 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView register(HttpSession session) {
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login");
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("registerServiceForm", new RegisterServiceForm());
 		return mav;

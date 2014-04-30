@@ -18,12 +18,12 @@
 		<!-- Jumbotron -->
 		<div class="jumbotron">
 			<div class="container-fluid">
-				<div class="row-fluid">
+				<div class="row-fluid"> 					
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
 							<li><a href="listAll">Listar Activas</a></li>
-							<li><a href="listAll?list=inactive">Listar Inactivas</a></li>
+							<li><a href="listAll?list=history">Historial</a></li>
 							<li><a href="register">Nueva Subscripcion</a></li>
 							<li class="active">Ver Subscripcion</li>
 						</ul>
@@ -53,13 +53,17 @@
 						<form class="form" action="delete" method="post" name="search">
 						<input name="person" type="hidden" value="${enrollment.person.id}" path="person"/>
 						<input name="service" type="hidden" value="${enrollment.service.id}" path="service"/>
-						
-							<div class="control-group">
-								<div class="controls">
-									<button type="submit" class="btn">Eliminar</button>
+							<c:if test="${isActive}">
+								<div class="control-group">
+									<div class="controls">
+										<button type="submit" class="btn">Cancelar</button>
+									</div>
 								</div>
-							</div>
+							</c:if>
 						</form>
+						<c:if test="${!isActive}">
+							<div class="alert alert-warning">Subscripcion cancelada!</div>
+						</c:if>
 					</div>
 				</div>
 			</div>

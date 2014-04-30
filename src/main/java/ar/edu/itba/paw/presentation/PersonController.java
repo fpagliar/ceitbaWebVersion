@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.RegisterPersonForm;
 import ar.edu.itba.paw.presentation.command.UpdatePersonForm;
 import ar.edu.itba.paw.presentation.command.validator.RegisterPersonFormValidator;
@@ -25,28 +26,27 @@ public class PersonController {
 	private UpdatePersonFormValidator updateValidator;
 	private PersonRepo personRepo;
 	private EnrollmentRepo enrollmentRepo;
+	private UserRepo userRepo;
 
 	@Autowired
-	public PersonController(RegisterPersonFormValidator validator,
+	public PersonController(UserRepo userRepo, RegisterPersonFormValidator validator,
 			UpdatePersonFormValidator updateValidator, PersonRepo personRepo, EnrollmentRepo enrollmentRepo) {
 		super();
+		this.userRepo = userRepo;
 		this.registerValidator = validator;
 		this.personRepo = personRepo;
 		this.updateValidator = updateValidator;
 		this.enrollmentRepo = enrollmentRepo;
 	}
 
-//	@RequestMapping(method = RequestMethod.GET)
-//	public ModelAndView login(HttpSession session) {
-//		ModelAndView mav;
-//		mav = new ModelAndView();
-//		mav.addObject("loginForm", new LoginForm());
-//		return mav;
-//	}
-
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listAll(HttpSession session,
 		@RequestParam(value = "search", required = false) String search){
+
+		UserManager usr = new SessionManager(session);
+		if(!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		if(search != null){
 			mav.addObject("persons", personRepo.search(search));
@@ -61,7 +61,11 @@ public class PersonController {
 			HttpSession session,
 			@RequestParam(value = "success", required = false) Boolean success,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
+
 		UserManager usr = new SessionManager(session);
+		if(!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("person", person);
 		if(neww != null && neww){
@@ -82,6 +86,10 @@ public class PersonController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView update(HttpSession session, UpdatePersonForm form,
 			Errors errors) {
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		updateValidator.validate(form, errors);
 		Person updatedPerson = personRepo.getById(form.getId());
@@ -103,6 +111,11 @@ public class PersonController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView register(HttpSession session, RegisterPersonForm form,
 			Errors errors) {
+
+		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
@@ -122,6 +135,9 @@ public class PersonController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView register(HttpSession session) {
 		UserManager usr = new SessionManager(session);
+		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("registerPersonForm", new RegisterPersonForm());
 		return mav;

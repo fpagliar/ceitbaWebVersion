@@ -24,25 +24,24 @@
 							<li class="nav-header">Opciones</li>
 							<c:if test="${history==true}">
 								<li><a href="listAll">Listar Activas</a></li>
-								<li class="active"><a href="listAll?list=history">Listar
-										Inactivas</a></li>
+								<li class="active"><a href="listAll?list=history">Historial</a></li>
 								<li><a href="register">Nueva subscripcion</a></li>
 							</c:if>
 							<c:if test="${service!=null}">
 								<li><a href="listAll">Listar Activas</a></li>
-								<li><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li><a href="listAll?list=history">Historial</a></li>
 								<li class="active"><a href="#">${service}</a></li>
 								<li><a href="register">Nueva subscripcion</a></li>
 							</c:if>
 							<c:if test="${search==true}">
 								<li><a href="listAll">Listar Activas</a></li>
-								<li><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li><a href="listAll?list=history">Historial</a></li>
 								<li class="active"><a href="#">Busqueda</a></li>
 								<li><a href="register">Nueva subscripcion</a></li>
 							</c:if>
 							<c:if test="${search!=true&&service==null&&history!=true}">
 								<li class="active"><a href="listAll">Listar Activas</a></li>
-								<li><a href="listAll?list=history">Listar Inactivas</a></li>
+								<li><a href="listAll?list=history">Historial</a></li>
 								<li><a href="register">Nueva subscripcion</a></li>
 							</c:if>
 						</ul>

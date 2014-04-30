@@ -4,10 +4,10 @@ public interface UserManager {
 
 	public boolean existsUser();
 
-	public String getName();
+	public String getUsername();
 
-	public void setUser(String name);
+	public void setUser(String username);
 
-	public void resetUser(String name);
+	public void resetUser(String username);
 
 }

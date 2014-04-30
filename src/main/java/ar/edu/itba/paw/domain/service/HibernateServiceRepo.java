@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
+import ar.edu.itba.paw.domain.user.User;
 
 @Repository
 public class HibernateServiceRepo extends AbstractHibernateRepo implements ServiceRepo{
@@ -107,7 +108,7 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements Servi
 	@Override
 	public List<Service> search(String s) {
 		List<Service> ans = new ArrayList<Service>();
-		List<Service> all = find("from Service where name like ?", "%"+ s + "%");
+		List<Service> all = find("from Service where UPPER(name) like ?", "%"+ s.toUpperCase() + "%");
 		ans.addAll(all);
 		return ans;
 	}
@@ -115,4 +116,5 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements Servi
 	private boolean duplicatedData(String field, String value) {
 		return !find("from Service where ? = ?", field, value).isEmpty();
 	}
+
 }

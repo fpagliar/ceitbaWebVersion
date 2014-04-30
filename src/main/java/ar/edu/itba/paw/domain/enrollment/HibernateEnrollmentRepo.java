@@ -34,6 +34,7 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 				}
 		save(enrollment);
 		enrollment.getPerson().enroll(enrollment);
+		enrollment.getService().enroll(enrollment);
 	}
 
 	@Override

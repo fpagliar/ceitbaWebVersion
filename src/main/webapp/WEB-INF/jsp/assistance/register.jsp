@@ -19,41 +19,15 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li class="active"><a href="#">Nueva Subscripcion</a></li>
+							<li><a href="listAll">Listar Todas</a></li>
+							<li class="active"><a href="#">Nueva asistencia</a></li>
 						</ul>
 					</div>
 					<div class="span10">
-						<ul class="nav nav-tabs">
-							<c:if test="${all==null}">
-								<li><a href="?service=all">Todos</a></li>
-							</c:if>
-							<c:if test="${all!=null}">
-								<li class="active"><a href="#">Todos</a></li>
-							</c:if>
-							<c:if test="${sport==null}">
-								<li><a href="?service=sport">Deporte</a></li>
-							</c:if>
-							<c:if test="${sport!=null}">
-								<li class="active"><a href="#">Deporte</a></li>
-							</c:if>
-							<c:if test="${course==null}">
-								<li><a href="?service=course">Curso</a></li>
-							</c:if>
-							<c:if test="${course!=null}">
-								<li class="active"><a href="#">Curso</a></li>
-							</c:if>
-							<c:if test="${other==null}">
-								<li><a href="?service=other">Otro</a></li>
-							</c:if>
-							<c:if test="${other!=null}">
-								<li class="active"><a href="#">Otro</a></li>
-							</c:if>
-						</ul>
 						<div id="content">
 							<div class="page">
 								<form:form method="post" action="register"
-									commandName="registerEnrollmentForm" class="form-horizontal">
+									commandName="registerAssistanceForm" class="form-horizontal">
 									<div class="control-group">
 										<label class="control-label" for="inputEmail">Legajo</label>
 										<div class="controls">
@@ -65,13 +39,8 @@
 										<form:errors path="legacy" class="error alert alert-error" />
 									</div>
 									<div class="control-group">
-										<label class="control-label" for="inputEmail">Servicio</label>
-										<form:select name="serviceName" path="serviceName">
-											<c:forEach var="service" items="${services}"
-												varStatus="rowCounter">
-												<option value="${service.name}">${service.name}</option>
-											</c:forEach>
-										</form:select>
+										<form:input name="serviceName" path="serviceName" type="hidden"
+											 value="${service.name}"/>
 									</div>
 									<div class="control-group">
 										<div class="controls">

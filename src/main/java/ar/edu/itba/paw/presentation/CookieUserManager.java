@@ -24,16 +24,16 @@ public class CookieUserManager implements UserManager {
 		}
 	}
 
-	public String getName() {
+	public String getUsername() {
 		return getByID(NAME_ID);
 	}
 
-	public void setUser(String name) {
-		setCookie(NAME_ID, name, false);
+	public void setUser(String username) {
+		setCookie(NAME_ID, username, false);
 	}
 
-	public void resetUser(String name) {
-		setCookie(NAME_ID, name, true);
+	public void resetUser(String username) {
+		setCookie(NAME_ID, username, true);
 	}
 
 	private void setCookie(String name, String value, boolean delete) {
