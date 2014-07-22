@@ -130,7 +130,6 @@
 										<c:if test="${service.type == 'LOCKER'}">
 											<td>Locker</td>
 										</c:if>
-										<td>${service.type}</td>
 										<td>${service.value}</td>
 										<td>${service.status}</td>
 										<td><a href="update?id=${service.id}"><i

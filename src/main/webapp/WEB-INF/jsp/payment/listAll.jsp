@@ -29,9 +29,9 @@
 						<h2 class="text-center">Filtrar Busqueda</h2>
 						<form action="listAll" method="get" name="listAll">
 							<input type="text" class="form-control"
-								placeholder="Inicio en formato dd/mm/aaaa" name="start_date">
+								placeholder="Inicio formato dd/mm/aaaa" name="start">
 							<input type="text" class="form-control"
-								placeholder="Fin en formato dd/mm/aaaa" name="end_date">
+								placeholder="Fin formato dd/mm/aaaa" name="end">
 								<button type="submit">
 									<i class="icon-search"></i>
 								</button>
@@ -42,19 +42,23 @@
 									<th>Legajo</th>
 									<th>Nombre</th>
 									<th>Apellido</th>
-									<th>Fecha</th>
+									<th>Monto</th>
+									<th>Fecha de deuda</th>
+									<th>Fecha de pago</th>
 									<th>Detalle de usuario</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="assistance" items="${assistances}"
+								<c:forEach var="payment" items="${payments}"
 									varStatus="rowCounter">
 									<tr>
-										<td>${assistance.person.legacy}</td>
-										<td>${assistance.person.firstName}</td>
-										<td>${assistance.person.lastName}</td>
-										<td>${assistance.formatedDate}</td>
-										<td><a href="listAll?person=${assistance.person.id}"><i
+										<td>${payment.person.legacy}</td>
+										<td>${payment.person.firstName}</td>
+										<td>${payment.person.lastName}</td>
+										<td>${payment.amount}</td>
+										<td>${payment.formatedPaymentDate}</td>
+										<td>${payment.formatedDebtDate}</td>
+										<td><a href="listAll?person=${payment.person.id}"><i
 												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>

@@ -42,10 +42,14 @@ public class RegisterAssistanceFormValidator implements Validator {
 			if (p == null)
 				errors.rejectValue("legacy", "inexistent");
 			Service s = serviceRepo.get(target.getServiceName());
-			if (s == null || ! s.isActive())
-				errors.rejectValue("service", "inexistent");
+			if (s == null)
+				errors.rejectValue("serviceName", "inexistent");
+			else if(!s.isActive())
+				errors.rejectValue("serviceName", "inactive");
 		} catch (NumberFormatException e) {
 			errors.rejectValue("legacy", "invalid");
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return;
 	}

@@ -41,16 +41,28 @@ public class HibernateCashPaymentRepo extends AbstractHibernateRepo implements
 
 	@Override
 	public List<CashPayment> getAll(DateTime start, DateTime end) {
+		if(start == null)
+			start = DateTime.parse("0");
+		if(end == null)
+			end = DateTime.now();
 		return find("from CashPayment where paymentDate > ? and paymentDate < ?", start, end);
 	}
 
 	@Override
 	public List<CashPayment> getAll(Person p) {
+		if(p == null)
+			return getAll();
 		return find("from CashPayment where person = ?", p);
 	}
 
 	@Override
 	public List<CashPayment> getAll(Person p, DateTime start, DateTime end) {
+		if(p == null)
+			return getAll(start, end);
+		if(start == null)
+			start = DateTime.parse("0");
+		if(end == null)
+			end = DateTime.now();
 		return find("from CashPayment where paymentDate > ? and paymentDate < ? and person = ?", start, end, p);
 	}
 

@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
 import ar.edu.itba.paw.domain.user.Person;
+import ar.edu.itba.paw.lib.DateHelper;
 
 @Entity
 @Table(name = "cash_payment")
@@ -71,5 +72,23 @@ public class CashPayment extends PersistentEntity {
 
 	public void setPaymentDate(DateTime paymentDate) {
 		this.paymentDate = paymentDate;
+	}
+
+	public String getFormatedPaymentDate() {
+		try {
+			return DateHelper.getDateString(paymentDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String getFormatedDebtDate() {
+		try {
+			return DateHelper.getDateString(debtDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

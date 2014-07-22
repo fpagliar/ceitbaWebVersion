@@ -115,10 +115,9 @@ public class ServiceController {
 		updatedService.setMonthsDuration(Integer.parseInt(form.getMonthsDuration()));
 		if(form.getStatus().equals("ACTIVE"))
 			updatedService.activate();
-//			updatedService.setStatus(Service.Status.ACTIVE);
 		else
 			updatedService.deactivate();
-//			updatedService.setStatus(Service.Status.INACTIVE);
+		
 		if(form.getType().equals("SPORT"))
 			updatedService.setType(Service.Type.SPORT);
 		else if(form.getType().equals("COURSE"))
@@ -139,7 +138,6 @@ public class ServiceController {
 		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login");
 
-		ModelAndView mav = new ModelAndView();
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
 			return null;

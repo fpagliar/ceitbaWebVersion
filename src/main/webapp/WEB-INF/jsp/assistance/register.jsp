@@ -43,6 +43,9 @@
 											 value="${service.name}"/>
 									</div>
 									<div class="control-group">
+										<form:errors path="serviceName" class="error alert alert-error" />
+									</div>
+									<div class="control-group">
 										<div class="controls">
 											<button type="submit" class="btn">Crear</button>
 										</div>

@@ -55,7 +55,7 @@ public class Assistance extends PersistentEntity {
 		return date;
 	}
 	
-	public String getFormatedDate(){
+	public String getFormatedDate() { 
 		try{
 		return DateHelper.getDateString(date);
 		} catch (Exception e){
