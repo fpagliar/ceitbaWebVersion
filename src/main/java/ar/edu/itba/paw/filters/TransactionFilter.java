@@ -44,7 +44,6 @@ public class TransactionFilter extends OncePerRequestFilter {
 				request.setAttribute("user", userRepo.get(userMan.getUsername()));
 				request.setAttribute("level", userRepo.get(userMan.getUsername()).getLevel());
 			}
-//			request.setAttribute("foodTypes", foodTypeRepo.getAll());
 			
 			// Call the next filter (continue request processing)
 			filterChain.doFilter(request, response);

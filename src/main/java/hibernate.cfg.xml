@@ -6,9 +6,9 @@
     <session-factory>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.password">paw</property>
-        <property name="hibernate.connection.url">jdbc:postgresql:paw1</property>
-        <property name="hibernate.connection.username">paw</property>
+        <property name="hibernate.connection.password">ceitba</property>
+        <property name="hibernate.connection.url">jdbc:postgresql:sibadac</property>
+        <property name="hibernate.connection.username">ceitba</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="hibernate.search.autoregister_listeners">false</property>
     </session-factory>
