@@ -8,11 +8,12 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import ar.edu.itba.paw.domain.PersistentEntity;
 import ar.edu.itba.paw.domain.user.Person;
 
 @Entity
 @Table(name = "debt")
-public class Debt {
+public class Debt extends PersistentEntity {
 
 	@ManyToOne(optional = false)
 	private Person person;

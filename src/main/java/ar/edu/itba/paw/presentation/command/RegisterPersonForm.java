@@ -75,4 +75,14 @@ public class RegisterPersonForm {
 	public void setLegacy(String legacy) {
 		this.legacy = legacy;
 	}
+	
+	String paymentMethod;
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 }

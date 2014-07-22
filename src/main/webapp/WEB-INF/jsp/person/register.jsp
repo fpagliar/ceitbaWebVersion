@@ -101,6 +101,15 @@
 									<form:errors path="email2" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
+								<label class="control-label" for="paymentMethod">Medio de pago</label>
+								<div class="controls">
+									<form:select name="paymentMethod" path="paymentMethod">
+										<form:option value="CASH"> Efectivo </form:option>
+										<form:option value="BILL" selected="selected"> Factura </form:option>
+									</form:select>
+								</div>
+							</div>
+							<div class="control-group">
 								<div class="controls">
 									<button type="submit" class="btn">Crear</button>
 								</div>

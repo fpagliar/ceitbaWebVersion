@@ -85,4 +85,14 @@ public class UpdatePersonForm {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	String paymentMethod;
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 }
