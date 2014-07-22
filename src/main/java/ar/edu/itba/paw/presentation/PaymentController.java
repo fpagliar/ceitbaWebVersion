@@ -16,7 +16,6 @@ import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
-import ar.edu.itba.paw.lib.DateHelper;
 import ar.edu.itba.paw.presentation.command.validator.RegisterAssistanceFormValidator;
 
 @Controller
@@ -43,7 +42,7 @@ public class PaymentController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView payments(HttpSession session, 
+	public ModelAndView listAll(HttpSession session, 
 			@RequestParam(value = "person_id", required = false) Person person, 
 			@RequestParam(value = "start", required = false) DateTime start, 
 			@RequestParam(value = "end", required = false) DateTime end) {

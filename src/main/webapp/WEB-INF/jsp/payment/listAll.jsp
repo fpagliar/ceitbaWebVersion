@@ -21,7 +21,7 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li class="active"><a href="listAll">Listar todas</a></li>
+							<li class="active"><a href="listAll">Listar todos</a></li>
 							<li><a href="register?service_id=${service.id}">Nueva asistencia</a></li>
 						</ul>
 					</div>

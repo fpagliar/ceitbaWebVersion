@@ -10,9 +10,9 @@
 								<li><a href="../service/listAll">Servicios</a></li>
 								<li><a href="../enrollment/listAll">Subscripciones</a></li>
 							</c:if>
-							<li class="active"><a href="listAll">Asistencias</a></li>
+							<li><a href="../assistance/listAll">Asistencias</a></li>
 							<c:if test="${!basicUser}">
-								<li><a href="../payment/listAll">Pagos</a></li>
+								<li class="active"><a href="listAll">Pagos</a></li>
 								<li><a href="#">Facturacion</a></li>
 								<li><a href="../user/update">Perfil</a></li>
 							</c:if>
