@@ -39,7 +39,7 @@ public class CashPayment extends PersistentEntity {
 	}
 
 	public CashPayment(Debt debt, DateTime paymentDate) {
-		this(debt.getPerson(), debt.getAmount(), paymentDate, debt.getDate());
+		this(debt.getPerson(), debt.getAmount(), paymentDate, debt.getBillingDate());
 	}
 
 	public Person getPerson() {

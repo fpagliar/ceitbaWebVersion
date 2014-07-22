@@ -5,10 +5,13 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.user.Person;
+import ar.edu.itba.paw.lib.DateHelper;
 
+@Repository
 public class HibernateDebtRepo extends AbstractHibernateRepo implements
 		DebtRepo {
 
@@ -19,17 +22,37 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 
 	@Override
 	public List<Debt> getAll() {
-		return find("from CashPayment");
+		return find("from Debt");
 	}
 
 	@Override
 	public List<Debt> get(Person person) {
-		return find("from CashPayment where person = ?", person);
+		return find("from Debt where person = ?", person);
 	}
 
 	@Override
 	public List<Debt> get(DateTime start, DateTime end) {
-		return find("from CashPayment where date > ? and date < ?", start, end);
+		if (start == null)
+			start = DateTime.parse("0");
+		if (end == null)
+			end = DateTime.now();
+		return find("from Debt where billingDate > ? and billingDate < ?",
+				DateHelper.getNormalizedDate(start),
+				DateHelper.getNormalizedDate(end));
+	}
+
+	@Override
+	public List<Debt> get(Person p, DateTime start, DateTime end) {
+		if (p == null)
+			return get(start, end);
+		if (start == null)
+			start = DateTime.parse("0");
+		if (end == null)
+			end = DateTime.now();
+		return find(
+				"from Debt where billingDate > ? and billingDate < ? and person = ?",
+				DateHelper.getNormalizedDate(start),
+				DateHelper.getNormalizedDate(end), p);
 	}
 
 	@Override

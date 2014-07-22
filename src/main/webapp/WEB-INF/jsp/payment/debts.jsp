@@ -21,8 +21,8 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li class="active"><a href="listAll">Listar todos</a></li>
-							<li><a href="debts">Listar deudas</a></li>
+							<li><a href="listAll">Listar pagos</a></li>
+							<li class="active"><a href="debts">Listar deudas</a></li>
 						</ul>
 					</div>
 					<div class="span10">
@@ -44,21 +44,19 @@
 									<th>Apellido</th>
 									<th>Monto</th>
 									<th>Fecha de deuda</th>
-									<th>Fecha de pago</th>
 									<th>Detalle de usuario</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="payment" items="${payments}"
+								<c:forEach var="debt" items="${debts}"
 									varStatus="rowCounter">
 									<tr>
-										<td>${payment.person.legacy}</td>
-										<td>${payment.person.firstName}</td>
-										<td>${payment.person.lastName}</td>
-										<td>${payment.amount}</td>
-										<td>${payment.formatedPaymentDate}</td>
-										<td>${payment.formatedDebtDate}</td>
-										<td><a href="listAll?person=${payment.person.id}"><i
+										<td>${debt.person.legacy}</td>
+										<td>${debt.person.firstName}</td>
+										<td>${debt.person.lastName}</td>
+										<td>${debt.amount}</td>
+										<td>${debt.formatedDate}</td>
+										<td><a href="listAll?person=${debt.person.id}"><i
 												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>

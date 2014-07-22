@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
 import ar.edu.itba.paw.domain.user.Person;
+import ar.edu.itba.paw.lib.DateHelper;
 
 @Entity
 @Table(name = "debt")
@@ -18,8 +19,8 @@ public class Debt extends PersistentEntity {
 	@ManyToOne(optional = false)
 	private Person person;
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-	@Column(name = "date", nullable = false)
-	private DateTime date;
+	@Column(name = "billingdate", nullable = false)
+	private DateTime billingDate;
 	@Column(name = "amount", nullable = false)
 	private int amount;
 
@@ -29,7 +30,7 @@ public class Debt extends PersistentEntity {
 	public Debt(Person person, int amount, DateTime date) {
 		this.person = person;
 		this.amount = amount;
-		this.date = date;
+		this.billingDate = date;
 	}
 
 	public Person getPerson() {
@@ -40,12 +41,12 @@ public class Debt extends PersistentEntity {
 		this.person = person;
 	}
 
-	public DateTime getDate() {
-		return date;
+	public DateTime getBillingDate() {
+		return billingDate;
 	}
 
-	public void setDate(DateTime date) {
-		this.date = date;
+	public void setBillingDate(DateTime billingDate) {
+		this.billingDate = billingDate;
 	}
 
 	public int getAmount() {
@@ -62,5 +63,14 @@ public class Debt extends PersistentEntity {
 
 	public void pay(DateTime date) {
 		person.pay(this, date);
+	}
+	
+	public String getFormatedDate() {
+		try {
+			return DateHelper.getDateString(billingDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

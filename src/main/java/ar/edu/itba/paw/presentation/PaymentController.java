@@ -12,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.domain.assistance.AssistanceRepo;
 import ar.edu.itba.paw.domain.payment.CashPaymentRepo;
+import ar.edu.itba.paw.domain.payment.Debt;
+import ar.edu.itba.paw.domain.payment.DebtRepo;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
@@ -21,28 +23,46 @@ import ar.edu.itba.paw.presentation.command.validator.RegisterAssistanceFormVali
 @Controller
 public class PaymentController {
 
-//	private ServiceRepo serviceRepo;
-//	private PersonRepo personRepo;
-//	private AssistanceRepo assistanceRepo;
-//	private RegisterAssistanceFormValidator validator;
-//	private UserRepo userRepo;
+	// private ServiceRepo serviceRepo;
+	// private PersonRepo personRepo;
+	// private AssistanceRepo assistanceRepo;
+	// private RegisterAssistanceFormValidator validator;
+	// private UserRepo userRepo;
 	private CashPaymentRepo paymentRepo;
+	private DebtRepo debtRepo;
 
 	@Autowired
 	public PaymentController(UserRepo userRepo, ServiceRepo serviceRepo,
 			PersonRepo personRepo, AssistanceRepo assistanceRepo,
-			RegisterAssistanceFormValidator validator, CashPaymentRepo paymentRepo) {
+			RegisterAssistanceFormValidator validator,
+			CashPaymentRepo paymentRepo, DebtRepo debtRepo) {
 		super();
-//		this.userRepo = userRepo;
-//		this.serviceRepo = serviceRepo;
-//		this.personRepo = personRepo;
-//		this.validator = validator;
-//		this.assistanceRepo = assistanceRepo;
+		// this.userRepo = userRepo;
+		// this.serviceRepo = serviceRepo;
+		// this.personRepo = personRepo;
+		// this.validator = validator;
+		// this.assistanceRepo = assistanceRepo;
 		this.paymentRepo = paymentRepo;
+		this.debtRepo = debtRepo;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session, 
+	public ModelAndView listAll(HttpSession session,
+			@RequestParam(value = "person_id", required = false) Person person,
+			@RequestParam(value = "start", required = false) DateTime start,
+			@RequestParam(value = "end", required = false) DateTime end) {
+
+		UserManager usr = new SessionManager(session);
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("payments", paymentRepo.getAll(person, start, end));
+		return mav;
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView debts(HttpSession session, 
 			@RequestParam(value = "person_id", required = false) Person person, 
 			@RequestParam(value = "start", required = false) DateTime start, 
 			@RequestParam(value = "end", required = false) DateTime end) {
@@ -52,7 +72,8 @@ public class PaymentController {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("payments", paymentRepo.getAll(person, start, end));
+		
+		mav.addObject("debts", debtRepo.get(person, start, end));
 		return mav;
 	}
 }
