@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.domain.user.User;
+import ar.edu.itba.paw.domain.user.User.Level;
 import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.LoginForm;
 import ar.edu.itba.paw.presentation.command.RegisterUserForm;
@@ -127,6 +128,9 @@ public class UserController {
 		if (!usr.existsUser()) {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		}
+
+		User user = userRepo.get(usr.getUsername());
+		form.setAdmin(user.getLevel().equals(Level.ADMINISTRATOR));
 		updateValidator.validate(form, errors);
 
 		ModelAndView mav = new ModelAndView();
@@ -174,7 +178,10 @@ public class UserController {
 
 		try {
 			Integer id = Integer.valueOf(userId);
-			userRepo.remove(userRepo.get(id));
+			User user = userRepo.get(id);
+			if (user.isAdmin())
+				return new ModelAndView("redirect:/sibadac/notAuthorized");
+			userRepo.remove(user);
 			return new ModelAndView("redirect:../user/listAll?success=1");
 		} catch (Exception e) {
 			return new ModelAndView("redirect:/sibadac/notAuthorized");

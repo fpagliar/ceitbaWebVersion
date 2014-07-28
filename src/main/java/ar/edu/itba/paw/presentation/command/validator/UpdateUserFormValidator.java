@@ -12,9 +12,9 @@ import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.UpdateUserForm;
 
 @Component
-public class UpdateUserFormValidator implements Validator{
+public class UpdateUserFormValidator implements Validator {
 	private UserRepo userRepo;
-	
+
 	@Autowired
 	public UpdateUserFormValidator(UserRepo userRepo) {
 		super();
@@ -31,37 +31,40 @@ public class UpdateUserFormValidator implements Validator{
 		UpdateUserForm target = (UpdateUserForm) obj;
 		String previous = target.getCurrentUsername();
 		String next = target.getUsername();
-		
+
 		User currentUser = userRepo.get(previous);
 
 		// Check old password
-		if (target.getOldPassword().equals(""))
-			errors.rejectValue("oldPassword", "missing");
-		else if( ! target.getOldPassword().equals(currentUser.getPassword()))
-			errors.rejectValue("oldPassword", "invalid");
+		if (!(target.isAdmin() && (!currentUser.isAdmin()))) {
+			if (target.getOldPassword().equals(""))
+				errors.rejectValue("oldPassword", "missing");
+			else if (!target.getOldPassword().equals(currentUser.getPassword()))
+				errors.rejectValue("oldPassword", "invalid");
+		}
 
 		// Password changed
-		if(!target.getNewPassword().equals("")){
-			if(target.getReNewPassword().equals("")){
+		if (!target.getNewPassword().equals("")) {
+			if (target.getReNewPassword().equals("")) {
 				errors.rejectValue("reNewPassword", "missing");
 			}
 			if (!target.getNewPassword().equals(target.getReNewPassword())) {
 				errors.rejectValue("newPassword", "match");
 				errors.rejectValue("reNewPassword", "match");
 			}
-			if (target.getNewPassword().length() < 6){
+			if (target.getNewPassword().length() < 6) {
 				errors.rejectValue("newPassword", "short");
 			}
 		}
 
 		// Username changed
-		if(! previous.equals(next)){
+		if (!previous.equals(next)) {
 			if (next.equals("")) {
 				errors.rejectValue("username", "missing");
 			}
 			List<User> userList = userRepo.getAll();
 			for (User user : userList) {
-				if ( (! user.getUsername().equals(previous)) && user.getUsername().equals(next)) {
+				if ((!user.getUsername().equals(previous))
+						&& user.getUsername().equals(next)) {
 					errors.rejectValue("username", "exists");
 				}
 			}
