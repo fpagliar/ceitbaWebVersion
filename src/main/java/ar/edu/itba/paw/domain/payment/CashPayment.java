@@ -3,6 +3,7 @@ package ar.edu.itba.paw.domain.payment;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -19,27 +20,21 @@ public class CashPayment extends PersistentEntity {
 	@ManyToOne(optional = false)
 	private Person person;
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-	@Column(name = "debt_date", nullable = false)
-	private DateTime debtDate;
-	@Column(name = "amount", nullable = false)
-	private int amount;
-	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	@Column(name = "payment_date", nullable = false)
 	private DateTime paymentDate;
+	@OneToOne(optional = false)
+	private Debt debt;
 
 	protected CashPayment() {
 	}
 
-	public CashPayment(Person person, int amount, DateTime paymentDate,
-			DateTime debtDate) {
+	public CashPayment(Person person, DateTime paymentDate, Debt debt) {
 		this.person = person;
-		this.amount = amount;
 		this.paymentDate = paymentDate;
-		this.debtDate = debtDate;
 	}
 
 	public CashPayment(Debt debt, DateTime paymentDate) {
-		this(debt.getPerson(), debt.getAmount(), paymentDate, debt.getBillingDate());
+		this(debt.getPerson(), paymentDate, debt);
 	}
 
 	public Person getPerson() {
@@ -51,19 +46,11 @@ public class CashPayment extends PersistentEntity {
 	}
 
 	public DateTime getDebtDate() {
-		return debtDate;
-	}
-
-	public void setDebtDate(DateTime debtDate) {
-		this.debtDate = debtDate;
+		return debt.getBillingDate();
 	}
 
 	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
+		return debt.getAmount();
 	}
 
 	public DateTime getPaymentDate() {
@@ -85,7 +72,7 @@ public class CashPayment extends PersistentEntity {
 
 	public String getFormatedDebtDate() {
 		try {
-			return DateHelper.getDateString(debtDate);
+			return DateHelper.getDateString(getDebtDate());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

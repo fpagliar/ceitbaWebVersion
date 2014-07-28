@@ -25,6 +25,9 @@
 							<li class="active"><a href="debts">Listar deudas</a></li>
 						</ul>
 					</div>
+					<c:if test="${error==true}">
+						<div class="alert alert-danger"> Ha ocurrido un error en el pago </div>
+					</c:if>
 					<div class="span10">
 						<h2 class="text-center">Filtrar Busqueda</h2>
 						<form action="listAll" method="get" name="listAll">
@@ -56,8 +59,14 @@
 										<td>${debt.person.lastName}</td>
 										<td>${debt.amount}</td>
 										<td>${debt.formatedDate}</td>
-										<td><a href="listAll?person=${debt.person.id}"><i
-												class="icon-edit"></i></a></td>
+										<td>
+											<form:form method="post" action="pay"
+										commandName="createPaymentForm" class="form-horizontal">
+												<form:input name="debtId" path="debtId" type="hidden"
+												value="${debt.id}" />
+												<button type="submit" class="btn">Pagar</button>
+											</form:form>
+										</td>
 									</tr>
 								</c:forEach>
 							</tbody>

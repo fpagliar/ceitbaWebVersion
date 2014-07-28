@@ -3,6 +3,7 @@ package ar.edu.itba.paw.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
@@ -29,6 +30,15 @@ public abstract class AbstractHibernateRepo {
 		}
 		List<T> list = query.list();
 		return list;
+	}
+	
+	/**
+	 * Creates a session of criteria.
+	 * 
+	 * @return The criteria.
+	 */
+	protected Criteria createCriteria(Class<?> clazz) {
+		return sessionFactory.getCurrentSession().createCriteria(clazz);
 	}
 
 	protected org.hibernate.classic.Session getSession() {

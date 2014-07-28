@@ -58,12 +58,12 @@ public class Person extends PersistentEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "method", nullable = false)
 	private PaymentMethod paymentMethod;
-	
+
 	@OneToMany
 	private List<CashPayment> payments = new ArrayList<CashPayment>();
 	@OneToMany
 	private List<Debt> debts = new ArrayList<Debt>();
-	
+
 	// Hibernate requirement
 	Person() {
 	}
@@ -84,7 +84,8 @@ public class Person extends PersistentEntity {
 	}
 
 	public void setEmail2(String email2) {
-		this.email2 = email2;
+		if(!isEmpty(email2))
+			this.email2 = email2;
 	}
 
 	public String getEmail() {
@@ -96,7 +97,8 @@ public class Person extends PersistentEntity {
 	}
 
 	public void setDni(String dni) {
-		this.dni = dni;
+		if(!isEmpty(dni))
+			this.dni = dni;
 	}
 
 	public void setLegacy(int legacy) {
@@ -142,11 +144,13 @@ public class Person extends PersistentEntity {
 	/* Setters */
 
 	public void setFirstName(String name) {
-		this.firstName = name;
+		if(!isEmpty(name))
+			this.firstName = name;
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		if(!isEmpty(lastName))
+			this.lastName = lastName;
 	}
 
 	public void setEmail(String mail) {
@@ -184,10 +188,14 @@ public class Person extends PersistentEntity {
 	}
 
 	private void validateEmpty(String s) {
-		if (s == null || s.length() == 0) {
+		if (isEmpty(s)) {
 			throw new IllegalArgumentException();
 		}
 		return;
+	}
+
+	private boolean isEmpty(String s) {
+		return s == null || s.length() == 0;
 	}
 
 	public List<Enrollment> getActiveEnrollments() {
@@ -224,12 +232,12 @@ public class Person extends PersistentEntity {
 		debts.remove(debt);
 		payments.add(new CashPayment(debt, paymentDate));
 	}
-	
+
 	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
-	
-	public void setPaymentMethod(PaymentMethod paymentMethod){
+
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
-	}	
+	}
 }

@@ -2,7 +2,9 @@ package ar.edu.itba.paw.domain.payment;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -34,36 +36,60 @@ public class HibernateCashPaymentRepo extends AbstractHibernateRepo implements
 		delete(payment);		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CashPayment> getAll() {
-		return find("from CashPayment");
+		Criteria c = createCriteria(CashPayment.class);
+		return (List<CashPayment>) c.list();
+		//		return find("from CashPayment");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CashPayment> getAll(DateTime start, DateTime end) {
-		if(start == null)
-			start = DateTime.parse("0");
-		if(end == null)
-			end = DateTime.now();
-		return find("from CashPayment where paymentDate > ? and paymentDate < ?", start, end);
+		Criteria c = createCriteria(CashPayment.class);
+		if(start != null)
+			c.add(Restrictions.gt("paymentDate", start));
+		if(end != null)
+			c.add(Restrictions.lt("paymentDate", end));
+		return (List<CashPayment>) c.list();
+//		if(start == null)
+//			start = DateTime.parse("0");
+//		if(end == null)
+//			end = DateTime.now();
+//		return find("from CashPayment where paymentDate > ? and paymentDate < ?", start, end);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CashPayment> getAll(Person p) {
-		if(p == null)
-			return getAll();
-		return find("from CashPayment where person = ?", p);
+		Criteria c = createCriteria(CashPayment.class);
+		if(p != null)
+			c.add(Restrictions.eq("person", p));
+		return (List<CashPayment>) c.list();
+//		if(p == null)
+//			return getAll();
+//		return find("from CashPayment where person = ?", p);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CashPayment> getAll(Person p, DateTime start, DateTime end) {
-		if(p == null)
-			return getAll(start, end);
-		if(start == null)
-			start = DateTime.parse("0");
-		if(end == null)
-			end = DateTime.now();
-		return find("from CashPayment where paymentDate > ? and paymentDate < ? and person = ?", start, end, p);
+		Criteria c = createCriteria(CashPayment.class);
+		if(p != null)
+			c.add(Restrictions.eq("person", p));
+		if(start != null)
+			c.add(Restrictions.gt("paymentDate", start));
+		if(end != null)
+			c.add(Restrictions.lt("paymentDate", end));
+		return (List<CashPayment>) c.list();
+//		if(p == null)
+//			return getAll(start, end);
+//		if(start == null)
+//			start = DateTime.parse("0");
+//		if(end == null)
+//			end = DateTime.now();
+//		return find("from CashPayment where paymentDate > ? and paymentDate < ? and person = ?", start, end, p);
 	}
 
 }

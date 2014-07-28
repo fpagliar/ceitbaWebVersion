@@ -2,11 +2,14 @@ package ar.edu.itba.paw.domain.enrollment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
+import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.user.Person;
 
@@ -42,56 +45,87 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return get(Enrollment.class, id);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> get(Person p){
-		return find("from Enrollment where person = ?", p);
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("person", p));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where person = ?", p);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> get(Service s){
-		return find("from Enrollment where service = ?", s);
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("service", s));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where service = ?", s);
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> get(Person p, Service s) {
-		return find("from Enrollment where person = ? and service = ?", p, s);
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("person", p));
+		c.add(Restrictions.eq("service", s));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where person = ? and service = ?", p, s);
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getAll() {
-		return find("from Enrollment");
+		Criteria c = createCriteria(Enrollment.class);
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getExpired() {
 		updateActive();
-		return find("from Enrollment where endDate is not null");		
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.ne("endDate", null));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where endDate is not null");		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getExpired(Person p) {
 		updateActive();
-		return find("from Enrollment where person = ? and endDate is not null", p);
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.ne("endDate", null));
+		c.add(Restrictions.eq("person", p));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where person = ? and endDate is not null", p);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getExpired(Service s) {
 		updateActive();
-		return find("from Enrollment where service = ? and endDate is not null", s);
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.ne("endDate", null));
+		c.add(Restrictions.eq("service", s));		
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where service = ? and endDate is not null", s);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getActive() {
 		updateActive();
-		return find("from Enrollment where endDate is null");		
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("endDate", null));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where endDate is null");		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getActive(Person p) {
 		updateActive();
-		return find("from Enrollment where person = ? and endDate is null", p);
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("endDate", null));
+		c.add(Restrictions.eq("person", p));
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where person = ? and endDate is null", p);
 	}
 
 	@Override
@@ -112,14 +146,14 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return all;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Enrollment> getActive(Service s) {
 		updateActive();
-		return find("from Enrollment where service = ? and endDate is null", s);
-	}
-
-	private boolean duplicatedData(String field, String value) {
-		return !find("from Enrollment where ? = ?", field, value).isEmpty();
+		Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("endDate", null));
+		c.add(Restrictions.eq("service", s));		
+		return (List<Enrollment>) c.list();
+//		return find("from Enrollment where service = ? and endDate is null", s);
 	}
 	
 	private void updateActive(){

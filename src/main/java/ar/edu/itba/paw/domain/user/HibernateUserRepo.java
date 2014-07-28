@@ -2,7 +2,9 @@ package ar.edu.itba.paw.domain.user;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,21 +41,29 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements
 	
 	@Override
 	public User get(String username){
-		List<User> users = find("from User where username = ?", username);
-		if(users.size() == 0)
-			return null;
-		if(users.size() == 1)
-			return users.get(0);
-		throw new RuntimeException("An internal error occurred");
+		Criteria c = createCriteria(User.class).add(Restrictions.eq("username", username));
+		return (User) c.uniqueResult();
+//		List<User> users = find("from User where username = ?", username);
+//		if(users.size() == 0)
+//			return null;
+//		if(users.size() == 1)
+//			return users.get(0);
+//		throw new RuntimeException("An internal error occurred");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getAll() {
-		return find("from User");
+		Criteria c = createCriteria(User.class);
+		return (List<User>) c.list();
+//		return find("from User");
 	}
 
+	@SuppressWarnings("unchecked")
 	private boolean duplicatedData(String field, String value) {
-		return !find("from User where ? = ?", field, value).isEmpty();
+		Criteria c = createCriteria(User.class).add(Restrictions.eq(field, value));
+		return ! ((List<User>) c.list()).isEmpty();
+//		return !find("from User where ? = ?", field, value).isEmpty();
 	}
 
 	
