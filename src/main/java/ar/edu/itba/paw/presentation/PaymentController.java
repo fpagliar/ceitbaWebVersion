@@ -29,38 +29,57 @@ public class PaymentController {
 
 	private CashPaymentRepo paymentRepo;
 	private DebtRepo debtRepo;
+	private PersonRepo personRepo;
 	private CreatePaymentFormValidator validator;
 
 	@Autowired
 	public PaymentController(CashPaymentRepo paymentRepo, DebtRepo debtRepo,
-			CreatePaymentFormValidator validator) {
+			PersonRepo personRepo, CreatePaymentFormValidator validator) {
 		super();
 		this.paymentRepo = paymentRepo;
 		this.debtRepo = debtRepo;
+		this.personRepo = personRepo;
 		this.validator = validator;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session,
-			@RequestParam(value = "person_id", required = false) Person person,
+	public ModelAndView listAll(
+			HttpSession session,
+			@RequestParam(value = "legacy", required = false) String legacy,
 			@RequestParam(value = "start", required = false) DateTime start,
-			@RequestParam(value = "end", required = false) DateTime end) {
+			@RequestParam(value = "end", required = false) DateTime end,
+			@RequestParam(value = "error", required = false) String error) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("payments", paymentRepo.getAll(person, start, end));
+		if (legacy != null) {
+			try {
+				int leg = Integer.parseInt(legacy);
+				Person person = personRepo.getByLegacy(leg);
+				if (person == null)
+					mav.addObject("error", "El legajo no corresponde a ningun alumno");
+				else
+					mav.addObject("payments",
+							paymentRepo.getAll(person, start, end));
+			} catch (Exception e) {
+				mav.addObject("error", "Legajo invalido");
+			}
+		} else {
+			mav.addObject("payments", paymentRepo.getAll(start, end));
+		}
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView debts(HttpSession session,
-			@RequestParam(value = "person_id", required = false) Person person,
+	public ModelAndView debts(
+			HttpSession session,
+			@RequestParam(value = "legacy", required = false) String legacy,
 			@RequestParam(value = "start", required = false) DateTime start,
 			@RequestParam(value = "end", required = false) DateTime end,
-			@RequestParam(value = "error", required = false, defaultValue = "false") Boolean error) {
+			@RequestParam(value = "error", required = false) String error) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
@@ -68,9 +87,23 @@ public class PaymentController {
 
 		ModelAndView mav = new ModelAndView();
 
-		// mav.addObject("debts", debtRepo.get(person, start, end));
-		mav.addObject("debts", debtRepo.getAll());
-		mav.addObject("error", error);
+		if (legacy != null) {
+			try {
+				int leg = Integer.parseInt(legacy);
+				Person person = personRepo.getByLegacy(leg);
+				if (person == null)
+					mav.addObject("error", "El legajo no corresponde a ningun alumno");
+				else
+					mav.addObject("debts",
+							debtRepo.get(person, start, end));
+			} catch (Exception e) {
+				mav.addObject("error", "Legajo invalido");
+			}
+		} else {
+			mav.addObject("debts", debtRepo.get(start, end));
+		}
+//		mav.addObject("debts", debtRepo.get(person, start, end));
+		// mav.addObject("debts", debtRepo.getAll());
 		mav.addObject("createPaymentForm", new CreatePaymentForm());
 		return mav;
 	}
@@ -82,11 +115,11 @@ public class PaymentController {
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
-//		validator.validate(form, errors);
-//		if (errors.hasErrors()) {
-//			return new ModelAndView("redirect:../payment/debts?error=true");			
-//		}
-		
+		validator.validate(form, errors);
+		if (errors.hasErrors()) {
+			return new ModelAndView("redirect:../payment/debts?error=true");
+		}
+
 		Debt debt = debtRepo.get(Integer.parseInt(form.getDebtId()));
 		debt.pay();
 		return new ModelAndView("redirect:../payment/listAll");

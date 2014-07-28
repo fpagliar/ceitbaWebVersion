@@ -21,7 +21,7 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li class="active"><a href="listAll">Listar todos</a></li>
+							<li class="active"><a href="listAll">Listar pagos</a></li>
 							<li><a href="debts">Listar deudas</a></li>
 						</ul>
 					</div>
@@ -32,9 +32,11 @@
 								placeholder="Inicio formato dd/mm/aaaa" name="start">
 							<input type="text" class="form-control"
 								placeholder="Fin formato dd/mm/aaaa" name="end">
-								<button type="submit">
-									<i class="icon-search"></i>
-								</button>
+							<input type="text" class="form-control"
+								placeholder="Legajo" name="legacy">
+							<button type="submit">
+								<i class="icon-search"></i>
+							</button>
 						</form>
 						<table class="table table-striped pull-right">
 							<thead>

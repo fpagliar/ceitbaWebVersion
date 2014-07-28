@@ -35,9 +35,11 @@
 								placeholder="Inicio formato dd/mm/aaaa" name="start">
 							<input type="text" class="form-control"
 								placeholder="Fin formato dd/mm/aaaa" name="end">
-								<button type="submit">
-									<i class="icon-search"></i>
-								</button>
+							<input type="text" class="form-control"
+								placeholder="Legajo" name="legacy">
+							<button type="submit">
+								<i class="icon-search"></i>
+							</button>
 						</form>
 						<table class="table table-striped pull-right">
 							<thead>
