@@ -22,8 +22,10 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="register">Nuevo Usuario</a></li>
+							<c:if test="${administrator}">
+								<li><a href="listAll">Listar Todos</a></li>
+								<li><a href="register">Nuevo Usuario</a></li>
+							</c:if>
 							<c:if test="${profile == true}">
 								<li class="active"><a href="#">Mi Perfil</a></li>
 							</c:if>

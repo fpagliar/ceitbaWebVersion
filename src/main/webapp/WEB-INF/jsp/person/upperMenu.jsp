@@ -8,7 +8,6 @@
 							<li class="active"><a href="listAll">Usuarios</a></li>
 							<li><a href="../service/listAll">Servicios</a></li>
 							<li><a href="../enrollment/listAll">Subscripciones</a></li>
-							<li><a href="../assistance/listAll">Asistencias</a></li>
 							<li><a href="../payment/listAll">Pagos</a></li>
 							<li><a href="#">Facturacion</a></li>
 							<li><a href="../user/update">Perfil</a></li>
