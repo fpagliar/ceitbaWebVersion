@@ -27,9 +27,13 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 	 * @throws DuplicatedUserException
 	 *             if the username or mail already exists for another user
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void add(Enrollment enrollment) {
-		List<Enrollment> list = find("from Enrollment where person = ? and service = ?", enrollment.getPerson(), enrollment.getService()); 
+		Criteria c = createCriteria(Enrollment.class);
+		c.add(Restrictions.eq("person", enrollment.getPerson()));
+		c.add(Restrictions.eq("service", enrollment.getService()));
+		List<Enrollment> list = (List<Enrollment>) c.list(); 
 		for(Enrollment e: list)
 				if(e.isActive() && !Service.Type.OTHER.equals(e.getService().getType())){
 					return;		// The subscriptions typed OTHER can have unlimited active enrollments in the same period				

@@ -2,8 +2,6 @@ package ar.edu.itba.paw.domain.service;
 
 import java.util.List;
 
-import ar.edu.itba.paw.domain.user.User;
-
 public interface ServiceRepo {
 
 	public void add(Service service);

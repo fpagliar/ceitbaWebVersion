@@ -187,13 +187,6 @@ public class Person extends PersistentEntity {
 		return legacy;
 	}
 
-	private void validateEmpty(String s) {
-		if (isEmpty(s)) {
-			throw new IllegalArgumentException();
-		}
-		return;
-	}
-
 	private boolean isEmpty(String s) {
 		return s == null || s.length() == 0;
 	}

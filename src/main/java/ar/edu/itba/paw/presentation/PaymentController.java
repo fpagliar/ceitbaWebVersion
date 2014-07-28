@@ -11,18 +11,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.domain.assistance.AssistanceRepo;
 import ar.edu.itba.paw.domain.payment.CashPaymentRepo;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.payment.DebtRepo;
-import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
-import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.CreatePaymentForm;
-import ar.edu.itba.paw.presentation.command.RegisterEnrollmentForm;
 import ar.edu.itba.paw.presentation.command.validator.CreatePaymentFormValidator;
-import ar.edu.itba.paw.presentation.command.validator.RegisterAssistanceFormValidator;
 
 @Controller
 public class PaymentController {

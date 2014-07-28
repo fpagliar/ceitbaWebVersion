@@ -33,8 +33,6 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 		c.add(Restrictions.eq("legacy", person.getLegacy()));
 		if (!c.list().isEmpty())
 			throw new DuplicatedDataException(person);
-		// if (duplicatedData("legacy", "" + person.getLegacy())) {
-		// }
 		save(person);
 	}
 
@@ -47,47 +45,22 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 		Criteria c = createCriteria(Person.class).add(
 				Restrictions.eq("legacy", legacy));
 		return (Person) c.uniqueResult();
-		// List<Person> persons = find("from Person where legacy = ?", legacy);
-		// if(persons.size() == 0)
-		// return null;
-		// if(persons.size() == 1)
-		// return persons.get(0);
-		// throw new RuntimeException("An internal error occurred");
 	}
 
 	public Person getByDni(String dni) {
 		Criteria c = createCriteria(Person.class).add(
 				Restrictions.eq("dni", dni));
 		return (Person) c.uniqueResult();
-		// if(dni == null || dni.equals(""))
-		// return null;
-		// List<Person> persons = find("from Person where dni = ?", dni);
-		// if(persons.size() == 0)
-		// return null;
-		// if(persons.size() == 1)
-		// return persons.get(0);
-		// throw new RuntimeException("An internal error occurred");
 	}
-
-	// @Override
-	// public Person get(String username) {
-	// List<Person> all = getAll();
-	// for (Person user : all) {
-	// if (user.getUsername().equals(username)) {
-	// return user;
-	// }
-	// }
-	// return null;
-	// }
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Person> getAll() {
 		Criteria c = createCriteria(Person.class);
 		return (List<Person>) c.list();
-		// return find("from Person");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Person> search(String s) {
 		List<Person> ans = new ArrayList<Person>();
@@ -97,17 +70,9 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 			return ans;
 		} catch (NumberFormatException e) {
 		}
-		List<Person> allByName = find(
-				"from Person where UPPER(firstName) like ? or UPPER(lastName) like ?",
-				"%" + s.toUpperCase() + "%", "%" + s.toUpperCase() + "%");
-		ans.addAll(allByName);
+		Criteria c = createCriteria(Person.class);
+		c.add(Restrictions.or(Restrictions.ilike("firstName", s), Restrictions.ilike("lastName", s)));
+		ans.addAll((List<Person>)c.list());
 		return ans;
 	}
-
-//	private boolean duplicatedData(String field, String value) {
-//		Criteria c = createCriteria(Person.class);
-//		c.add(Restrictions.eq(field, value));
-//		return !c.list().isEmpty();
-//		// return !find("from Person where ? = ?", field, value).isEmpty();
-//	}
 }

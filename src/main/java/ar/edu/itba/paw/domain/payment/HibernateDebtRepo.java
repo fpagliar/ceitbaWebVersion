@@ -26,7 +26,6 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	public List<Debt> getAll() {
 		Criteria c = createCriteria(Debt.class);
 		return (List<Debt>) c.list();
-//		return find("from Debt");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -34,7 +33,6 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	public List<Debt> get(Person person) {
 		Criteria c = createCriteria(Debt.class).add(Restrictions.eq("person", person));
 		return (List<Debt>) c.list();
-//		return find("from Debt where person = ?", person);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -46,13 +44,6 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 		if(end != null)
 			c.add(Restrictions.lt("billingDate", end));
 		return (List<Debt>) c.list();
-//		if (start == null)
-//			start = DateTime.parse("0");
-//		if (end == null)
-//			end = DateTime.now();
-//		return find("from Debt where billingDate > ? and billingDate < ?",
-//				DateHelper.getNormalizedDate(start),
-//				DateHelper.getNormalizedDate(end));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -66,18 +57,6 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 		if(end != null)
 			c.add(Restrictions.lt("billingDate", end));
 		return (List<Debt>) c.list();
-//		if(start != null)
-//			c.add(Restrictions.gt("billingDate", start));
-//		if (p == null)
-//			return get(start, end);
-//		if (start == null)
-//			start = DateTime.parse("0");
-//		if (end == null)
-//			end = DateTime.now();
-//		return find(
-//				"from Debt where billingDate > ? and billingDate < ? and person = ?",
-//				DateHelper.getNormalizedDate(start),
-//				DateHelper.getNormalizedDate(end), p);
 	}
 
 	@Override

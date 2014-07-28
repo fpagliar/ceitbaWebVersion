@@ -41,7 +41,6 @@ public class HibernateCashPaymentRepo extends AbstractHibernateRepo implements
 	public List<CashPayment> getAll() {
 		Criteria c = createCriteria(CashPayment.class);
 		return (List<CashPayment>) c.list();
-		//		return find("from CashPayment");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,11 +52,6 @@ public class HibernateCashPaymentRepo extends AbstractHibernateRepo implements
 		if(end != null)
 			c.add(Restrictions.lt("paymentDate", end));
 		return (List<CashPayment>) c.list();
-//		if(start == null)
-//			start = DateTime.parse("0");
-//		if(end == null)
-//			end = DateTime.now();
-//		return find("from CashPayment where paymentDate > ? and paymentDate < ?", start, end);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -67,9 +61,6 @@ public class HibernateCashPaymentRepo extends AbstractHibernateRepo implements
 		if(p != null)
 			c.add(Restrictions.eq("person", p));
 		return (List<CashPayment>) c.list();
-//		if(p == null)
-//			return getAll();
-//		return find("from CashPayment where person = ?", p);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -83,13 +74,6 @@ public class HibernateCashPaymentRepo extends AbstractHibernateRepo implements
 		if(end != null)
 			c.add(Restrictions.lt("paymentDate", end));
 		return (List<CashPayment>) c.list();
-//		if(p == null)
-//			return getAll(start, end);
-//		if(start == null)
-//			start = DateTime.parse("0");
-//		if(end == null)
-//			end = DateTime.now();
-//		return find("from CashPayment where paymentDate > ? and paymentDate < ? and person = ?", start, end, p);
 	}
 
 }

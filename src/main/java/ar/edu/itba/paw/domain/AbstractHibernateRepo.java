@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
 
 public abstract class AbstractHibernateRepo {
 	private final SessionFactory sessionFactory;
@@ -20,18 +17,18 @@ public abstract class AbstractHibernateRepo {
 		return (T) getSession().get(type, id);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> List<T> find(String hql, Object... params) {
-		Session session = getSession();
-
-		Query query = session.createQuery(hql);
-		for (int i = 0; i < params.length; i++) {
-			query.setParameter(i, params[i]);
-		}
-		List<T> list = query.list();
-		return list;
-	}
-	
+//	@SuppressWarnings("unchecked")
+//	public <T> List<T> find(String hql, Object... params) {
+//		Session session = getSession();
+//
+//		Query query = session.createQuery(hql);
+//		for (int i = 0; i < params.length; i++) {
+//			query.setParameter(i, params[i]);
+//		}
+//		List<T> list = query.list();
+//		return list;
+//	}
+//	
 	/**
 	 * Creates a session of criteria.
 	 * 

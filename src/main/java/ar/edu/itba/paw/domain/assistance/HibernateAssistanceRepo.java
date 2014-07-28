@@ -36,7 +36,6 @@ public class HibernateAssistanceRepo extends AbstractHibernateRepo implements
 	public List<Assistance> getAll(Person person) {
 		Criteria c = createCriteria(Assistance.class).add(Restrictions.eq("person", person));
 		return (List<Assistance>) c.list();
-//		return find("from Assistance where person = ?", person);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -44,8 +43,6 @@ public class HibernateAssistanceRepo extends AbstractHibernateRepo implements
 	public List<Assistance> getAll(DateTime date) {
 		Criteria c = createCriteria(Assistance.class).add(Restrictions.eq("date", date));
 		return (List<Assistance>) c.list();
-//		return find("from Assistance where date = ?",
-//				DateHelper.getNormalizedDate(date));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,9 +50,6 @@ public class HibernateAssistanceRepo extends AbstractHibernateRepo implements
 	public List<Assistance> getAll(DateTime startDate, DateTime endDate) {
 		Criteria c = createCriteria(Assistance.class).add(Restrictions.between("date", startDate, endDate));
 		return (List<Assistance>) c.list();
-//		return find("from Assistance where date <= ? and date >= ?",
-//				DateHelper.getNormalizedDate(startDate),
-//				DateHelper.getNormalizedDate(endDate));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,10 +59,6 @@ public class HibernateAssistanceRepo extends AbstractHibernateRepo implements
 		Criteria c = createCriteria(Assistance.class).add(Restrictions.eq("person", person));
 		c.add(Restrictions.between("date", startDate, endDate));
 		return (List<Assistance>) c.list();
-//		return find(
-//				"from Assistance where date <= ? and date >= ? and person = ?",
-//				DateHelper.getNormalizedDate(startDate),
-//				DateHelper.getNormalizedDate(endDate), person);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,6 +66,5 @@ public class HibernateAssistanceRepo extends AbstractHibernateRepo implements
 	public List<Assistance> getAll() {
 		Criteria c = createCriteria(Assistance.class);
 		return (List<Assistance>) c.list();
-//		return find("from Assistance");
 	}
 }

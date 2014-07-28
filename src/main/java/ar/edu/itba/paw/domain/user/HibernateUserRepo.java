@@ -43,12 +43,6 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements
 	public User get(String username){
 		Criteria c = createCriteria(User.class).add(Restrictions.eq("username", username));
 		return (User) c.uniqueResult();
-//		List<User> users = find("from User where username = ?", username);
-//		if(users.size() == 0)
-//			return null;
-//		if(users.size() == 1)
-//			return users.get(0);
-//		throw new RuntimeException("An internal error occurred");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,28 +50,16 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements
 	public List<User> getAll() {
 		Criteria c = createCriteria(User.class);
 		return (List<User>) c.list();
-//		return find("from User");
 	}
 
 	@SuppressWarnings("unchecked")
 	private boolean duplicatedData(String field, String value) {
 		Criteria c = createCriteria(User.class).add(Restrictions.eq(field, value));
 		return ! ((List<User>) c.list()).isEmpty();
-//		return !find("from User where ? = ?", field, value).isEmpty();
 	}
 
 	
 	public void remove(User user){
 		delete(user);
 	}
-
-	//	@Override
-//	public List<Person> getAllAdministrators() {
-//		return find("from User where level = '" + Person.Level.ADMINISTRATOR + "'");
-//	}
-//
-//	@Override
-//	public List<Person> getAllRegularUsers() {
-//		return find("from User where level = '" + Person.Level.REGULAR + "'");
-//	}
 }
