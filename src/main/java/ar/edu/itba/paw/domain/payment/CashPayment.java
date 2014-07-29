@@ -31,6 +31,7 @@ public class CashPayment extends PersistentEntity {
 	public CashPayment(Person person, DateTime paymentDate, Debt debt) {
 		this.person = person;
 		this.paymentDate = paymentDate;
+		this.debt = debt;
 	}
 
 	public CashPayment(Debt debt, DateTime paymentDate) {

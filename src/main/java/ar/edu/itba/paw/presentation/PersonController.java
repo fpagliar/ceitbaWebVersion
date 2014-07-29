@@ -83,6 +83,7 @@ public class PersonController {
 					"La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updatePersonForm", new UpdatePersonForm());
+		mav.addObject("isCash", person.getPaymentMethod().equals(PaymentMethod.CASH));
 		mav.addObject("enrollments", enrollmentRepo.getActive(person));
 		return mav;
 	}
@@ -107,7 +108,7 @@ public class PersonController {
 		updatedPerson.setCellphone(form.getCellphone());
 		updatedPerson.setDni(form.getDni());
 		updatedPerson.setEmail2(form.getEmail2());
-		if (form.getPaymentMethod().equals(PaymentMethod.CASH)) {
+		if (form.getPaymentMethod().equals(PaymentMethod.CASH.toString())) {
 			updatedPerson.setPaymentMethod(PaymentMethod.CASH);
 		} else {
 			updatedPerson.setPaymentMethod(PaymentMethod.BILL);

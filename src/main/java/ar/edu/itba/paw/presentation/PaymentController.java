@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.domain.payment.CashPayment;
 import ar.edu.itba.paw.domain.payment.CashPaymentRepo;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.payment.DebtRepo;
@@ -97,8 +98,6 @@ public class PaymentController {
 		} else {
 			mav.addObject("debts", debtRepo.get(start, end));
 		}
-//		mav.addObject("debts", debtRepo.get(person, start, end));
-		// mav.addObject("debts", debtRepo.getAll());
 		mav.addObject("createPaymentForm", new CreatePaymentForm());
 		return mav;
 	}
@@ -116,7 +115,8 @@ public class PaymentController {
 		}
 
 		Debt debt = debtRepo.get(Integer.parseInt(form.getDebtId()));
-		debt.pay();
+		CashPayment payment = debt.pay();
+		paymentRepo.add(payment);
 		return new ModelAndView("redirect:../payment/listAll");
 	}
 }

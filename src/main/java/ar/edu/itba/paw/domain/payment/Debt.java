@@ -68,12 +68,12 @@ public class Debt extends PersistentEntity {
 		this.amount = amount;
 	}
 	
-	public void pay() {
-		pay(DateTime.now());
+	public CashPayment pay() {
+		return pay(DateTime.now());
 	}
 
-	public void pay(DateTime date) {
-		person.pay(this, date);
+	public CashPayment pay(DateTime date) {
+		return person.pay(this, date);
 	}
 	
 	public String getFormatedDate() {

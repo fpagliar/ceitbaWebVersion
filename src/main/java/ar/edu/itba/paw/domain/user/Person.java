@@ -221,9 +221,11 @@ public class Person extends PersistentEntity {
 				e.cancel();
 	}
 
-	public void pay(Debt debt, DateTime paymentDate) {
+	public CashPayment pay(Debt debt, DateTime paymentDate) {
 		debts.remove(debt);
-		payments.add(new CashPayment(debt, paymentDate));
+		CashPayment payment = new CashPayment(debt, paymentDate);
+		payments.add(payment);
+		return payment;
 	}
 
 	public PaymentMethod getPaymentMethod() {

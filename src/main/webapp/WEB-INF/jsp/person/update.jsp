@@ -122,8 +122,14 @@
 								<label class="control-label" for="paymentMethod">Medio de pago</label>
 								<div class="controls">
 									<form:select name="paymentMethod" path="paymentMethod">
-										<form:option value="CASH"> Efectivo </form:option>
-										<form:option value="BILL" selected="selected"> Factura </form:option>
+										<c:if test="${isCash}">
+											<form:option value="CASH" selected="selected"> Efectivo </form:option>
+											<form:option value="BILL"> Factura </form:option>
+										</c:if>
+										<c:if test="${not isCash}">
+											<form:option value="CASH"> Efectivo </form:option>
+											<form:option value="BILL" selected="selected"> Factura </form:option>
+										</c:if>
 									</form:select>
 								</div>
 							</div>
