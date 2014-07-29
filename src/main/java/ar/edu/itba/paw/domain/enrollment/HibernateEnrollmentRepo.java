@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.user.Person;
+import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 
 @Repository
 public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
@@ -160,6 +161,18 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return (List<Enrollment>) c.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Enrollment> getBilledActive(Service s) {
+		updateActive();
+		Criteria c = createCriteria(Enrollment.class).add(
+				Restrictions.isNull("endDate"));
+		c.add(Restrictions.eq("service", s));
+		c.createCriteria("person").add(
+				Restrictions.eq("paymentMethod", PaymentMethod.BILL));
+		return (List<Enrollment>) c.list();
+	}
+
 	private void updateActive() {
 		for (Enrollment e : getAll())
 			e.checkActive();
@@ -167,14 +180,16 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> getNewEnrollments(Boolean personnel, Service s,
-			DateTime start, DateTime end) {
+	public List<Enrollment> getBilledNewEnrollments(Boolean personnel,
+			Service s, DateTime start, DateTime end) {
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.eq("service", s));
 		if (personnel)
-			c.createCriteria("person").add(Restrictions.le("legacy", 1000));
+			c.createCriteria("person").add(Restrictions.le("legacy", 1000))
+					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 		else
-			c.createCriteria("person").add(Restrictions.ge("legacy", 1000));
+			c.createCriteria("person").add(Restrictions.ge("legacy", 1000))
+					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 
 		c.add(Restrictions.between("startDate", start, end));
 		c.add(Restrictions.isNull("endDate"));
@@ -183,14 +198,16 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> getCancelledEnrollments(Boolean personnel,
+	public List<Enrollment> getBilledCancelledEnrollments(Boolean personnel,
 			Service s, DateTime start, DateTime end) {
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.eq("service", s));
 		if (personnel)
-			c.createCriteria("person").add(Restrictions.le("legacy", 1000));
+			c.createCriteria("person").add(Restrictions.le("legacy", 1000))
+					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 		else
-			c.createCriteria("person").add(Restrictions.ge("legacy", 1000));
+			c.createCriteria("person").add(Restrictions.ge("legacy", 1000))
+					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 
 		c.add(Restrictions.between("endDate", start, end));
 		return (List<Enrollment>) c.list();

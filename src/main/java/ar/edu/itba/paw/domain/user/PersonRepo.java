@@ -2,6 +2,8 @@ package ar.edu.itba.paw.domain.user;
 
 import java.util.List;
 
+import ar.edu.itba.paw.domain.payment.Debt;
+
 
 /**
  * User repository.
@@ -41,5 +43,7 @@ public interface PersonRepo {
 	 * Adds the received {@link Person} to the database.
 	 */
 	public void add(Person person);
+	
+	public List<Debt> billCashPayments();
 	
 }

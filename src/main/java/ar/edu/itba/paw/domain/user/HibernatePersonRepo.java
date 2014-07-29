@@ -6,11 +6,15 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
+import ar.edu.itba.paw.domain.enrollment.Enrollment;
+import ar.edu.itba.paw.domain.payment.Debt;
+import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 
 @Repository
 public class HibernatePersonRepo extends AbstractHibernateRepo implements
@@ -71,8 +75,30 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 		} catch (NumberFormatException e) {
 		}
 		Criteria c = createCriteria(Person.class);
-		c.add(Restrictions.or(Restrictions.ilike("firstName", s), Restrictions.ilike("lastName", s)));
-		ans.addAll((List<Person>)c.list());
+		c.add(Restrictions.or(Restrictions.ilike("firstName", s),
+				Restrictions.ilike("lastName", s)));
+		ans.addAll((List<Person>) c.list());
 		return ans;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Debt> billCashPayments() {
+		Criteria c = createCriteria(Person.class).add(
+				Restrictions.eq("paymentMethod", PaymentMethod.CASH));
+		List<Person> list = (List<Person>) c.list();
+		List<Debt> debts = new ArrayList<Debt>();
+		for (Person p : list) {
+			double total = 0;
+			String reason = "";
+			for(Enrollment e : p.getActiveEnrollments())
+				if (e.getService().getValue() > 0){
+					total += e.getService().getValue();
+					reason += e.getService().getName() + " ";
+				}
+			debts.add(new Debt(p, total, DateTime.now(), reason));						
+		}
+		return debts;
+	}
+
 }

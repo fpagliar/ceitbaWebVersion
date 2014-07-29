@@ -17,6 +17,8 @@ public interface DebtRepo {
 	public List<Debt> get(Person p, DateTime start, DateTime end);
 
 	public void add(Debt debt);
+
+	public void add(List<Debt> debt);
 	
 	public void pay(Debt debt, DateTime date);
 	

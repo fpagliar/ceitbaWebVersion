@@ -31,7 +31,8 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Debt> get(Person person) {
-		Criteria c = createCriteria(Debt.class).add(Restrictions.eq("person", person));
+		Criteria c = createCriteria(Debt.class).add(
+				Restrictions.eq("person", person));
 		return (List<Debt>) c.list();
 	}
 
@@ -39,9 +40,9 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Debt> get(DateTime start, DateTime end) {
 		Criteria c = createCriteria(Debt.class);
-		if(start != null)
+		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
-		if(end != null)
+		if (end != null)
 			c.add(Restrictions.lt("billingDate", end));
 		return (List<Debt>) c.list();
 	}
@@ -50,11 +51,11 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Debt> get(Person p, DateTime start, DateTime end) {
 		Criteria c = createCriteria(Debt.class);
-		if(p != null)
+		if (p != null)
 			c.add(Restrictions.eq("person", p));
-		if(start != null)
+		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
-		if(end != null)
+		if (end != null)
 			c.add(Restrictions.lt("billingDate", end));
 		return (List<Debt>) c.list();
 	}
@@ -62,6 +63,13 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public void add(Debt debt) {
 		save(debt);
+	}
+
+	@Override
+	public void add(List<Debt> debts) {
+		for (Debt debt : debts) {
+			save(debt);
+		}
 	}
 
 	@Override

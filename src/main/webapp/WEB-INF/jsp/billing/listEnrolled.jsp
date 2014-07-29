@@ -27,7 +27,7 @@
 							<li class="active"><a href="#">Anotados</a></li>
 						</ul>
 					</div>
-					<div class="span10">
+					<div class="span9">
 						<h2 class="text-center">Filtrar Busqueda</h2>
 						<form action="listEnrolled" method="get" name="listEnrolled" class="form-horizontal">
 							<div class="control-group">
@@ -63,6 +63,7 @@
 							</div>
 							<button type="submit" class="btn">Listar</button>
 						</form>
+						<h4 class="text-center">Busqueda: ${query} </h4>
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
@@ -87,12 +88,17 @@
 							</tbody>
 						</table>
 					</div>
+					<div class="span1">
+						<form action="billCashPayments" method="post">
+							<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
+						<form>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="footer">
-			<p>&copy; CEITBA 2013</p>
+			<p>CEITBA 2014</p>
 		</div>
 
 	</div>

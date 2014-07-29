@@ -22,15 +22,26 @@ public class Debt extends PersistentEntity {
 	@Column(name = "billingdate", nullable = false)
 	private DateTime billingDate;
 	@Column(name = "amount", nullable = false)
-	private int amount;
+	private double amount;
+	@Column(name = "reason", nullable = true)
+	private String reason;
 
 	protected Debt() {
 	}
 
-	public Debt(Person person, int amount, DateTime date) {
+	public Debt(Person person, double amount, DateTime date, String reason) {
 		this.person = person;
 		this.amount = amount;
 		this.billingDate = date;
+		this.reason = reason;
+	}
+	
+	public String getReason() {
+		return reason;
+	}
+	
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 	public Person getPerson() {
@@ -49,11 +60,11 @@ public class Debt extends PersistentEntity {
 		this.billingDate = billingDate;
 	}
 
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	

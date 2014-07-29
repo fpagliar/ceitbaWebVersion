@@ -49,7 +49,7 @@ public class CashPayment extends PersistentEntity {
 		return debt.getBillingDate();
 	}
 
-	public int getAmount() {
+	public double getAmount() {
 		return debt.getAmount();
 	}
 

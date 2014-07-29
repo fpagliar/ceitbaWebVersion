@@ -49,6 +49,7 @@
 									<th>Apellido</th>
 									<th>Monto</th>
 									<th>Fecha de deuda</th>
+									<th>Motivo</th>
 									<th>Detalle de usuario</th>
 								</tr>
 							</thead>
@@ -61,6 +62,7 @@
 										<td>${debt.person.lastName}</td>
 										<td>${debt.amount}</td>
 										<td>${debt.formatedDate}</td>
+										<td>${debt.reason}</td>
 										<td>
 											<form:form method="post" action="pay"
 										commandName="createPaymentForm" class="form-horizontal">
@@ -79,7 +81,7 @@
 		</div>
 
 		<div class="footer">
-			<p>&copy; CEITBA 2013</p>
+			<p>CEITBA 2014</p>
 		</div>
 
 	</div>

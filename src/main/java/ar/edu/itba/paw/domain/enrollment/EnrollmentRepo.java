@@ -24,6 +24,7 @@ public interface EnrollmentRepo {
 	public List<Enrollment> getActive(Service s);
 	public List<Enrollment> get(Person p, Service s);
 	
-	public List<Enrollment> getNewEnrollments(Boolean personnel, Service s, DateTime start, DateTime end);
-	public List<Enrollment> getCancelledEnrollments(Boolean personnel, Service s, DateTime start, DateTime end);
+	public List<Enrollment> getBilledActive(Service s);
+	public List<Enrollment> getBilledNewEnrollments(Boolean personnel, Service s, DateTime start, DateTime end);
+	public List<Enrollment> getBilledCancelledEnrollments(Boolean personnel, Service s, DateTime start, DateTime end);
 }

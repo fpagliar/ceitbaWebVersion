@@ -123,7 +123,7 @@
 		</div>
 
 		<div class="footer">
-			<p>&copy; CEITBA 2013</p>
+			<p>CEITBA 2014</p>
 		</div>
 
 	</div>

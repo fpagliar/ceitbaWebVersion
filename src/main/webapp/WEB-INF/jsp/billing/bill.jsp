@@ -22,26 +22,13 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="register">Nuevo Usuario</a></li>
-							<li><a href="update">Mi perfil</a></li>
-							<li class="active"><a href="#">Eliminar</a></li>
+							<li><a href="listNewEnrollments">Altas</a></li>
+							<li><a href="listCancelledEnrollments">Bajas</a></li>
+							<li><a href="listEnrolled">Anotados</a></li>
 						</ul>
 					</div>
 					<div class="span10">
-					</div>
-					<div class="span10">
-					</div>
-					<div class="span10">
-						<form class="form" action="delete" method="post" name="search">
-							<input name="id" type="hidden" value="${user.id}" path="id"/>
-							<div class="control-group">
-								<div class="controls">
-									<button type="submit" class="btn">Eliminar</button>
-								</div>
-							</div>
-						</form>
-						
+						<div class="alert alert-success" role="alert"> Se ha facturado con exito </div>
 					</div>
 				</div>
 			</div>
@@ -55,4 +42,3 @@
 
 </body>
 </html>
-
