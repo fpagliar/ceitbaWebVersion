@@ -12,7 +12,7 @@
 							</c:if>
 							<c:if test="${!basicUser}">
 								<li class="active"><a href="listAll">Pagos</a></li>
-								<li><a href="#">Facturacion</a></li>
+								<li><a href="../billing/listNewEnrollments">Facturacion</a></li>
 								<li><a href="../user/update">Perfil</a></li>
 							</c:if>
 						</ul>

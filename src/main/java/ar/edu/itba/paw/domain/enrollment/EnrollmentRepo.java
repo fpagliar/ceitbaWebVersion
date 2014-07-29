@@ -2,6 +2,8 @@ package ar.edu.itba.paw.domain.enrollment;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.user.Person;
 
@@ -21,4 +23,7 @@ public interface EnrollmentRepo {
 	public List<Enrollment> getActiveServiceList(List<Service> services);
 	public List<Enrollment> getActive(Service s);
 	public List<Enrollment> get(Person p, Service s);
+	
+	public List<Enrollment> getNewEnrollments(Boolean personnel, Service s, DateTime start, DateTime end);
+	public List<Enrollment> getCancelledEnrollments(Boolean personnel, Service s, DateTime start, DateTime end);
 }
