@@ -12,7 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.domain.enrollment.Enrollment;
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
+import ar.edu.itba.paw.domain.payment.Debt;
+import ar.edu.itba.paw.domain.payment.DebtRepo;
 import ar.edu.itba.paw.domain.service.Service;
+import ar.edu.itba.paw.domain.service.Service.Type;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
@@ -27,17 +30,20 @@ public class EnrollmentController {
 	private ServiceRepo serviceRepo;
 	private PersonRepo personRepo;
 	private UserRepo userRepo;
+	private DebtRepo debtRepo;
 	private RegisterEnrollmentFormValidator validator;
 
 	@Autowired
-	public EnrollmentController(UserRepo userRepo, EnrollmentRepo enrollmentRepo,
-			ServiceRepo serviceRepo, PersonRepo personRepo,
+	public EnrollmentController(UserRepo userRepo,
+			EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo,
+			PersonRepo personRepo, DebtRepo debtRepo, 
 			RegisterEnrollmentFormValidator validator) {
 		super();
 		this.userRepo = userRepo;
 		this.enrollmentRepo = enrollmentRepo;
 		this.serviceRepo = serviceRepo;
 		this.personRepo = personRepo;
+		this.debtRepo = debtRepo;
 		this.validator = validator;
 	}
 
@@ -49,9 +55,9 @@ public class EnrollmentController {
 			@RequestParam(value = "serviceName", required = false) String serviceName) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("courses", serviceRepo.getActiveCourses());
 		mav.addObject("sports", serviceRepo.getActiveSports());
@@ -67,10 +73,10 @@ public class EnrollmentController {
 			mav.addObject("service", serviceName);
 		}
 		if (search != null) {
-			mav.addObject("personEnrollments",
-					enrollmentRepo.getActivePersonsList(personRepo.search(search)));
-			mav.addObject("serviceEnrollments",
-					enrollmentRepo.getActiveServiceList(serviceRepo.search(search)));
+			mav.addObject("personEnrollments", enrollmentRepo
+					.getActivePersonsList(personRepo.search(search)));
+			mav.addObject("serviceEnrollments", enrollmentRepo
+					.getActiveServiceList(serviceRepo.search(search)));
 			mav.addObject("search", true);
 		}
 		if (value == null && search == null && serviceName == null)
@@ -84,7 +90,7 @@ public class EnrollmentController {
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
@@ -102,7 +108,7 @@ public class EnrollmentController {
 			RegisterEnrollmentForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
@@ -115,32 +121,40 @@ public class EnrollmentController {
 			return mav;
 		}
 		Integer legacy = Integer.parseInt(form.getLegacy());
-		Enrollment e = new Enrollment(personRepo.getByLegacy(legacy),
-				serviceRepo.get(form.getServiceName()));
-		enrollmentRepo.add(e);
-		
-		return new ModelAndView("redirect:show?id=" + e.getId() + "&neww=true");
+		Service service = serviceRepo.get(form.getServiceName());
+		Person person = personRepo.getByLegacy(legacy);
+		if (service.getType().equals(Type.OTHER)) {
+			Debt debt = person.consume(service);
+			debtRepo.add(debt);
+			return new ModelAndView("redirect:../payment/listAll?legacy=" + person.getLegacy());
+		} else {
+			Enrollment e = new Enrollment(person,
+					service);
+			enrollmentRepo.add(e);
+			return new ModelAndView("redirect:show?id=" + e.getId() + "&neww=true");
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView register(HttpSession session,
+	public ModelAndView register(
+			HttpSession session,
 			@RequestParam(value = "service", required = false) String serviceCategory) {
-		
+
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
-		if("sport".equals(serviceCategory)){
+		if ("sport".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveSports());
 			mav.addObject("sport", "sport");
-		}else if("course".equals(serviceCategory)){
+		} else if ("course".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveCourses());
 			mav.addObject("course", "course");
-		}else if("other".equals(serviceCategory)){
+		} else if ("other".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveOthers());
 			mav.addObject("other", "other");
-		}else{
+		} else {
 			mav.addObject("services", serviceRepo.getActive());
 			mav.addObject("all", "all");
 		}
@@ -155,7 +169,7 @@ public class EnrollmentController {
 			@RequestParam(value = "service", required = true) Service service) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		for (Enrollment e : enrollmentRepo.get(person, service)) {
@@ -168,7 +182,7 @@ public class EnrollmentController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView delete(HttpSession session) {
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();

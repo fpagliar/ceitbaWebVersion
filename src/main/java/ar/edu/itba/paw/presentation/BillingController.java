@@ -94,6 +94,37 @@ public class BillingController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView listOtherDebts(
+			HttpSession session,
+			@RequestParam(value = "start", required = false) DateTime start,
+			@RequestParam(value = "end", required = false) DateTime end,
+			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
+		UserManager usr = new SessionManager(session);
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
+		if (start == null)
+			start = DateTime.now().minusMonths(1);
+		if (end == null)
+			end = DateTime.now();
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start)
+				+ " Fin:" + DateHelper.getDateString(end) + " Personal:" + personnel);
+		mav.addObject("debts", debtRepo.getBilledDebts(personnel, start, end));
+		return mav;
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView deleteDebts(HttpSession session) {
+		UserManager usr = new SessionManager(session);
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
+		debtRepo.removeBilledDebts();
+		return new ModelAndView("redirect:../billing/listOtherDebts");
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listEnrolled(
 			HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,

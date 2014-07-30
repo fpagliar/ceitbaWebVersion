@@ -96,7 +96,7 @@ public class PaymentController {
 				mav.addObject("error", "Legajo invalido");
 			}
 		} else {
-			mav.addObject("debts", debtRepo.get(start, end));
+			mav.addObject("debts", debtRepo.getCashedDebts(start, end));
 		}
 		mav.addObject("createPaymentForm", new CreatePaymentForm());
 		return mav;

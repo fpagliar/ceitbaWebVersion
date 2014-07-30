@@ -24,13 +24,13 @@
 							<li class="nav-header">Opciones</li>
 							<li><a href="listNewEnrollments">Altas</a></li>
 							<li><a href="listCancelledEnrollments">Bajas</a></li>
-							<li class="active"><a href="#">Anotados</a></li>
-							<li><a href="listOtherDebts">Otras Deudas</a></li>
+							<li><a href="listEnrolled">Anotados</a></li>
+							<li class="active"><a href="#">Otras deudas</a></li>
 						</ul>
 					</div>
 					<div class="span9">
 						<h2 class="text-center">Filtrar Busqueda</h2>
-						<form action="listEnrolled" method="get" name="listEnrolled" class="form-horizontal">
+						<form action="listOtherDebts" method="get" name="listOtherDebts" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="start">Inicio</label>
 								<div class="controls">
@@ -43,16 +43,6 @@
 								<div class="controls">
 									<input type="text" class="form-control"
 										placeholder="formato dd/mm/aaaa" name="end">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="service_id">Servicio</label>
-								<div class="controls">
-									<select name="service_id">
-										<c:forEach var="service" items="${services}" varStatus="rowCounter">
-											<option value="${service.id}"> ${service.name} </option>
-										</c:forEach>
-									</select>
 								</div>
 							</div>
 							<div class="control-group">
@@ -71,28 +61,35 @@
 									<th>Legajo</th>
 									<th>Nombre</th>
 									<th>Apellido</th>
-									<th>Fecha de inscripcion</th>
-									<th>Servicio</th>
+									<th>Fecha de deuda</th>
+									<th>Motivo</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="enrollment" items="${enrolled}"
+								<c:forEach var="debt" items="${debts}"
 									varStatus="rowCounter">
 									<tr>
-										<td>${enrollment.person.legacy}</td>
-										<td>${enrollment.person.firstName}</td>
-										<td>${enrollment.person.lastName}</td>
-										<td>${enrollment.formatedStartDate}</td>
-										<td>${enrollment.service.name}</td>
+										<td>${debt.person.legacy}</td>
+										<td>${debt.person.firstName}</td>
+										<td>${debt.person.lastName}</td>
+										<td>${debt.formatedDate}</td>
+										<td>${debt.reason}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 					</div>
 					<div class="span1">
-						<form action="billCashPayments" method="post">
-							<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
-						<form>
+						<div class="row-fluid">
+							<form action="billCashPayments" method="post">
+								<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
+							</form>
+						</div>
+						<div class="row-fluid">
+							<form action="deleteDebts" method="post">
+								<button type="submit" class="btn" onClick='return confirm("Esta accion va a eliminar todas las deudas del mes. Desea seguir?")'>Eliminar otros pagos</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>

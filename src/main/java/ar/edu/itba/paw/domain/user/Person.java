@@ -209,6 +209,10 @@ public class Person extends PersistentEntity {
 	 * SHOULD ONLY BE CALLED BY THE ENROLLMENT REPO!!!
 	 */
 	public void enroll(Enrollment e) {
+		if(e.getService().getType().equals(ar.edu.itba.paw.domain.service.Service.Type.OTHER)){
+			throw new IllegalArgumentException("Use consume for type OTHER");
+		}
+			
 		for (Enrollment active : enrolledServices)
 			if (active.getService().equals(e.getService()) && e.isActive())
 				return;
@@ -219,6 +223,12 @@ public class Person extends PersistentEntity {
 		for (Enrollment e : enrolledServices)
 			if (e.getService().equals(s))
 				e.cancel();
+	}
+	
+	public Debt consume(Service s) {
+		Debt d = new Debt(this, s.getValue(), DateTime.now(), s.getName());
+		debts.add(d);
+		return d;
 	}
 
 	public CashPayment pay(Debt debt, DateTime paymentDate) {

@@ -16,6 +16,12 @@ public interface DebtRepo {
 	
 	public List<Debt> get(Person p, DateTime start, DateTime end);
 
+	public List<Debt> getBilledDebts(Boolean personnel, DateTime start, DateTime end);
+
+	public void removeBilledDebts();
+
+	public List<Debt> getCashedDebts(DateTime start, DateTime end);
+
 	public void add(Debt debt);
 
 	public void add(List<Debt> debt);
