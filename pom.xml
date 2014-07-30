@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ar.edu.itba.ir.paw</groupId>
-	<artifactId>t-loresto</artifactId>
+	<artifactId>sibadac</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>t-loresto Maven Webapp</name>
+	<name>Sibadac Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
@@ -19,11 +19,6 @@
 			<artifactId>jetty</artifactId>
 			<version>6.1.22</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>8.4-701.jdbc3</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -89,11 +84,6 @@
 			<version>3.12.1.GA</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.3</version>
-		</dependency>
-		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.2</version>
@@ -103,7 +93,17 @@
 			<artifactId>joda-time-hibernate</artifactId>
 			<version>1.2</version>
 		</dependency>
-	</dependencies>
+	      <dependency>
+	        <groupId>com.sun.faces</groupId>
+	        <artifactId>jsf-api</artifactId>
+	        <version>2.0.8</version>
+	      </dependency>
+	      <dependency>
+	        <groupId>com.sun.faces</groupId>
+	        <artifactId>jsf-impl</artifactId>
+	        <version>2.0.8</version>
+	     </dependency>
+    	</dependencies>
 	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
@@ -122,6 +122,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>t-loresto</finalName>
+		<finalName>sibadac</finalName>
 	</build>
 </project>

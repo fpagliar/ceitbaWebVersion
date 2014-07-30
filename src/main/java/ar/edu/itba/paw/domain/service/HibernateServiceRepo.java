@@ -87,6 +87,16 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 		return getActiveByType(Service.Type.LOCKER);
 	}
 
+	@Override
+	public List<Service> getCommons() {
+		return getByType(Service.Type.COMMON);
+	}
+
+	@Override
+	public List<Service> getActiveCommons() {
+		return getActiveByType(Service.Type.COMMON);
+	}
+
 	@SuppressWarnings("unchecked")
 	private List<Service> getByType(Service.Type type) {
 		Criteria c = createCriteria(Service.class).add(Restrictions.eq("type", type));

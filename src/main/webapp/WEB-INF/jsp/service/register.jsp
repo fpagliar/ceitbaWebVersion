@@ -46,7 +46,8 @@
 										<form:option value="SPORT"> Deporte </form:option>
 										<form:option value="COURSE"> Curso </form:option>
 										<form:option value="LOCKER"> Locker </form:option>
-										<form:option value="OTHER" selected="selected"> Otro </form:option>
+										<form:option value="COMMON"> Estandar </form:option>
+										<form:option value="OTHER"> Otro </form:option>
 									</form:select>
 								</div>
 							</div>

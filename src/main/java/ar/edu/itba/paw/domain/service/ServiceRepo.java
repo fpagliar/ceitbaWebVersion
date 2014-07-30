@@ -24,6 +24,9 @@ public interface ServiceRepo {
 	public List<Service> getLockers();
 	public List<Service> getActiveLockers();
 	
+	public List<Service> getCommons();
+	public List<Service> getActiveCommons();
+
 	public List<Service> getActive();
 	public List<Service> getInactive();
 	public List<Service> search(String s);

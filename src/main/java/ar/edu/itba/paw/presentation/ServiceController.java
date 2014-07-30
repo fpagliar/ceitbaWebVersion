@@ -27,10 +27,12 @@ public class ServiceController {
 	private RegisterServiceFormValidator registerValidator;
 	private EnrollmentRepo enrollmentRepo;
 	private UserRepo userRepo;
-	
+
 	@Autowired
-	public ServiceController(UserRepo userRepo, ServiceRepo serviceRepo, UpdateServiceFormValidator updateValidator, 
-			RegisterServiceFormValidator registerValidator, EnrollmentRepo enrollmentRepo) {
+	public ServiceController(UserRepo userRepo, ServiceRepo serviceRepo,
+			UpdateServiceFormValidator updateValidator,
+			RegisterServiceFormValidator registerValidator,
+			EnrollmentRepo enrollmentRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.serviceRepo = serviceRepo;
@@ -45,26 +47,28 @@ public class ServiceController {
 			@RequestParam(value = "search", required = false) String search) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
-	
+
 		ModelAndView mav = new ModelAndView();
-		if("active".equals(value))
+		if ("active".equals(value))
 			mav.addObject("services", serviceRepo.getActive());
-		else if("inactive".equals(value))
+		else if ("inactive".equals(value))
 			mav.addObject("services", serviceRepo.getInactive());
-		else if("SPORT".equals(value))
+		else if ("SPORT".equals(value))
 			mav.addObject("services", serviceRepo.getSports());
-		else if("COURSE".equals(value))
+		else if ("COURSE".equals(value))
 			mav.addObject("services", serviceRepo.getCourses());
-		else if("OTHER".equals(value))
+		else if ("OTHER".equals(value))
 			mav.addObject("services", serviceRepo.getOthers());
-		else if("LOCKER".equals(value))
+		else if ("LOCKER".equals(value))
 			mav.addObject("services", serviceRepo.getLockers());
-		else if(search != null){
+		else if ("COMMON".equals(value))
+			mav.addObject("services", serviceRepo.getCommons());
+		else if (search != null) {
 			mav.addObject("services", serviceRepo.search(search));
 			mav.addObject("search", true);
-		}else
+		} else
 			mav.addObject("services", serviceRepo.getAll());
 		mav.addObject("list", value);
 		return mav;
@@ -76,19 +80,20 @@ public class ServiceController {
 			@RequestParam(value = "success", required = false) Boolean success,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("service", service);
-		if(neww != null && neww){
+		if (neww != null && neww) {
 			mav.addObject("new", true);
 			mav.addObject("newmsg", "Servicio creado correctamente");
 		}
-		if(success == null){
+		if (success == null) {
 			mav.addObject("success", false);
-		}else{
+		} else {
 			mav.addObject("success", success);
-			mav.addObject("successmsg", "La informacion se ha modificado correctamente");
+			mav.addObject("successmsg",
+					"La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updateServiceForm", new UpdateServiceForm());
 		mav.addObject("enrollments", enrollmentRepo.getActive(service));
@@ -100,7 +105,7 @@ public class ServiceController {
 			Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		updateValidator.validate(form, errors);
 
@@ -112,30 +117,33 @@ public class ServiceController {
 		}
 		updatedService.setName(form.getName());
 		updatedService.setValue(Double.parseDouble(form.getValue()));
-		updatedService.setMonthsDuration(Integer.parseInt(form.getMonthsDuration()));
-		if(form.getStatus().equals("ACTIVE"))
+		updatedService.setMonthsDuration(Integer.parseInt(form
+				.getMonthsDuration()));
+		if (form.getStatus().equals("ACTIVE"))
 			updatedService.activate();
 		else
 			updatedService.deactivate();
-		
-		if(form.getType().equals("SPORT"))
+
+		if (form.getType().equals("SPORT"))
 			updatedService.setType(Service.Type.SPORT);
-		else if(form.getType().equals("COURSE"))
+		else if (form.getType().equals("COURSE"))
 			updatedService.setType(Service.Type.COURSE);
-		else if(form.getType().equals("LOCKER"))
+		else if (form.getType().equals("LOCKER"))
 			updatedService.setType(Service.Type.LOCKER);
+		else if (form.getType().equals("COMMON"))
+			updatedService.setType(Service.Type.COMMON);
 		else
 			updatedService.setType(Service.Type.OTHER);
 		return new ModelAndView("redirect:update?id=" + updatedService.getId()
 				+ "&success=true");
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView register(HttpSession session, RegisterServiceForm form,
 			Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login");
 
 		registerValidator.validate(form, errors);
@@ -143,15 +151,16 @@ public class ServiceController {
 			return null;
 		}
 		Service.Type type = null;
-		if(form.getType().equals("COURSE"))
+		if (form.getType().equals("COURSE"))
 			type = Service.Type.COURSE;
-		if(form.getType().equals("LOCKER"))
+		if (form.getType().equals("LOCKER"))
 			type = Service.Type.LOCKER;
-		if(form.getType().equals("OTHER"))
+		if (form.getType().equals("OTHER"))
 			type = Service.Type.OTHER;
-		if(form.getType().equals("SPORT"))
+		if (form.getType().equals("SPORT"))
 			type = Service.Type.SPORT;
-		Service s = new Service(form.getName(),	Double.parseDouble(form.getValue()), type, Integer.parseInt(form.getMonthsDuration()));
+		Service s = new Service(form.getName(), Double.parseDouble(form
+				.getValue()), type, Integer.parseInt(form.getMonthsDuration()));
 		serviceRepo.add(s);
 		return new ModelAndView("redirect:update?id=" + s.getId()
 				+ "&success=false&neww=true");
@@ -160,7 +169,7 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView register(HttpSession session) {
 		UserManager usr = new SessionManager(session);
-		if (! usr.existsUser() || ! userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login");
 
 		ModelAndView mav = new ModelAndView();

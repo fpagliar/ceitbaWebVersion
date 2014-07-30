@@ -43,6 +43,12 @@
 							<c:if test="${course!=null}">
 								<li class="active"><a href="#">Curso</a></li>
 							</c:if>
+							<c:if test="${common==null}">
+								<li><a href="?service=common">Estandar</a></li>
+							</c:if>
+							<c:if test="${common!=null}">
+								<li class="active"><a href="#">Estandar</a></li>
+							</c:if>
 							<c:if test="${other==null}">
 								<li><a href="?service=other">Otro</a></li>
 							</c:if>

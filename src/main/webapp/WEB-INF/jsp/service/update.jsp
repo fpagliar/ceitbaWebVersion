@@ -56,25 +56,37 @@
 											<form:option value="SPORT" selected="selected" />
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" />
+											<form:option value="COMMON" />
 											<form:option value="OTHER" />
 										</c:if>
 										<c:if test="${service.type == 'COURSE'}">
 											<form:option value="SPORT" />
 											<form:option value="COURSE" selected="selected" />
 											<form:option value="LOCKER" />
+											<form:option value="COMMON" />
 											<form:option value="OTHER" />
 										</c:if>
 										<c:if test="${service.type == 'LOCKER'}">
 											<form:option value="SPORT" />
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" selected="selected" />
+											<form:option value="COMMON" />
 											<form:option value="OTHER" />
 										</c:if>
 										<c:if
-											test="${service.type != 'LOCKER' && service.type != 'COURSE' && service.type != 'SPORT'}">
+											test="${service.type == 'COMMON'}">
 											<form:option value="SPORT" />
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" />
+											<form:option value="COMMON" selected="selected" />
+											<form:option value="OTHER"/>
+										</c:if>
+										<c:if
+											test="${service.type != 'LOCKER' && service.type != 'COMMON' && service.type != 'COURSE' && service.type != 'SPORT'}">
+											<form:option value="SPORT" />
+											<form:option value="COURSE" />
+											<form:option value="LOCKER" />
+											<form:option value="COMMON" />
 											<form:option value="OTHER" selected="selected" />
 										</c:if>
 									</form:select>

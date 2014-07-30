@@ -59,10 +59,6 @@ public class EnrollmentController {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("courses", serviceRepo.getActiveCourses());
-		mav.addObject("sports", serviceRepo.getActiveSports());
-		mav.addObject("others", serviceRepo.getActiveOthers());
-		mav.addObject("lockers", serviceRepo.getActiveLockers());
 		if ("history".equals(value)) {
 			mav.addObject("enrollments", enrollmentRepo.getExpired());
 			mav.addObject("history", true);
@@ -154,6 +150,9 @@ public class EnrollmentController {
 		} else if ("other".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveOthers());
 			mav.addObject("other", "other");
+		} else if ("common".equals(serviceCategory)) {
+			mav.addObject("services", serviceRepo.getActiveCommons());
+			mav.addObject("common", "common");
 		} else {
 			mav.addObject("services", serviceRepo.getActive());
 			mav.addObject("all", "all");

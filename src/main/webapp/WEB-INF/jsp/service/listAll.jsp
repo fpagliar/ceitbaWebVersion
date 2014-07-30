@@ -29,6 +29,7 @@
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='active'}">
@@ -39,6 +40,7 @@
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='inactive'}">
@@ -49,6 +51,7 @@
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='SPORT'}">
@@ -59,6 +62,7 @@
 										Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='COURSE'}">
@@ -69,6 +73,7 @@
 								<li class="active"><a href="listAll?list=COURSE">Listar
 										Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='LOCKER'}">
@@ -79,7 +84,19 @@
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li class="active"><a href="listAll?list=LOCKER">Listar
 										Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=OTHER">Listar Otros Servicios</a></li>
+							</c:if>
+							<c:if test="${list=='COMMON'}">
+								<li><a href="listAll">Listar Todos</a></li>
+								<li><a href="listAll?list=active">Listar Activos</a></li>
+								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
+								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
+								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
+								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li class="active"><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
+								<li><a href="listAll?list=OTHER">Listar
+										Otros Servicios</a></li>
 							</c:if>
 							<c:if test="${list=='OTHER'}">
 								<li><a href="listAll">Listar Todos</a></li>
@@ -88,6 +105,7 @@
 								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
 								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
 								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
+								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
 								<li class="active"><a href="listAll?list=OTHER">Listar
 										Otros Servicios</a></li>
 							</c:if>
@@ -129,6 +147,9 @@
 										</c:if>
 										<c:if test="${service.type == 'LOCKER'}">
 											<td>Locker</td>
+										</c:if>
+										<c:if test="${service.type == 'COMMON'}">
+											<td>Estandar</td>
 										</c:if>
 										<td>${service.value}</td>
 										<td>${service.status}</td>
