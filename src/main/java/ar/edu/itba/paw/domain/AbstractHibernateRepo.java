@@ -50,4 +50,8 @@ public abstract class AbstractHibernateRepo {
 		getSession().delete(o);
 		return;
 	}
+	
+	public void update(Object o) {
+		sessionFactory.getCurrentSession().update(o);
+	}
 }

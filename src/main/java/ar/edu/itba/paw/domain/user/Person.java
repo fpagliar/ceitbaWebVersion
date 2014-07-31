@@ -137,8 +137,9 @@ public class Person extends PersistentEntity {
 
 	@Override
 	public String toString() {
-		return "Name: " + firstName + "\n Surname: " + lastName + "\n Mail: "
-				+ email + "\n Id: " + getId();
+		return "id: " + getId() + " first_name: " + firstName + " last_name: " + lastName + " email: " + email +
+				" legacy: " + legacy + " phone: " + phone + " cellphone: " + cellphone + " email2: " + email2 +
+				" dni: " + dni + " payment_method: " + paymentMethod;
 	}
 
 	/* Setters */

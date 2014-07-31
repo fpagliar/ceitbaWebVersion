@@ -159,6 +159,8 @@ public class ServiceController {
 			type = Service.Type.OTHER;
 		if (form.getType().equals("SPORT"))
 			type = Service.Type.SPORT;
+		if (form.getType().equals("COMMON"))
+			type = Service.Type.COMMON;
 		Service s = new Service(form.getName(), Double.parseDouble(form
 				.getValue()), type, Integer.parseInt(form.getMonthsDuration()));
 		serviceRepo.add(s);

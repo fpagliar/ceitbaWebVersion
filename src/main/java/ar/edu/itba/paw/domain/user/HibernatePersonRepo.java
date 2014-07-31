@@ -96,7 +96,8 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 					total += e.getService().getValue();
 					reason += e.getService().getName() + " ";
 				}
-			debts.add(new Debt(p, total, DateTime.now(), reason));						
+			if(total > 0)
+				debts.add(new Debt(p, total, DateTime.now(), reason));						
 		}
 		return debts;
 	}

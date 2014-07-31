@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 public class DateHelper {
 
 	public static String getDateString(DateTime date) {
+		if(date == null)
+			return "";
 		return date.getDayOfMonth() + "/" + date.getMonthOfYear() + "/"
 				+ date.getYear();
 	}

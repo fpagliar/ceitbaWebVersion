@@ -26,9 +26,9 @@ public interface DebtRepo {
 
 	public void add(List<Debt> debt);
 	
-	public void pay(Debt debt, DateTime date);
-	
-	public void pay(Debt debt);
+//	public void pay(Debt debt, DateTime date);
+//	
+//	public void pay(Debt debt);
 
 	public Debt get(int id);
 }

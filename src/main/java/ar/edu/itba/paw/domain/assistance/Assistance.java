@@ -66,6 +66,6 @@ public class Assistance extends PersistentEntity {
 	
 	@Override
 	public String toString() {
-		return "person:" + person.getLegacy() + " - service:" + service.getName() + " - date:" + date.toString();
+		return "id:" + getId() + " date: " + DateHelper.getDateString(date);
 	}
 }

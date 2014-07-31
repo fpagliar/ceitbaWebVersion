@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
+import ar.edu.itba.paw.domain.payment.Debt.DebtStatus;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 
@@ -26,6 +27,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Debt> getAll() {
 		Criteria c = createCriteria(Debt.class);
+		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		return (List<Debt>) c.list();
 	}
 
@@ -34,6 +36,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	public List<Debt> get(Person person) {
 		Criteria c = createCriteria(Debt.class).add(
 				Restrictions.eq("person", person));
+		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		return (List<Debt>) c.list();
 	}
 
@@ -41,6 +44,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Debt> get(DateTime start, DateTime end) {
 		Criteria c = createCriteria(Debt.class);
+		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
 		if (end != null)
@@ -52,6 +56,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Debt> get(Person p, DateTime start, DateTime end) {
 		Criteria c = createCriteria(Debt.class);
+		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (p != null)
 			c.add(Restrictions.eq("person", p));
 		if (start != null)
@@ -66,6 +71,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	public List<Debt> getBilledDebts(Boolean personnel, DateTime start,
 			DateTime end) {
 		Criteria c = createCriteria(Debt.class);
+		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
 		if (end != null)
@@ -84,17 +90,20 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public void removeBilledDebts() {
 		Criteria c = createCriteria(Debt.class);
-		c.createCriteria("person").add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
+		c.createCriteria("person").add(
+				Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 		List<Debt> debts = (List<Debt>) c.list();
-		for(Debt debt : debts){
-			delete(debt);
+		for (Debt debt : debts) {
+			debt.billed();
+			update(debt);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Debt> getCashedDebts(DateTime start, DateTime end) {
 		Criteria c = createCriteria(Debt.class);
+		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
 		if (end != null)
@@ -112,21 +121,22 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public void add(List<Debt> debts) {
 		for (Debt debt : debts) {
-			save(debt);
+			add(debt);
 		}
 	}
 
-	@Override
-	public void pay(Debt debt, DateTime date) {
-		debt.pay(date);
-		delete(debt);
-		return;
-	}
-
-	@Override
-	public void pay(Debt debt) {
-		pay(debt, DateTime.now());
-	}
+//	@Override
+//	public void pay(Debt debt, DateTime date) {
+//		debt.pay(date);
+//		update(debt);
+//		return;
+//	}
+//
+//	@Override
+//	public void pay(Debt debt) {
+//		pay(debt, DateTime.now());
+//		update(debt);
+//	}
 
 	@Override
 	public Debt get(int id) {

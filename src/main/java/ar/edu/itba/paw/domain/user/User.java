@@ -1,26 +1,36 @@
 package ar.edu.itba.paw.domain.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
 
 @Entity
-@Table(name="my_user")
+@Table(name = "my_user")
 public class User extends PersistentEntity {
 
-	@Column(name="username", unique=true, nullable=false)
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
-	@Column(name="password", nullable=false)
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	public static enum Level {ADMINISTRATOR, MODERATOR, REGULAR};
+	public static enum Level {
+		ADMINISTRATOR, MODERATOR, REGULAR
+	};
+
 	@Enumerated(EnumType.STRING)
-	@Column(name="level", nullable=false)
+	@Column(name = "level", nullable = false)
 	private Level level;
+
+	@OneToMany
+	private List<UserAction> actions = new ArrayList<UserAction>();
 
 	// Hibernate requirement
 	User() {
@@ -32,21 +42,21 @@ public class User extends PersistentEntity {
 	}
 
 	/* Getters */
-	public String getUsername(){
+	public String getUsername() {
 		return this.username;
 	}
 
-	public Level getLevel(){
+	public Level getLevel() {
 		return this.level;
 	}
-	
-	public String getPassword(){
+
+	public String getPassword() {
 		return this.password;
 	}
 
 	@Override
 	public String toString() {
-		return "Username: " + username + "\n Password: " + password + "\n ------------------ ";
+		return "id: " + getId() + " username: " + username + " password: " + password + " level: " + level;
 	}
 
 	/* Setters */
@@ -55,18 +65,18 @@ public class User extends PersistentEntity {
 		validateEmpty(password);
 		this.password = password;
 	}
-	
-	public void setUsername(String username){
+
+	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	public void setLevel(Level level){
+
+	public void setLevel(Level level) {
 		this.level = level;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null)
+		if (obj == null)
 			return false;
 		User user = (User) obj;
 		return this.username == (user.getUsername());
@@ -83,12 +93,20 @@ public class User extends PersistentEntity {
 		}
 		return;
 	}
-	
-	public boolean isAdmin(){
+
+	public boolean isAdmin() {
 		return Level.ADMINISTRATOR == level;
 	}
 
-	public boolean isModerator(){
+	public boolean isModerator() {
 		return Level.MODERATOR == level || isAdmin();
+	}
+
+	public List<UserAction> getActions() {
+		return actions;
+	}
+
+	public void reportAction(UserAction action) {
+		actions.add(action);
 	}
 }

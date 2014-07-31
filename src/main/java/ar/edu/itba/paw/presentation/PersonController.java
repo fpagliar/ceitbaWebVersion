@@ -136,7 +136,7 @@ public class PersonController {
 		p.setEmail(form.getEmail());
 		p.setEmail2(form.getEmail2());
 		p.setPhone(form.getPhone());
-		if (form.getPaymentMethod().equals(PaymentMethod.CASH)) {
+		if (form.getPaymentMethod().equals(PaymentMethod.CASH.toString())) {
 			p.setPaymentMethod(PaymentMethod.CASH);
 		} else {
 			p.setPaymentMethod(PaymentMethod.BILL);

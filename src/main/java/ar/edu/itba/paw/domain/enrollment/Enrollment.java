@@ -102,4 +102,11 @@ public class Enrollment extends PersistentEntity {
 				&& startDate.equals(other.getStartDate())
 				&& service.equals(other.getService());
 	}
+	
+	@Override
+	public String toString() {
+		return "id: " + getId() + " start_date: "
+				+ DateHelper.getDateString(startDate) + " end_date: "
+				+ DateHelper.getDateString(endDate);
+	}
 }

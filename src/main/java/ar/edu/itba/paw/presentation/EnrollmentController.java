@@ -89,6 +89,8 @@ public class EnrollmentController {
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
+		if(enrollment == null)
+			return new ModelAndView("redirect:listAll");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("enrollment", enrollment);
 		if (neww != null && neww) {

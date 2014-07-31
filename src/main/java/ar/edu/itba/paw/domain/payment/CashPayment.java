@@ -42,10 +42,6 @@ public class CashPayment extends PersistentEntity {
 		return person;
 	}
 
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-
 	public DateTime getDebtDate() {
 		return debt.getBillingDate();
 	}
@@ -78,5 +74,10 @@ public class CashPayment extends PersistentEntity {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return "id: " + getId() + " payment_date: " + DateHelper.getDateString(paymentDate);
 	}
 }

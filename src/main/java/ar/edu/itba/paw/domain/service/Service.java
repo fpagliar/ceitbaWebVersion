@@ -7,9 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
@@ -43,8 +41,7 @@ public class Service extends PersistentEntity {
 	@Column(name = "months_duration", nullable = false)
 	private int monthsDuration;
 
-	@ManyToMany
-	@JoinTable(name = "service_enrollment", inverseJoinColumns = { @JoinColumn(name = "service") }, joinColumns = { @JoinColumn(name = "id") })
+	@OneToMany
 	private List<Enrollment> enrolledPeople = new ArrayList<Enrollment>();
 
 	Service() {
@@ -132,5 +129,12 @@ public class Service extends PersistentEntity {
 			return false;
 		Service other = (Service) obj;
 		return other.getName() == name;
+	}
+	
+	@Override
+	public String toString() {
+		return "id: " + getId() + " name: " + name + " type: " + type
+				+ " value: " + value + " duration: " + monthsDuration
+				+ " status: " + status;
 	}
 }
