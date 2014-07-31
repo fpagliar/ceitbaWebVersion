@@ -1,0 +1,4 @@
++ Cancelar ceitba deberia cancelar todas las subscripciones
++ tracking de acciones de usuarios
++ filtros por nombre con ilike?
++ listar pagos borrar link a detalle del usuario

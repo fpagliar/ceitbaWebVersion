@@ -14,6 +14,10 @@ import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.RegisterPersonForm;
 import ar.edu.itba.paw.presentation.command.UpdatePersonForm;
@@ -28,23 +32,23 @@ public class PersonController {
 	private PersonRepo personRepo;
 	private EnrollmentRepo enrollmentRepo;
 	private UserRepo userRepo;
+	private UserActionRepo userActionRepo;
 
 	@Autowired
-	public PersonController(UserRepo userRepo,
-			RegisterPersonFormValidator validator,
-			UpdatePersonFormValidator updateValidator, PersonRepo personRepo,
-			EnrollmentRepo enrollmentRepo) {
+	public PersonController(UserRepo userRepo, RegisterPersonFormValidator validator,
+			UpdatePersonFormValidator updateValidator, PersonRepo personRepo, EnrollmentRepo enrollmentRepo,
+			UserActionRepo userActionRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.registerValidator = validator;
 		this.personRepo = personRepo;
 		this.updateValidator = updateValidator;
 		this.enrollmentRepo = enrollmentRepo;
+		this.userActionRepo = userActionRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session,
-			@RequestParam(value = "search", required = false) String search) {
+	public ModelAndView listAll(HttpSession session, @RequestParam(value = "search", required = false) String search) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
@@ -60,8 +64,7 @@ public class PersonController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView update(@RequestParam("id") Person person,
-			HttpSession session,
+	public ModelAndView update(@RequestParam("id") Person person, HttpSession session,
 			@RequestParam(value = "success", required = false) Boolean success,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 
@@ -79,8 +82,7 @@ public class PersonController {
 			mav.addObject("success", false);
 		} else {
 			mav.addObject("success", success);
-			mav.addObject("successmsg",
-					"La informacion se ha modificado correctamente");
+			mav.addObject("successmsg", "La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updatePersonForm", new UpdatePersonForm());
 		mav.addObject("isCash", person.getPaymentMethod().equals(PaymentMethod.CASH));
@@ -89,8 +91,7 @@ public class PersonController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView update(HttpSession session, UpdatePersonForm form,
-			Errors errors) {
+	public ModelAndView update(HttpSession session, UpdatePersonForm form, Errors errors) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
@@ -100,6 +101,8 @@ public class PersonController {
 		if (errors.hasErrors()) {
 			return null;
 		}
+		String personBeforeUpdate = updatedPerson.toString();
+
 		updatedPerson.setLegacy(Integer.parseInt(form.getLegacy()));
 		updatedPerson.setFirstName(form.getFirstName());
 		updatedPerson.setLastName(form.getLastName());
@@ -113,13 +116,14 @@ public class PersonController {
 		} else {
 			updatedPerson.setPaymentMethod(PaymentMethod.BILL);
 		}
-		return new ModelAndView("redirect:update?id=" + updatedPerson.getId()
-				+ "&success=true");
+
+		userActionRepo.add(new UserAction(Action.UPDATE, Person.class.getName(), personBeforeUpdate, updatedPerson
+				.toString(), ControllerType.PERSON, "update", userRepo.get(usr.getUsername())));
+		return new ModelAndView("redirect:update?id=" + updatedPerson.getId() + "&success=true");
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView register(HttpSession session, RegisterPersonForm form,
-			Errors errors) {
+	public ModelAndView register(HttpSession session, RegisterPersonForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
@@ -129,8 +133,7 @@ public class PersonController {
 		if (errors.hasErrors()) {
 			return null;
 		}
-		Person p = new Person(form.getFirstName(), form.getLastName(),
-				Integer.valueOf(form.getLegacy()));
+		Person p = new Person(form.getFirstName(), form.getLastName(), Integer.valueOf(form.getLegacy()));
 		p.setCellphone(form.getCellphone());
 		p.setDni(form.getDni());
 		p.setEmail(form.getEmail());
@@ -142,8 +145,10 @@ public class PersonController {
 			p.setPaymentMethod(PaymentMethod.BILL);
 		}
 		personRepo.add(p);
-		return new ModelAndView("redirect:update?id=" + p.getId()
-				+ "&success=false&neww=true");
+
+		userActionRepo.add(new UserAction(Action.CREATE, Person.class.getName(), null, p.toString(),
+				ControllerType.PERSON, "register", userRepo.get(usr.getUsername())));
+		return new ModelAndView("redirect:update?id=" + p.getId() + "&success=false&neww=true");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

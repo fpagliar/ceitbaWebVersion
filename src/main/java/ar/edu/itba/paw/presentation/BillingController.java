@@ -18,6 +18,11 @@ import ar.edu.itba.paw.domain.payment.DebtRepo;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
+import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.lib.DateHelper;
 
 @Controller
@@ -27,19 +32,22 @@ public class BillingController {
 	private ServiceRepo serviceRepo;
 	private DebtRepo debtRepo;
 	private PersonRepo personRepo;
+	private UserActionRepo userActionRepo;
+	private UserRepo userRepo;
 
 	@Autowired
-	public BillingController(EnrollmentRepo enrollmentRepo,
-			ServiceRepo serviceRepo, DebtRepo debtRepo, PersonRepo personRepo) {
+	public BillingController(EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo, DebtRepo debtRepo,
+			PersonRepo personRepo, UserActionRepo userActionRepo, UserRepo userRepo) {
 		this.enrollmentRepo = enrollmentRepo;
 		this.serviceRepo = serviceRepo;
 		this.personRepo = personRepo;
 		this.debtRepo = debtRepo;
+		this.userActionRepo = userActionRepo;
+		this.userRepo = userRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listNewEnrollments(
-			HttpSession session,
+	public ModelAndView listNewEnrollments(HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,
 			@RequestParam(value = "start", required = false) DateTime start,
 			@RequestParam(value = "end", required = false) DateTime end,
@@ -56,18 +64,15 @@ public class BillingController {
 		if (end == null)
 			end = DateTime.now();
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start)
-				+ " Fin:" + DateHelper.getDateString(end) + " Servicio:"
-				+ service.getName() + " Personal:" + personnel);
+		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start) + " Fin:" + DateHelper.getDateString(end)
+				+ " Servicio:" + service.getName() + " Personal:" + personnel);
 		mav.addObject("services", serviceRepo.getActive());
-		mav.addObject("newEnrollments", enrollmentRepo.getBilledNewEnrollments(
-				personnel, service, start, end));
+		mav.addObject("newEnrollments", enrollmentRepo.getBilledNewEnrollments(personnel, service, start, end));
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listCancelledEnrollments(
-			HttpSession session,
+	public ModelAndView listCancelledEnrollments(HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,
 			@RequestParam(value = "start", required = false) DateTime start,
 			@RequestParam(value = "end", required = false) DateTime end,
@@ -84,18 +89,16 @@ public class BillingController {
 		if (end == null)
 			end = DateTime.now();
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start)
-				+ " Fin:" + DateHelper.getDateString(end) + " Servicio:"
-				+ service.getName() + " Personal:" + personnel);
+		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start) + " Fin:" + DateHelper.getDateString(end)
+				+ " Servicio:" + service.getName() + " Personal:" + personnel);
 		mav.addObject("services", serviceRepo.getActive());
-		mav.addObject("cancelledEnrollments", enrollmentRepo
-				.getBilledCancelledEnrollments(personnel, service, start, end));
+		mav.addObject("cancelledEnrollments",
+				enrollmentRepo.getBilledCancelledEnrollments(personnel, service, start, end));
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listOtherDebts(
-			HttpSession session,
+	public ModelAndView listOtherDebts(HttpSession session,
 			@RequestParam(value = "start", required = false) DateTime start,
 			@RequestParam(value = "end", required = false) DateTime end,
 			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
@@ -108,8 +111,8 @@ public class BillingController {
 		if (end == null)
 			end = DateTime.now();
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start)
-				+ " Fin:" + DateHelper.getDateString(end) + " Personal:" + personnel);
+		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start) + " Fin:" + DateHelper.getDateString(end)
+				+ " Personal:" + personnel);
 		mav.addObject("debts", debtRepo.getBilledDebts(personnel, start, end));
 		return mav;
 	}
@@ -120,13 +123,18 @@ public class BillingController {
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
-		debtRepo.removeBilledDebts();
+		List<Debt> debts = debtRepo.removeBilledDebts();
+		String ids = "";
+		for (Debt debt : debts) {
+			ids += debt.getId() + "-";
+		}
+		userActionRepo.add(new UserAction(Action.POST, Debt.class.getName(), ids, null, ControllerType.BILLING,
+				"deleteDebts", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:../billing/listOtherDebts");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listEnrolled(
-			HttpSession session,
+	public ModelAndView listEnrolled(HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,
 			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
 		UserManager usr = new SessionManager(session);
@@ -137,8 +145,7 @@ public class BillingController {
 			service = serviceRepo.get("ceitba");
 
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", " Servicio:" + service.getName() + " Personal:"
-				+ personnel);
+		mav.addObject("query", " Servicio:" + service.getName() + " Personal:" + personnel);
 		mav.addObject("services", serviceRepo.getActive());
 		mav.addObject("enrolled", enrollmentRepo.getBilledActive(service));
 		return mav;
@@ -152,6 +159,12 @@ public class BillingController {
 
 		List<Debt> debts = personRepo.billCashPayments();
 		debtRepo.add(debts);
+		String ids = "";
+		for (Debt debt : debts) {
+			ids += debt.getId() + "-";
+		}
+		userActionRepo.add(new UserAction(Action.POST, Debt.class.getName(), null, ids, ControllerType.BILLING,
+				"billCashPayments", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:bill");
 	}
 

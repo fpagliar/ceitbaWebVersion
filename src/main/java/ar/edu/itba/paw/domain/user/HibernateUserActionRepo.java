@@ -31,9 +31,9 @@ public class HibernateUserActionRepo extends AbstractHibernateRepo implements
 	public UserAction get(int id) {
 		return get(UserAction.class, id);
 	}
-	
+
 	@Override
-	public void remove(UserAction action){
+	public void remove(UserAction action) {
 		delete(action);
 	}
 

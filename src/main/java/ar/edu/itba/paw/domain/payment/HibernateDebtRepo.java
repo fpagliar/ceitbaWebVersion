@@ -88,7 +88,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void removeBilledDebts() {
+	public List<Debt> removeBilledDebts() {
 		Criteria c = createCriteria(Debt.class);
 		c.createCriteria("person").add(
 				Restrictions.eq("paymentMethod", PaymentMethod.BILL));
@@ -97,6 +97,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 			debt.billed();
 			update(debt);
 		}
+		return debts;
 	}
 
 	@SuppressWarnings("unchecked")

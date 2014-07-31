@@ -36,6 +36,7 @@
 								<tr>
 									<th>Usuario</th>
 									<th>Rol</th>
+									<th>Estado</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -52,6 +53,14 @@
 										<c:if test="${user.level == 'REGULAR'}"> 
 											<td>Regular</td>
 										</c:if>
+										<td>
+											<c:if test="${user.active}"> 
+												<td>Activo</td>
+											</c:if>
+											<c:if test="${not user.active}"> 
+												<td>Inactivo</td>
+											</c:if>
+										</td>
 										<c:if test="${admin}">
 											<td>
 												<a href="update?id=${user.id}">Editar</a>

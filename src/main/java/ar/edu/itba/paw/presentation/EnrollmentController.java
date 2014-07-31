@@ -19,6 +19,10 @@ import ar.edu.itba.paw.domain.service.Service.Type;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.RegisterEnrollmentForm;
 import ar.edu.itba.paw.presentation.command.validator.RegisterEnrollmentFormValidator;
@@ -32,12 +36,12 @@ public class EnrollmentController {
 	private UserRepo userRepo;
 	private DebtRepo debtRepo;
 	private RegisterEnrollmentFormValidator validator;
+	private UserActionRepo userActionRepo;
 
 	@Autowired
-	public EnrollmentController(UserRepo userRepo,
-			EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo,
-			PersonRepo personRepo, DebtRepo debtRepo, 
-			RegisterEnrollmentFormValidator validator) {
+	public EnrollmentController(UserRepo userRepo, EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo,
+			PersonRepo personRepo, DebtRepo debtRepo, RegisterEnrollmentFormValidator validator,
+			UserActionRepo userActionRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.enrollmentRepo = enrollmentRepo;
@@ -45,12 +49,11 @@ public class EnrollmentController {
 		this.personRepo = personRepo;
 		this.debtRepo = debtRepo;
 		this.validator = validator;
+		this.userActionRepo = userActionRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(
-			HttpSession session,
-			@RequestParam(value = "list", required = false) String value,
+	public ModelAndView listAll(HttpSession session, @RequestParam(value = "list", required = false) String value,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "serviceName", required = false) String serviceName) {
 
@@ -64,15 +67,12 @@ public class EnrollmentController {
 			mav.addObject("history", true);
 		}
 		if (serviceName != null) {
-			mav.addObject("enrollments",
-					enrollmentRepo.getActive(serviceRepo.get(serviceName)));
+			mav.addObject("enrollments", enrollmentRepo.getActive(serviceRepo.get(serviceName)));
 			mav.addObject("service", serviceName);
 		}
 		if (search != null) {
-			mav.addObject("personEnrollments", enrollmentRepo
-					.getActivePersonsList(personRepo.search(search)));
-			mav.addObject("serviceEnrollments", enrollmentRepo
-					.getActiveServiceList(serviceRepo.search(search)));
+			mav.addObject("personEnrollments", enrollmentRepo.getActivePersonsList(personRepo.search(search)));
+			mav.addObject("serviceEnrollments", enrollmentRepo.getActiveServiceList(serviceRepo.search(search)));
 			mav.addObject("search", true);
 		}
 		if (value == null && search == null && serviceName == null)
@@ -81,15 +81,14 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView show(@RequestParam("id") Enrollment enrollment,
-			HttpSession session,
+	public ModelAndView show(@RequestParam("id") Enrollment enrollment, HttpSession session,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
-		if(enrollment == null)
+		if (enrollment == null)
 			return new ModelAndView("redirect:listAll");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("enrollment", enrollment);
@@ -102,8 +101,7 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView register(HttpSession session,
-			RegisterEnrollmentForm form, Errors errors) {
+	public ModelAndView register(HttpSession session, RegisterEnrollmentForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
@@ -124,18 +122,20 @@ public class EnrollmentController {
 		if (service.getType().equals(Type.OTHER)) {
 			Debt debt = person.consume(service);
 			debtRepo.add(debt);
+			userActionRepo.add(new UserAction(Action.CREATE, Debt.class.getName(), null, debt.toString(),
+					ControllerType.ENROLLMENT, "register", userRepo.get(usr.getUsername())));
 			return new ModelAndView("redirect:../payment/listAll?legacy=" + person.getLegacy());
 		} else {
-			Enrollment e = new Enrollment(person,
-					service);
+			Enrollment e = new Enrollment(person, service);
 			enrollmentRepo.add(e);
+			userActionRepo.add(new UserAction(Action.CREATE, Enrollment.class.getName(), null, e.toString(),
+					ControllerType.ENROLLMENT, "register", userRepo.get(usr.getUsername())));
 			return new ModelAndView("redirect:show?id=" + e.getId() + "&neww=true");
 		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView register(
-			HttpSession session,
+	public ModelAndView register(HttpSession session,
 			@RequestParam(value = "service", required = false) String serviceCategory) {
 
 		UserManager usr = new SessionManager(session);
@@ -165,18 +165,22 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView delete(HttpSession session,
-			@RequestParam(value = "person", required = true) Person person,
+	public ModelAndView delete(HttpSession session, @RequestParam(value = "person", required = true) Person person,
 			@RequestParam(value = "service", required = true) Service service) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
+		String ids = "";
 		for (Enrollment e : enrollmentRepo.get(person, service)) {
 			e.cancel(); // cancels all the subscriptions instead of looking for
 						// the active one
+			ids += e.getId() + "-";
 		}
+		
+		userActionRepo.add(new UserAction(Action.DELETE, Enrollment.class.getName(), ids, null,
+				ControllerType.ENROLLMENT, "delete", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:delete");
 	}
 

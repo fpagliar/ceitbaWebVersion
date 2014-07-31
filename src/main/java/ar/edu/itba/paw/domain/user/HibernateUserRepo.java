@@ -12,8 +12,7 @@ import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
 
 @Repository
-public class HibernateUserRepo extends AbstractHibernateRepo implements
-		UserRepo {
+public class HibernateUserRepo extends AbstractHibernateRepo implements UserRepo {
 
 	@Autowired
 	public HibernateUserRepo(SessionFactory sessionFactory) {
@@ -38,9 +37,9 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements
 	public User get(int id) {
 		return get(User.class, id);
 	}
-	
+
 	@Override
-	public User get(String username){
+	public User get(String username) {
 		Criteria c = createCriteria(User.class).add(Restrictions.eq("username", username));
 		return (User) c.uniqueResult();
 	}
@@ -55,11 +54,12 @@ public class HibernateUserRepo extends AbstractHibernateRepo implements
 	@SuppressWarnings("unchecked")
 	private boolean duplicatedData(String field, String value) {
 		Criteria c = createCriteria(User.class).add(Restrictions.eq(field, value));
-		return ! ((List<User>) c.list()).isEmpty();
+		return !((List<User>) c.list()).isEmpty();
 	}
 
-	
-	public void remove(User user){
-		delete(user);
+	public void remove(User user) {
+		user.deactivate();
+		update(user);
+		// delete(user);
 	}
 }

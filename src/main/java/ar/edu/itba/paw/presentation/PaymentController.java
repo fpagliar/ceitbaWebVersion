@@ -17,6 +17,11 @@ import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.payment.DebtRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
+import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.CreatePaymentForm;
 import ar.edu.itba.paw.presentation.command.validator.CreatePaymentFormValidator;
 
@@ -27,15 +32,19 @@ public class PaymentController {
 	private DebtRepo debtRepo;
 	private PersonRepo personRepo;
 	private CreatePaymentFormValidator validator;
+	private UserActionRepo userActionRepo;
+	private UserRepo userRepo;
 
 	@Autowired
 	public PaymentController(CashPaymentRepo paymentRepo, DebtRepo debtRepo,
-			PersonRepo personRepo, CreatePaymentFormValidator validator) {
+			PersonRepo personRepo, CreatePaymentFormValidator validator, UserActionRepo userActionRepo, UserRepo userRepo) {
 		super();
 		this.paymentRepo = paymentRepo;
 		this.debtRepo = debtRepo;
 		this.personRepo = personRepo;
 		this.validator = validator;
+		this.userActionRepo = userActionRepo;
+		this.userRepo = userRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -117,6 +126,7 @@ public class PaymentController {
 		Debt debt = debtRepo.get(Integer.parseInt(form.getDebtId()));
 		CashPayment payment = debt.pay();
 		paymentRepo.add(payment);
+		userActionRepo.add(new UserAction(Action.CREATE, CashPayment.class.getName(), null, payment.toString(), ControllerType.PAYMENT, "pay", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:../payment/listAll");
 	}
 }

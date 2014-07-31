@@ -30,7 +30,7 @@ public class LoginFormValidator implements Validator {
 		LoginForm target = (LoginForm) obj;
 		User user = userRepo.get(target.getUsername());
 
-		if (user == null) {
+		if (user == null || !user.isActive()) {
 			errors.rejectValue("username", "unexisting");
 			return;
 		}

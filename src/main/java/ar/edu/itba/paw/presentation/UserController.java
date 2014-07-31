@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.domain.user.User;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.User.Level;
+import ar.edu.itba.paw.domain.user.User.UserStatus;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
 import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.LoginForm;
 import ar.edu.itba.paw.presentation.command.RegisterUserForm;
@@ -29,21 +34,21 @@ public class UserController {
 	private UserRepo userRepo;
 	RegisterUserFormValidator registerValidator;
 	UpdateUserFormValidator updateValidator;
+	private UserActionRepo userActionRepo;
 
 	@Autowired
-	public UserController(LoginFormValidator loginValidator,
-			RegisterUserFormValidator registerValidator, UserRepo userRepo,
-			UpdateUserFormValidator updateValidator) {
+	public UserController(LoginFormValidator loginValidator, RegisterUserFormValidator registerValidator,
+			UserRepo userRepo, UpdateUserFormValidator updateValidator, UserActionRepo userActionRepo) {
 		super();
 		this.loginValidator = loginValidator;
 		this.userRepo = userRepo;
 		this.registerValidator = registerValidator;
 		this.updateValidator = updateValidator;
+		this.userActionRepo = userActionRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView login(HttpSession session,
-			@RequestParam(value = "error", required = false) String error) {
+	public ModelAndView login(HttpSession session, @RequestParam(value = "error", required = false) String error) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("loginForm", new LoginForm());
 		mav.addObject("error", error);
@@ -74,18 +79,15 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(
-			HttpSession session,
+	public ModelAndView listAll(HttpSession session,
 			@RequestParam(value = "success", required = false) Integer messageKey) {
-		String[] messages = { "El usuario ha sido creado correctamente",
-				"El usuario ha sido eliminado correctamente" };
+		String[] messages = { "El usuario ha sido creado correctamente", "El usuario ha sido eliminado correctamente" };
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
 			return new ModelAndView("redirect:/sibadac/notAuthorized");
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("users", userRepo.getAll());
-		if (messageKey != null && messageKey >= 0
-				&& messageKey < messages.length)
+		if (messageKey != null && messageKey >= 0 && messageKey < messages.length)
 			mav.addObject("successMsg", messages[messageKey]);
 		User loggedUser = userRepo.get(usr.getUsername());
 		if (loggedUser.isAdmin())
@@ -94,8 +96,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView update(
-			HttpSession session,
+	public ModelAndView update(HttpSession session,
 			@RequestParam(value = "success", required = false) Integer messageKey,
 			@RequestParam(value = "id", required = false) Integer id) {
 		String[] messages = { "El usuario ha sido actualizado correctamente", };
@@ -111,49 +112,56 @@ public class UserController {
 			mav.addObject("profile", "true");
 		} else {
 			if (!loggedUser.isAdmin())
-				return new ModelAndView(
-						"redirect:../user/login?error=unauthorized");
+				return new ModelAndView("redirect:../user/login?error=unauthorized");
 			mav.addObject("user", userRepo.get(id));
 		}
-		if (messageKey != null && messageKey >= 0
-				&& messageKey < messages.length)
+		if (messageKey != null && messageKey >= 0 && messageKey < messages.length)
 			mav.addObject("successMsg", messages[messageKey]);
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView update(HttpSession session, UpdateUserForm form,
-			Errors errors) {
+	public ModelAndView update(HttpSession session, UpdateUserForm form, Errors errors) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser()) {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		}
 
-		User user = userRepo.get(usr.getUsername());
-		form.setAdmin(user.getLevel().equals(Level.ADMINISTRATOR));
+		User loggedUser = userRepo.get(usr.getUsername());
+		form.setAdmin(loggedUser.getLevel().equals(Level.ADMINISTRATOR));
+
 		updateValidator.validate(form, errors);
 
 		ModelAndView mav = new ModelAndView();
 		if (errors.hasErrors()) {
-			User loggedUser = userRepo.get(usr.getUsername());
 			mav.addObject("administrator", loggedUser.isAdmin());
 			return mav;
 		}
+		
+		//If I'm no admin, and I am updating a user other than myself
+		if(!loggedUser.isAdmin() && !loggedUser.getUsername().equals(form.getCurrentUsername()))
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
-		User actual = userRepo.get(usr.getUsername());
-		actual.setUsername(form.getUsername());
+		User userBeingUpdated = userRepo.get(form.getCurrentUsername());
+		String previousUser = userBeingUpdated.toString();
 
-		usr.setUser(form.getUsername());
+		userBeingUpdated.setUsername(form.getUsername());
+		
+		//If I'm changing my username, then change it in the UserManager
+		if(loggedUser.getUsername().equals(form.getCurrentUsername()))
+			usr.setUser(form.getUsername());
 
 		if (form.getNewPassword() != "") {
-			actual.setPassword(form.getNewPassword());
+			userBeingUpdated.setPassword(form.getNewPassword());
 		}
-		return new ModelAndView("redirect:./update?success=0");
+
+		userActionRepo.add(new UserAction(Action.UPDATE, User.class.getName(), previousUser, userBeingUpdated.toString(),
+				ControllerType.USER, "update", loggedUser));
+		return new ModelAndView("redirect:./update?success=0&id=" + userBeingUpdated.getId());
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView remove(HttpSession session,
-			@RequestParam(value = "id", required = true) String userId) {
+	public ModelAndView remove(HttpSession session, @RequestParam(value = "id", required = true) String userId) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
 			return new ModelAndView("redirect:/sibadac/notAuthorized");
@@ -170,8 +178,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView delete(HttpSession session,
-			@RequestParam(value = "id", required = true) String userId) {
+	public ModelAndView delete(HttpSession session, @RequestParam(value = "id", required = true) String userId) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
 			return new ModelAndView("redirect:/sibadac/notAuthorized");
@@ -182,6 +189,9 @@ public class UserController {
 			if (user.isAdmin())
 				return new ModelAndView("redirect:/sibadac/notAuthorized");
 			userRepo.remove(user);
+
+			userActionRepo.add(new UserAction(Action.DELETE, User.class.getName(), user.toString(), null,
+					ControllerType.USER, "delete", userRepo.get(usr.getUsername())));
 			return new ModelAndView("redirect:../user/listAll?success=1");
 		} catch (Exception e) {
 			return new ModelAndView("redirect:/sibadac/notAuthorized");
@@ -205,8 +215,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView register(HttpSession session, RegisterUserForm form,
-			Errors errors) {
+	public ModelAndView register(HttpSession session, RegisterUserForm form, Errors errors) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
 			return new ModelAndView("redirect:/sibadac/notAuthorized");
@@ -223,6 +232,8 @@ public class UserController {
 		else
 			newUser.setLevel(User.Level.REGULAR);
 		userRepo.add(newUser);
+		userActionRepo.add(new UserAction(Action.CREATE, User.class.getName(), null, newUser.toString(),
+				ControllerType.USER, "register", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:../user/listAll?success=0");
 	}
 }

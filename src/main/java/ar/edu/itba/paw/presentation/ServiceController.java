@@ -13,7 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
 import ar.edu.itba.paw.presentation.command.RegisterServiceForm;
 import ar.edu.itba.paw.presentation.command.UpdateServiceForm;
 import ar.edu.itba.paw.presentation.command.validator.RegisterServiceFormValidator;
@@ -27,23 +31,22 @@ public class ServiceController {
 	private RegisterServiceFormValidator registerValidator;
 	private EnrollmentRepo enrollmentRepo;
 	private UserRepo userRepo;
+	private UserActionRepo userActionRepo;
 
 	@Autowired
-	public ServiceController(UserRepo userRepo, ServiceRepo serviceRepo,
-			UpdateServiceFormValidator updateValidator,
-			RegisterServiceFormValidator registerValidator,
-			EnrollmentRepo enrollmentRepo) {
+	public ServiceController(UserRepo userRepo, ServiceRepo serviceRepo, UpdateServiceFormValidator updateValidator,
+			RegisterServiceFormValidator registerValidator, EnrollmentRepo enrollmentRepo, UserActionRepo userActionRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.serviceRepo = serviceRepo;
 		this.updateValidator = updateValidator;
 		this.registerValidator = registerValidator;
 		this.enrollmentRepo = enrollmentRepo;
+		this.userActionRepo = userActionRepo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session,
-			@RequestParam(value = "list", required = false) String value,
+	public ModelAndView listAll(HttpSession session, @RequestParam(value = "list", required = false) String value,
 			@RequestParam(value = "search", required = false) String search) {
 
 		UserManager usr = new SessionManager(session);
@@ -75,8 +78,7 @@ public class ServiceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView update(@RequestParam("id") Service service,
-			HttpSession session,
+	public ModelAndView update(@RequestParam("id") Service service, HttpSession session,
 			@RequestParam(value = "success", required = false) Boolean success,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 		UserManager usr = new SessionManager(session);
@@ -92,8 +94,7 @@ public class ServiceController {
 			mav.addObject("success", false);
 		} else {
 			mav.addObject("success", success);
-			mav.addObject("successmsg",
-					"La informacion se ha modificado correctamente");
+			mav.addObject("successmsg", "La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updateServiceForm", new UpdateServiceForm());
 		mav.addObject("enrollments", enrollmentRepo.getActive(service));
@@ -101,8 +102,7 @@ public class ServiceController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView update(HttpSession session, UpdateServiceForm form,
-			Errors errors) {
+	public ModelAndView update(HttpSession session, UpdateServiceForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
@@ -111,14 +111,15 @@ public class ServiceController {
 
 		ModelAndView mav = new ModelAndView();
 		Service updatedService = serviceRepo.get(form.getId());
+		String previousService = updatedService.toString();
+
 		if (errors.hasErrors()) {
 			mav.addObject("service", serviceRepo.get(form.getId()));
 			return mav;
 		}
 		updatedService.setName(form.getName());
 		updatedService.setValue(Double.parseDouble(form.getValue()));
-		updatedService.setMonthsDuration(Integer.parseInt(form
-				.getMonthsDuration()));
+		updatedService.setMonthsDuration(Integer.parseInt(form.getMonthsDuration()));
 		if (form.getStatus().equals("ACTIVE"))
 			updatedService.activate();
 		else
@@ -134,13 +135,14 @@ public class ServiceController {
 			updatedService.setType(Service.Type.COMMON);
 		else
 			updatedService.setType(Service.Type.OTHER);
-		return new ModelAndView("redirect:update?id=" + updatedService.getId()
-				+ "&success=true");
+
+		userActionRepo.add(new UserAction(Action.UPDATE, Service.class.getName(), previousService, updatedService
+				.toString(), ControllerType.SERVICE, "update", userRepo.get(usr.getUsername())));
+		return new ModelAndView("redirect:update?id=" + updatedService.getId() + "&success=true");
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView register(HttpSession session, RegisterServiceForm form,
-			Errors errors) {
+	public ModelAndView register(HttpSession session, RegisterServiceForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
@@ -161,11 +163,13 @@ public class ServiceController {
 			type = Service.Type.SPORT;
 		if (form.getType().equals("COMMON"))
 			type = Service.Type.COMMON;
-		Service s = new Service(form.getName(), Double.parseDouble(form
-				.getValue()), type, Integer.parseInt(form.getMonthsDuration()));
+		Service s = new Service(form.getName(), Double.parseDouble(form.getValue()), type, Integer.parseInt(form
+				.getMonthsDuration()));
 		serviceRepo.add(s);
-		return new ModelAndView("redirect:update?id=" + s.getId()
-				+ "&success=false&neww=true");
+
+		userActionRepo.add(new UserAction(Action.CREATE, Service.class.getName(), null, s.toString(),
+				ControllerType.SERVICE, "register", userRepo.get(usr.getUsername())));
+		return new ModelAndView("redirect:update?id=" + s.getId() + "&success=false&neww=true");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

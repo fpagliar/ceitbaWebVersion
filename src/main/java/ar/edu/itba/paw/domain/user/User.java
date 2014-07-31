@@ -29,6 +29,13 @@ public class User extends PersistentEntity {
 	@Column(name = "level", nullable = false)
 	private Level level;
 
+	public static enum UserStatus {
+		ACTIVE, INACTIVE
+	};
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false)
+	private UserStatus status;
+
 	@OneToMany
 	private List<UserAction> actions = new ArrayList<UserAction>();
 
@@ -39,6 +46,7 @@ public class User extends PersistentEntity {
 	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
+		activate();
 	}
 
 	/* Getters */
@@ -108,5 +116,17 @@ public class User extends PersistentEntity {
 
 	public void reportAction(UserAction action) {
 		actions.add(action);
+	}
+
+	public boolean isActive() {
+		return UserStatus.ACTIVE.equals(status);
+	}
+
+	public void activate() {
+		this.status = UserStatus.ACTIVE;
+	}
+
+	public void deactivate() {
+		this.status = UserStatus.INACTIVE;
 	}
 }

@@ -17,28 +17,30 @@ public class UserAction extends PersistentEntity {
 	@ManyToOne(optional = false)
 	private User user;
 
-	@Column(name="previous", nullable=true)
+	@Column(name = "previous", nullable = true)
 	private String previous;
 
-	@Column(name="subsequent", nullable=true)
+	@Column(name = "subsequent", nullable = true)
 	private String subsequent;
 
 	public static enum ControllerType {
-		ASSISTANCE, BILLING, ENROLLMENT, PAYMENT, PERSON, SERVICE, USER, 
+		ASSISTANCE, BILLING, ENROLLMENT, PAYMENT, PERSON, SERVICE, USER,
 	};
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "controller", nullable = false)
 	private ControllerType controller;
 
-	@Column(nullable=false)
+	@Column(nullable = true)
 	private String className;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String method;
 
 	public static enum Action {
 		UPDATE, DELETE, CREATE, POST
 	};
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "action", nullable = false)
 	private Action action;
@@ -64,17 +66,23 @@ public class UserAction extends PersistentEntity {
 		this.date = DateTime.now();
 		checkAction();
 	}
-	
+
 	private void checkAction() {
 		if (action.equals(Action.CREATE)) {
-			if(previous != null || subsequent == null)
-				throw new IllegalArgumentException("INVALID ACTION - CREATE WITH previous:" + previous + " subsequent:" + subsequent);
+			if (previous != null || subsequent == null)
+				throw new IllegalArgumentException(
+						"INVALID ACTION - CREATE WITH previous:" + previous
+								+ " subsequent:" + subsequent);
 		} else if (action.equals(Action.DELETE)) {
-			if(previous == null || subsequent != null)
-				throw new IllegalArgumentException("INVALID ACTION - DELETE WITH previous:" + previous + " subsequent:" + subsequent);
+			if (previous == null || subsequent != null)
+				throw new IllegalArgumentException(
+						"INVALID ACTION - DELETE WITH previous:" + previous
+								+ " subsequent:" + subsequent);
 		} else if (action.equals(Action.UPDATE)) {
-			if(previous == null || subsequent == null)
-				throw new IllegalArgumentException("INVALID ACTION - UPDATE WITH previous:" + previous + " subsequent:" + subsequent);
+			if (previous == null || subsequent == null)
+				throw new IllegalArgumentException(
+						"INVALID ACTION - UPDATE WITH previous:" + previous
+								+ " subsequent:" + subsequent);
 		}
 		return;
 	}
@@ -82,21 +90,21 @@ public class UserAction extends PersistentEntity {
 	public User getUser() {
 		return user;
 	}
-	
+
 	public String getPrevious() {
 		return previous;
 	}
-	
+
 	public String getSubsequent() {
 		return subsequent;
 	}
-	
+
 	public ControllerType getController() {
 		return controller;
 	}
-	
+
 	public Action getAction() {
 		return action;
 	}
-	
+
 }

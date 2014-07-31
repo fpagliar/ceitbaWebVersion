@@ -32,13 +32,14 @@ public class UpdateUserFormValidator implements Validator {
 		String previous = target.getCurrentUsername();
 		String next = target.getUsername();
 
-		User currentUser = userRepo.get(previous);
+		User userBeingUpdated = userRepo.get(previous);
 
 		// Check old password
-		if (!(target.isAdmin() && (!currentUser.isAdmin()))) {
+		//If I'm an admin, and changing the details on a non admin user, then I don't need the password
+		if (!(target.isAdmin() && (!userBeingUpdated.isAdmin()))) {
 			if (target.getOldPassword().equals(""))
 				errors.rejectValue("oldPassword", "missing");
-			else if (!target.getOldPassword().equals(currentUser.getPassword()))
+			else if (!target.getOldPassword().equals(userBeingUpdated.getPassword()))
 				errors.rejectValue("oldPassword", "invalid");
 		}
 
