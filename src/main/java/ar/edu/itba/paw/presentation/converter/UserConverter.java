@@ -4,23 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import ar.edu.itba.paw.domain.user.Person;
-import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.User;
+import ar.edu.itba.paw.domain.user.UserRepo;
 
 @Component
-public class UserConverter implements Converter<String, Person>{
+public class UserConverter implements Converter<String, User>{
 	
-	private PersonRepo repo;
+	private UserRepo repo;
 	
 	@Autowired
-	public UserConverter(PersonRepo repo) {
+	public UserConverter(UserRepo repo) {
 		this.repo = repo;
 	}
 
 	@Override
-	public Person convert(String source) {
+	public User convert(String source) {
 		try {
-			return repo.getById(Integer.valueOf(source));
+			return repo.get(Integer.valueOf(source));
 		} catch (NumberFormatException e) {
 			return null;
 		}

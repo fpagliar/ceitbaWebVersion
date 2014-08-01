@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -14,12 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.domain.user.User;
-import ar.edu.itba.paw.domain.user.UserAction;
-import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.User.Level;
-import ar.edu.itba.paw.domain.user.User.UserStatus;
+import ar.edu.itba.paw.domain.user.UserAction;
 import ar.edu.itba.paw.domain.user.UserAction.Action;
 import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
+import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.LoginForm;
 import ar.edu.itba.paw.presentation.command.RegisterUserForm;
@@ -235,5 +235,53 @@ public class UserController {
 		userActionRepo.add(new UserAction(Action.CREATE, User.class.getName(), null, newUser.toString(),
 				ControllerType.USER, "register", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:../user/listAll?success=0");
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView listActions(HttpSession session, @RequestParam(value = "user", required = false) User user, 
+			@RequestParam(value = "start", required = false) DateTime start,
+			@RequestParam(value = "end", required = false) DateTime end,
+			@RequestParam(value = "controller", required = false) String controllerString,
+			@RequestParam(value = "action", required = false) String actionString) {
+		UserManager usr = new SessionManager(session);
+		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("redirect:/sibadac/notAuthorized");
+
+		Action action = null;
+		if(actionString != null) {
+			if(actionString.equals(Action.CREATE.toString()))
+				action = Action.CREATE;
+			else if(actionString.equals(Action.DELETE.toString()))
+				action = Action.DELETE;
+			else if(actionString.equals(Action.POST.toString()))
+				action = Action.POST;
+			else if(actionString.equals(Action.UPDATE.toString()))
+				action = Action.UPDATE;
+		}
+		
+		ControllerType controller = null;
+		if(controllerString != null){
+			if(controllerString.equals(ControllerType.ASSISTANCE.toString()))
+				controller = ControllerType.ASSISTANCE;
+			else if(controllerString.equals(ControllerType.BILLING.toString()))
+				controller = ControllerType.BILLING;
+			else if(controllerString.equals(ControllerType.ENROLLMENT.toString()))
+				controller = ControllerType.ENROLLMENT;
+			else if(controllerString.equals(ControllerType.PAYMENT.toString()))
+				controller = ControllerType.PAYMENT;
+			else if(controllerString.equals(ControllerType.PERSON.toString()))
+				controller = ControllerType.PERSON;
+			else if(controllerString.equals(ControllerType.SERVICE.toString()))
+				controller = ControllerType.SERVICE;
+			else if(controllerString.equals(ControllerType.USER.toString()))
+				controller = ControllerType.USER;
+		}
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("users", userRepo.getAll());
+		mav.addObject("controllers", ControllerType.values());
+		mav.addObject("userActions", Action.values());
+		mav.addObject("actions", userActionRepo.getAll(user, action, controller, start, end));
+		return mav;
 	}
 }

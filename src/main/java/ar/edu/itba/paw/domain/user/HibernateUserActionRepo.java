@@ -75,4 +75,22 @@ public class HibernateUserActionRepo extends AbstractHibernateRepo implements
 		c.add(Restrictions.between("date", start, end));
 		return (List<UserAction>) c.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserAction> getAll(User user, Action action, ControllerType controller, DateTime start, DateTime end) {
+		Criteria c = createCriteria(UserAction.class);
+		if(user != null)
+			c.add(Restrictions.eq("user", user));
+		if(action != null)
+			c.add(Restrictions.eq("action", action));
+		if(controller != null)
+			c.add(Restrictions.eq("controller", controller));
+		if(start != null)
+			c.add(Restrictions.ge("date", start));
+		if(end != null)
+			c.add(Restrictions.le("date", end));
+		return (List<UserAction>) c.list();
+	}
+	
 }

@@ -26,6 +26,7 @@
 							<li><a href="register">Nuevo Usuario</a></li>
 							<li><a href="update">Mi perfil</a></li>
 							<li class="active"><a href="#">Eliminar</a></li>
+							<li><a href="listActions">Listar acciones</a></li>
 						</ul>
 					</div>
 					<div class="span10">

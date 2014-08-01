@@ -24,7 +24,8 @@
 							<li class="nav-header">Opciones</li>
 							<li><a href="listAll">Listar Todos</a></li>
 							<li class="active"><a href="#">Nuevo Usuario</a></li>
-							<li ><a href="update">Mi Perfil</a></li>
+							<li><a href="update">Mi Perfil</a></li>
+							<li><a href="listActions">Listar acciones</a></li>
 						</ul>
 					</div>
 					<div class="span5">

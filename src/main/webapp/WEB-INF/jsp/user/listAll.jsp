@@ -25,6 +25,7 @@
 							<li class="active"><a href="#">Listar Todos</a></li>
 							<li><a href="register">Nuevo Usuario</a></li>
 							<li><a href="update">Mi perfil</a></li>
+							<li><a href="listActions">Listar acciones</a></li>
 						</ul>
 					</div>
 					<div class="span10">
@@ -37,6 +38,7 @@
 									<th>Usuario</th>
 									<th>Rol</th>
 									<th>Estado</th>
+									<th>Acciones</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -53,14 +55,12 @@
 										<c:if test="${user.level == 'REGULAR'}"> 
 											<td>Regular</td>
 										</c:if>
-										<td>
-											<c:if test="${user.active}"> 
-												<td>Activo</td>
-											</c:if>
-											<c:if test="${not user.active}"> 
-												<td>Inactivo</td>
-											</c:if>
-										</td>
+										<c:if test="${user.active}"> 
+											<td>Activo</td>
+										</c:if>
+										<c:if test="${not user.active}"> 
+											<td>Inactivo</td>
+										</c:if>
 										<c:if test="${admin}">
 											<td>
 												<a href="update?id=${user.id}">Editar</a>

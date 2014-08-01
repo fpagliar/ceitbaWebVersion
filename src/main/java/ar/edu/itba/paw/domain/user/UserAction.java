@@ -10,6 +10,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
+import ar.edu.itba.paw.lib.DateHelper;
 
 @Entity
 public class UserAction extends PersistentEntity {
@@ -53,9 +54,8 @@ public class UserAction extends PersistentEntity {
 	UserAction() {
 	}
 
-	public UserAction(Action action, String className, String previous,
-			String subsequent, ControllerType controller, String method,
-			User user) {
+	public UserAction(Action action, String className, String previous, String subsequent, ControllerType controller,
+			String method, User user) {
 		this.action = action;
 		this.className = className;
 		this.previous = previous;
@@ -70,19 +70,16 @@ public class UserAction extends PersistentEntity {
 	private void checkAction() {
 		if (action.equals(Action.CREATE)) {
 			if (previous != null || subsequent == null)
-				throw new IllegalArgumentException(
-						"INVALID ACTION - CREATE WITH previous:" + previous
-								+ " subsequent:" + subsequent);
+				throw new IllegalArgumentException("INVALID ACTION - CREATE WITH previous:" + previous + " subsequent:"
+						+ subsequent);
 		} else if (action.equals(Action.DELETE)) {
 			if (previous == null || subsequent != null)
-				throw new IllegalArgumentException(
-						"INVALID ACTION - DELETE WITH previous:" + previous
-								+ " subsequent:" + subsequent);
+				throw new IllegalArgumentException("INVALID ACTION - DELETE WITH previous:" + previous + " subsequent:"
+						+ subsequent);
 		} else if (action.equals(Action.UPDATE)) {
 			if (previous == null || subsequent == null)
-				throw new IllegalArgumentException(
-						"INVALID ACTION - UPDATE WITH previous:" + previous
-								+ " subsequent:" + subsequent);
+				throw new IllegalArgumentException("INVALID ACTION - UPDATE WITH previous:" + previous + " subsequent:"
+						+ subsequent);
 		}
 		return;
 	}
@@ -107,4 +104,12 @@ public class UserAction extends PersistentEntity {
 		return action;
 	}
 
+	public String getFormattedDate() {
+		return DateHelper.getDateString(date);
+	}
+
+	public String getClassName() {
+		String[] strings = className.split("\\.");
+		return strings[strings.length - 1];
+	}
 }

@@ -23,6 +23,8 @@ public interface UserActionRepo {
 
 	public List<UserAction> getAll(DateTime start, DateTime end);
 
+	public List<UserAction> getAll(User user, Action action, ControllerType controller, DateTime start, DateTime end);
+
 	public void remove(UserAction action);
 	
 }

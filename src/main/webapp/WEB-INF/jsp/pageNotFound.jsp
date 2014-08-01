@@ -7,6 +7,6 @@
 	<title>Ceitba Db</title>
 </head>
 <body>
-	<h1>The page requested was not found!</h1>
+	<h1> Error: No se ha podido encontrar la pagina solicitada :( </h1>
 </body>
 </html>

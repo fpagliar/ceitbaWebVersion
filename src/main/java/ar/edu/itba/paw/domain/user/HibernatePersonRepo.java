@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +76,8 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 		} catch (NumberFormatException e) {
 		}
 		Criteria c = createCriteria(Person.class);
-		c.add(Restrictions.or(Restrictions.ilike("firstName", s),
-				Restrictions.ilike("lastName", s)));
+		c.add(Restrictions.or(Restrictions.ilike("firstName", s, MatchMode.ANYWHERE),
+				Restrictions.ilike("lastName", s, MatchMode.ANYWHERE)));
 		ans.addAll((List<Person>) c.list());
 		return ans;
 	}

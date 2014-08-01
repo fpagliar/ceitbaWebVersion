@@ -32,6 +32,9 @@
 							<c:if test="${profile != true}">
 								<li class="active"><a href="#">Editar</a></li>
 							</c:if>
+							<c:if test="${administrator}">
+								<li><a href="listActions">Listar acciones</a></li>
+							</c:if>
 						</ul>
 					</div>
 					<div class="span5">
