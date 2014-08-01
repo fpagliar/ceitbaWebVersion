@@ -66,9 +66,11 @@
 												<a href="update?id=${user.id}">
 													<button>Editar</button> 
 												</a>
-												<a href="remove?id=${user.id}">
-													<button>Borrar</button>
-												</a>
+												<c:if test="${user.active}"> 
+													<a href="remove?id=${user.id}">
+														<button>Borrar</button>
+													</a>
+												</c:if>
 											</td>
 										</c:if>
 									</tr>
