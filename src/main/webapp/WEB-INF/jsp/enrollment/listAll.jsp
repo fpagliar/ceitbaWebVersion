@@ -49,6 +49,10 @@
 					<div class="span10">
 						<h2 class="text-center">Filtrar Busqueda</h2>
 						<form action="listAll" method="get" name="search">
+							<c:if test="${history==true}">
+								<input type="hidden" class="form-control"
+									name="list" value="history">
+							</c:if>
 							<input type="text" class="form-control"
 								placeholder="Nombre, legajo o servicio" name="search">
 								<button type="submit">
@@ -62,10 +66,36 @@
 									<th>Nombre</th>
 									<th>Apellido</th>
 									<th>Servicio</th>
+									<th>Alta</th>
+									<th>Baja</th>
 									<th></th>
 								</tr>
 							</thead>
 							<tbody>
+								<c:if test="${historyEnrollments!=null}">
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td><strong>Historial</strong></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+									<c:forEach var="enrollment" items="${historyEnrollments}"
+										varStatus="rowCounter">
+										<tr>
+											<td>${enrollment.person.legacy}</td>
+											<td>${enrollment.person.firstName}</td>
+											<td>${enrollment.person.lastName}</td>
+											<td>${enrollment.service.name}</td>
+											<td>${enrollment.formatedStartDate}</td>
+											<td>${enrollment.formatedEndDate}</td>
+											<td><a href="show?id=${enrollment.id}"><i
+													class="icon-edit"></i></a></td>
+										</tr>
+									</c:forEach>
+								</c:if>
 								<c:forEach var="enrollment" items="${enrollments}"
 									varStatus="rowCounter">
 									<tr>
@@ -73,6 +103,8 @@
 										<td>${enrollment.person.firstName}</td>
 										<td>${enrollment.person.lastName}</td>
 										<td>${enrollment.service.name}</td>
+										<td>${enrollment.formatedStartDate}</td>
+										<td>${enrollment.formatedEndDate}</td>
 										<td><a href="show?id=${enrollment.id}"><i
 												class="icon-edit"></i></a></td>
 									</tr>
@@ -81,7 +113,9 @@
 										<tr>
 											<td></td>
 											<td></td>
+											<td></td>
 											<td><strong>Servicios</strong></td>
+											<td></td>
 											<td></td>
 											<td></td>
 										</tr>
@@ -92,6 +126,8 @@
 											<td>${enrollment.person.firstName}</td>
 											<td>${enrollment.person.lastName}</td>
 											<td>${enrollment.service.name}</td>
+											<td>${enrollment.formatedStartDate}</td>
+											<td>${enrollment.formatedEndDate}</td>
 											<td><a href="show?id=${enrollment.id}"><i
 													class="icon-edit"></i></a></td>
 										</tr>
@@ -99,7 +135,9 @@
 										<tr>
 											<td></td>
 											<td></td>
+											<td></td>
 											<td><strong>Usuarios</strong></td>
+											<td></td>
 											<td></td>
 											<td></td>
 										</tr>
@@ -110,6 +148,8 @@
 											<td>${enrollment.person.firstName}</td>
 											<td>${enrollment.person.lastName}</td>
 											<td>${enrollment.service.name}</td>
+											<td>${enrollment.formatedStartDate}</td>
+											<td>${enrollment.formatedEndDate}</td>
 											<td><a href="show?id=${enrollment.id}"><i
 													class="icon-edit"></i></a></td>
 										</tr>

@@ -65,7 +65,7 @@ public class EnrollmentController {
 
 		ModelAndView mav = new ModelAndView();
 		if ("history".equals(value)) {
-			mav.addObject("enrollments", enrollmentRepo.getExpired());
+			mav.addObject("historyEnrollments", enrollmentRepo.getExpired());
 			mav.addObject("history", true);
 		}
 		if (serviceName != null) {

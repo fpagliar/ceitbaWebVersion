@@ -68,7 +68,7 @@
 										commandName="createPaymentForm" class="form-horizontal">
 												<form:input name="debtId" path="debtId" type="hidden"
 												value="${debt.id}" />
-												<button type="submit" class="btn">Pagar</button>
+												<button type="submit" class="btn btn-sm payment">Pagar</button>
 											</form:form>
 										</td>
 									</tr>
