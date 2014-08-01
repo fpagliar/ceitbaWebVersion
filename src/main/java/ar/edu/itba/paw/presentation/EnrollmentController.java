@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.presentation;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,12 +175,19 @@ public class EnrollmentController {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		String ids = "";
-		for (Enrollment e : enrollmentRepo.get(person, service)) {
+		List<Enrollment> enrollments;
+		if (service.getName().equals("ceitba")) {
+			// If it is ceitba, cancel all the enrollments
+			enrollments = enrollmentRepo.get(person);
+		} else {
+			enrollments = enrollmentRepo.get(person, service);
+		}
+		for (Enrollment e : enrollments) {
 			e.cancel(); // cancels all the subscriptions instead of looking for
 						// the active one
 			ids += e.getId() + "-";
 		}
-		
+
 		userActionRepo.add(new UserAction(Action.DELETE, Enrollment.class.getName(), ids, null,
 				ControllerType.ENROLLMENT, "delete", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:delete");
