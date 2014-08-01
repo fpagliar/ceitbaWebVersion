@@ -47,7 +47,6 @@
 									<th>Monto</th>
 									<th>Fecha de deuda</th>
 									<th>Fecha de pago</th>
-									<th>Detalle de usuario</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -60,8 +59,6 @@
 										<td>${payment.amount}</td>
 										<td>${payment.formatedPaymentDate}</td>
 										<td>${payment.formatedDebtDate}</td>
-										<td><a href="listAll?person=${payment.person.id}"><i
-												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

@@ -1,3 +1,2 @@
 + agregar boton de eliminar a la lista de usuarios
-+ listar pagos borrar link a detalle del usuario
 + arreglar los permisos / la pantalla de unauth
