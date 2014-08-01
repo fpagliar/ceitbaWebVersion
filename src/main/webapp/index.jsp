@@ -13,7 +13,7 @@
 <meta name="author" content="">
 
 <!-- Le styles -->
-<link href="assets/css/bootstrap.css" rel="stylesheet">
+<link href="/sibadac/assets/css/bootstrap.css" rel="stylesheet">
 <style type="text/css">
 body {
 	padding-top: 20px;

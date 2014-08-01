@@ -116,7 +116,7 @@ body {
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
-      <script src="../assets/js/html5shiv.js"></script>
+      <script src="/sibadac/assets/js/html5shiv.js"></script>
     <![endif]-->
 
 <!-- Fav and touch icons -->
