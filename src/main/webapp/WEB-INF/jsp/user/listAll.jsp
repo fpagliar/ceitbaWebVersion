@@ -56,14 +56,19 @@
 											<td>Regular</td>
 										</c:if>
 										<c:if test="${user.active}"> 
-											<td>Activo</td>
+											<td class="alert alert-success">Activo</td>
 										</c:if>
 										<c:if test="${not user.active}"> 
-											<td>Inactivo</td>
+											<td class="alert alert-danger">Inactivo</td>
 										</c:if>
 										<c:if test="${admin}">
 											<td>
-												<a href="update?id=${user.id}">Editar</a>
+												<a href="update?id=${user.id}">
+													<button>Editar</button> 
+												</a>
+												<a href="remove?id=${user.id}">
+													<button>Borrar</button>
+												</a>
 											</td>
 										</c:if>
 									</tr>

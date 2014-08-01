@@ -30,6 +30,7 @@
 						</ul>
 					</div>
 					<div class="span10">
+						<h3> Desea eliminar al usuario '${user.username}'? </h3>
 					</div>
 					<div class="span10">
 					</div>

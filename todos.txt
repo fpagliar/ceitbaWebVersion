@@ -1,2 +1,1 @@
-+ agregar boton de eliminar a la lista de usuarios
 + arreglar los permisos / la pantalla de unauth
