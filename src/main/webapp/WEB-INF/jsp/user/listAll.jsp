@@ -32,7 +32,7 @@
 						<c:if test="${successMsg != null}">
 							<div class="alert alert-success">${successMsg}</div>
 						</c:if>
-						<table class="table table-striped pull-right">
+						<table class="table pull-right">
 							<thead>
 								<tr>
 									<th>Usuario</th>

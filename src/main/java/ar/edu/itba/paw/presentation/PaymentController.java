@@ -58,6 +58,8 @@ public class PaymentController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		if (legacy != null) {
@@ -89,6 +91,8 @@ public class PaymentController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 
@@ -117,6 +121,8 @@ public class PaymentController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		validator.validate(form, errors);
 		if (errors.hasErrors()) {

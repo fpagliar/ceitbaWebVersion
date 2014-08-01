@@ -83,8 +83,11 @@ public class UserController {
 			@RequestParam(value = "success", required = false) Integer messageKey) {
 		String[] messages = { "El usuario ha sido creado correctamente", "El usuario ha sido eliminado correctamente" };
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("users", userRepo.getAll());
 		if (messageKey != null && messageKey >= 0 && messageKey < messages.length)
@@ -103,6 +106,7 @@ public class UserController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		User loggedUser = userRepo.get(usr.getUsername());
 		mav.addObject("updateUserForm", new UpdateUserForm());
@@ -112,7 +116,7 @@ public class UserController {
 			mav.addObject("profile", "true");
 		} else {
 			if (!loggedUser.isAdmin())
-				return new ModelAndView("redirect:../user/login?error=unauthorized");
+				return new ModelAndView("redirect:/unauthorized");
 			mav.addObject("user", userRepo.get(id));
 		}
 		if (messageKey != null && messageKey >= 0 && messageKey < messages.length)
@@ -123,9 +127,8 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView update(HttpSession session, UpdateUserForm form, Errors errors) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser()) {
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		}
 
 		User loggedUser = userRepo.get(usr.getUsername());
 		form.setAdmin(loggedUser.getLevel().equals(Level.ADMINISTRATOR));
@@ -140,7 +143,7 @@ public class UserController {
 		
 		//If I'm no admin, and I am updating a user other than myself
 		if(!loggedUser.isAdmin() && !loggedUser.getUsername().equals(form.getCurrentUsername()))
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
+			return new ModelAndView("unauthorized");
 
 		User userBeingUpdated = userRepo.get(form.getCurrentUsername());
 		String previousUser = userBeingUpdated.toString();
@@ -163,8 +166,10 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView remove(HttpSession session, @RequestParam(value = "id", required = true) String userId) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		try {
@@ -180,29 +185,33 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView delete(HttpSession session, @RequestParam(value = "id", required = true) String userId) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("unauthorized");
 
 		try {
 			Integer id = Integer.valueOf(userId);
 			User user = userRepo.get(id);
 			if (user.isAdmin())
-				return new ModelAndView("redirect:/sibadac/notAuthorized");
+				return new ModelAndView("unauthorized");
 			userRepo.remove(user);
 
 			userActionRepo.add(new UserAction(Action.DELETE, User.class.getName(), user.toString(), null,
 					ControllerType.USER, "delete", userRepo.get(usr.getUsername())));
 			return new ModelAndView("redirect:../user/listAll?success=1");
 		} catch (Exception e) {
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+			return new ModelAndView("unauthorized");
 		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView register(HttpSession session) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("registerUserForm", new RegisterUserForm());
@@ -217,8 +226,10 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView register(HttpSession session, RegisterUserForm form, Errors errors) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("unauthorized");
 
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
@@ -244,8 +255,10 @@ public class UserController {
 			@RequestParam(value = "controller", required = false) String controllerString,
 			@RequestParam(value = "action", required = false) String actionString) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isAdmin())
-			return new ModelAndView("redirect:/sibadac/notAuthorized");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isAdmin())
+			return new ModelAndView("unauthorized");
 
 		Action action = null;
 		if(actionString != null) {

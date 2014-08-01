@@ -130,12 +130,12 @@ body {
           <div class="navbar-inner">
             <div class="container">
               <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
                 <li><a href="data/person/listAll">Usuarios</a></li>
                 <li><a href="data/service/listAll">Servicios</a></li>
-                <li><a href="#">Subscripciones</a></li>
-                <li><a href="#">Facturacion</a></li>
-                <li><a href="#">Perfil</a></li>
+				<li><a href="data/enrollment/listAll">Subscripciones</a></li>
+				<li><a href="data/payment/listAll">Pagos</a></li>
+				<li><a href="data/billing/listNewEnrollments">Facturacion</a></li>
+				<li><a href="data/user/update">Perfil</a></li>
               </ul>
             </div>
           </div>
@@ -150,7 +150,7 @@ body {
       </div>
 
       <div class="footer">
-        <p>&copy; CEITBA 2013</p>
+        <p>CEITBA 2014</p>
       </div>
 
     </div>

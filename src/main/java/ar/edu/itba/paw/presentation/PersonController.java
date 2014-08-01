@@ -71,6 +71,8 @@ public class PersonController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("person", person);
@@ -93,8 +95,10 @@ public class PersonController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView update(HttpSession session, UpdatePersonForm form, Errors errors) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		updateValidator.validate(form, errors);
 		Person updatedPerson = personRepo.getById(form.getId());
@@ -126,8 +130,10 @@ public class PersonController {
 	public ModelAndView register(HttpSession session, RegisterPersonForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
@@ -154,8 +160,10 @@ public class PersonController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView register(HttpSession session) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("registerPersonForm", new RegisterPersonForm());

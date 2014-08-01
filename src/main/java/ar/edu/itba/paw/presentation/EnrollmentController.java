@@ -60,7 +60,7 @@ public class EnrollmentController {
 			@RequestParam(value = "serviceName", required = false) String serviceName) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
@@ -87,7 +87,7 @@ public class EnrollmentController {
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		if (enrollment == null)
@@ -106,8 +106,10 @@ public class EnrollmentController {
 	public ModelAndView register(HttpSession session, RegisterEnrollmentForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		validator.validate(form, errors);
@@ -141,8 +143,10 @@ public class EnrollmentController {
 			@RequestParam(value = "service", required = false) String serviceCategory) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		if ("sport".equals(serviceCategory)) {
@@ -171,8 +175,10 @@ public class EnrollmentController {
 			@RequestParam(value = "service", required = true) Service service) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		String ids = "";
 		List<Enrollment> enrollments;
@@ -196,8 +202,10 @@ public class EnrollmentController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView delete(HttpSession session) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		return mav;

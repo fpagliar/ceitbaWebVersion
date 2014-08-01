@@ -50,7 +50,7 @@ public class ServiceController {
 			@RequestParam(value = "search", required = false) String search) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
@@ -82,8 +82,11 @@ public class ServiceController {
 			@RequestParam(value = "success", required = false) Boolean success,
 			@RequestParam(value = "neww", required = false) Boolean neww) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
+
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("service", service);
 		if (neww != null && neww) {
@@ -105,8 +108,11 @@ public class ServiceController {
 	public ModelAndView update(HttpSession session, UpdateServiceForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
+		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
+
 		updateValidator.validate(form, errors);
 
 		ModelAndView mav = new ModelAndView();
@@ -145,8 +151,10 @@ public class ServiceController {
 	public ModelAndView register(HttpSession session, RegisterServiceForm form, Errors errors) {
 
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("redirect:../user/login");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
@@ -175,8 +183,10 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView register(HttpSession session) {
 		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser() || !userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("redirect:../user/login");
+		if (!usr.existsUser())
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("registerServiceForm", new RegisterServiceForm());

@@ -55,6 +55,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		if (service == null)
 			service = serviceRepo.get("ceitba");
@@ -80,6 +82,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		if (service == null)
 			service = serviceRepo.get("ceitba");
@@ -105,6 +109,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		if (start == null)
 			start = DateTime.now().minusMonths(1);
@@ -122,6 +128,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		List<Debt> debts = debtRepo.removeBilledDebts();
 		String ids = "";
@@ -140,6 +148,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		if (service == null)
 			service = serviceRepo.get("ceitba");
@@ -156,6 +166,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		List<Debt> debts = personRepo.billCashPayments();
 		debtRepo.add(debts);
@@ -173,6 +185,8 @@ public class BillingController {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		if(!userRepo.get(usr.getUsername()).isModerator())
+			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
 		return mav;
