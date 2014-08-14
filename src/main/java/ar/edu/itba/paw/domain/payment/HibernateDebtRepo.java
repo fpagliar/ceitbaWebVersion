@@ -77,10 +77,10 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 		if (end != null)
 			c.add(Restrictions.lt("billingDate", end));
 		if (personnel) {
-			c.createCriteria("person").add(Restrictions.le("legacy", 1000))
+			c.createCriteria("person").add(Restrictions.le("legacy", 10000))
 					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 		} else {
-			c.createCriteria("person").add(Restrictions.ge("legacy", 1000))
+			c.createCriteria("person").add(Restrictions.ge("legacy", 10000))
 					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
 		}
 		return (List<Debt>) c.list();
