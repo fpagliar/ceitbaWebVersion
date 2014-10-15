@@ -111,7 +111,7 @@ public class UserController {
 		User loggedUser = userRepo.get(usr.getUsername());
 		mav.addObject("updateUserForm", new UpdateUserForm());
 		mav.addObject("administrator", loggedUser.isAdmin());
-		if (id == null) {
+		if (id == null || id == loggedUser.getId()) {
 			mav.addObject("user", loggedUser);
 			mav.addObject("profile", "true");
 		} else {

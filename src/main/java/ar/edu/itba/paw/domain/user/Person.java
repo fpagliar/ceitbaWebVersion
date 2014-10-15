@@ -48,7 +48,7 @@ public class Person extends PersistentEntity {
 	private DateTime registration;
 
 	@ManyToMany
-	@JoinTable(name = "person_enrollment", inverseJoinColumns = { @JoinColumn(name = "person") }, joinColumns = { @JoinColumn(name = "id") })
+	@JoinTable(name = "person_enrollment", inverseJoinColumns = { @JoinColumn(name = "person_id") }, joinColumns = { @JoinColumn(name = "id") })
 	private List<Enrollment> enrolledServices = new ArrayList<Enrollment>();
 
 	public static enum PaymentMethod {

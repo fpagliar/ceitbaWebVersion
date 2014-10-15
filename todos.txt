@@ -1,1 +1,3 @@
 + arreglar los permisos / la pantalla de unauth
++ arreglar cuando cambia la pass emi rompe
++ cambiar la pantalla de usuarios para q limite la query

@@ -1,0 +1,46 @@
+para hacer el deploy:
+cp sibadac.war /var/lib/tomcat6/webapps/
+
+Para ver los logs:
+ls /var/log/tomcat6/
+
+
+
+There are three important directories for Tomcat:
+
+    /etc/tomcat6 for configuration
+
+    /etc/tomcat6 for runtime, called CATALINA_HOME
+
+    /usr/share/tomcat6-root for webapps
+
+The alternative path to Tomcat, called CATALINA_BASE, is /var/lib/tomcat6
+
+
+IMPORTANTE:
+service tomcat6 restart
+
+Para consultar:
+http://206.72.201.146:8080/sibadac
+
+Para pasar el archivo:
+server: nc -l 9999 > sibadac.war
+client: nc 206.72.201.146 9999 < target/sibadac.war
+
+Para crear el war:
+$> mvn package
+lo crea en target/name.war
+
+Para crear la db:
+root@MechaHitler:/home/sheetah# su postgres
+postgres@MechaHitler:/home/sheetah$ psql
+postgres=# CREATE USER ceitba WITH PASSWORD 'ceitba';
+postgres=# CREATE DATABASE sibadac;
+postgres=# GRANT ALL PRIVILEGES ON DATABASE sibadac to ceitba;
+postgres=# \q
+
+#DESPUES DE QUE CORRA EL SERVER (Y CREE LAS TABLAS)
+$> psql sibadac
+postgres=# INSERT INTO my_user(id, level, password, username) VALUES(1000, 'ADMINISTRATOR', '123123', 'admin');
+postgres=# \q
+
