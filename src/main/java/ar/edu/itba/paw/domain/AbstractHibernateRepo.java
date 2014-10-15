@@ -93,7 +93,7 @@ public abstract class AbstractHibernateRepo {
 	 * @return The number of rows matching the given criteria
 	 */
 	protected long getCount(final Criteria criteria) {
-		return (Long) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		return new Long((Integer)criteria.setProjection(Projections.rowCount()).uniqueResult());
 	}
 
 	/**

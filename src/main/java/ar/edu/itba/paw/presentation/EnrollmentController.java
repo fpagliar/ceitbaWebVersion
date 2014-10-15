@@ -73,7 +73,7 @@ public class EnrollmentController {
 			mav.addObject("service", serviceName);
 		}
 		if (search != null) {
-			mav.addObject("personEnrollments", enrollmentRepo.getActivePersonsList(personRepo.search(search)));
+			mav.addObject("personEnrollments", enrollmentRepo.getActivePersonsList(personRepo.search(search, 1).getElements()));
 			mav.addObject("serviceEnrollments", enrollmentRepo.getActiveServiceList(serviceRepo.search(search)));
 			mav.addObject("search", true);
 		}

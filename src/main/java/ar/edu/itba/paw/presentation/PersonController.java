@@ -48,18 +48,21 @@ public class PersonController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session, @RequestParam(value = "search", required = false) String search) {
+	public ModelAndView listAll(final HttpSession session, 
+			@RequestParam(value = "search", required = false) final String search,
+			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		ModelAndView mav = new ModelAndView();
-		if (search != null) {
-			mav.addObject("persons", personRepo.search(search));
+		if (search != null && search != "") {
+			mav.addObject("persons", personRepo.search(search, page));
 			mav.addObject("search", true);
+			mav.addObject("searchParam", search);
 		} else
-			mav.addObject("persons", personRepo.getAll());
+			mav.addObject("persons", personRepo.getAll(page));
 		return mav;
 	}
 

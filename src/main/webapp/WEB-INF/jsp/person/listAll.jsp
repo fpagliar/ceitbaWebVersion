@@ -52,7 +52,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="person" items="${persons}"
+								<c:forEach var="person" items="${persons.elements}"
 									varStatus="rowCounter">
 									<tr>
 										<td>${person.legacy}</td>
@@ -64,6 +64,23 @@
 								</c:forEach>
 							</tbody>
 						</table>
+						<div class="row-fluid">
+							<div class="span4">
+								<c:if test="${persons.actualPage > 1}">
+									<a href="listAll?page=${persons.actualPage-1}&search=${searchParam}"> 
+										<button class="btn-large">Anterior</button> 
+									</a>
+								</c:if>
+							</div>
+							<div class="span4">
+								<h3> Pagina ${persons.actualPage} de ${persons.totalPage} </h3>
+							</div>
+							<div class="span4">
+								<a href="listAll?page=${persons.actualPage+1}&search=${searchParam}"> 
+									<button class="btn-large">Siguiente</button> 
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

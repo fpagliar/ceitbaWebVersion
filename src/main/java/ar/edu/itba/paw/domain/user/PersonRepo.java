@@ -2,6 +2,7 @@ package ar.edu.itba.paw.domain.user;
 
 import java.util.List;
 
+import ar.edu.itba.paw.domain.PaginatedResult;
 import ar.edu.itba.paw.domain.payment.Debt;
 
 
@@ -13,18 +14,8 @@ public interface PersonRepo {
 	/**
 	 * Lists all the registered {@link Person}.
 	 */
-	public List<Person> getAll();
-	public List<Person> search(String s);
-
-	/**
-	 * Lists all the {@link Person} registered as administrators.
-	 */
-//	public List<Person> getAllAdministrators();
-	
-	/**
-	 * Lists all the {@link Person} registered as regular users.
-	 */
-//	public List<Person> getAllRegularUsers();
+	public PaginatedResult<Person> getAll(final int page);
+	public PaginatedResult<Person> search(final String s, final int page);
 
 	/**
 	 * Returns the unique {@link Person} associated with a specific id.

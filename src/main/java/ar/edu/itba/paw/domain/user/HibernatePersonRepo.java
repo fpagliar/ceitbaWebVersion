@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
+import ar.edu.itba.paw.domain.PaginatedResult;
 import ar.edu.itba.paw.domain.enrollment.Enrollment;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
@@ -20,6 +22,8 @@ import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 @Repository
 public class HibernatePersonRepo extends AbstractHibernateRepo implements
 		PersonRepo {
+	
+	private static final int ELEMENTS_PER_PAGE = 15;
 
 	@Autowired
 	public HibernatePersonRepo(SessionFactory sessionFactory) {
@@ -58,28 +62,26 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 		return (Person) c.uniqueResult();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Person> getAll() {
+	public PaginatedResult<Person> getAll(final int page) {
 		Criteria c = createCriteria(Person.class);
-		return (List<Person>) c.list();
+		c.addOrder(Order.asc("legacy"));
+		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Person.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Person> search(String s) {
-		List<Person> ans = new ArrayList<Person>();
+	public PaginatedResult<Person> search(final String s, final int page) {
 		try {
 			Person p = getByLegacy(Integer.valueOf(s));
-			ans.add(p);
-			return ans;
-		} catch (NumberFormatException e) {
-		}
+			final List<Person> elements = new ArrayList<Person>();
+			elements.add(p);
+			return new PaginatedResult<Person>(1, elements, 1, 1);
+		} catch (NumberFormatException e) { }
 		Criteria c = createCriteria(Person.class);
 		c.add(Restrictions.or(Restrictions.ilike("firstName", s, MatchMode.ANYWHERE),
 				Restrictions.ilike("lastName", s, MatchMode.ANYWHERE)));
-		ans.addAll((List<Person>) c.list());
-		return ans;
+		c.addOrder(Order.asc("legacy"));
+		return getPaginated(c, page-1, ELEMENTS_PER_PAGE, Person.class);
 	}
 
 	@SuppressWarnings("unchecked")
