@@ -76,9 +76,11 @@
 								<h3> Pagina ${persons.actualPage} de ${persons.totalPage} </h3>
 							</div>
 							<div class="span4">
-								<a href="listAll?page=${persons.actualPage+1}&search=${searchParam}"> 
-									<button class="btn-large">Siguiente</button> 
-								</a>
+								<c:if test="${persons.actualPage < persons.totalPage}">
+									<a href="listAll?page=${persons.actualPage+1}&search=${searchParam}"> 
+										<button class="btn-large">Siguiente</button> 
+									</a>
+								</c:if>
 							</div>
 						</div>
 					</div>

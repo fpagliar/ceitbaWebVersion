@@ -47,7 +47,8 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listAll(HttpSession session, @RequestParam(value = "list", required = false) String value,
-			@RequestParam(value = "search", required = false) String search) {
+			@RequestParam(value = "search", required = false) String search, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
@@ -55,25 +56,26 @@ public class ServiceController {
 
 		ModelAndView mav = new ModelAndView();
 		if ("active".equals(value))
-			mav.addObject("services", serviceRepo.getActive());
+			mav.addObject("services", serviceRepo.getActive(page));
 		else if ("inactive".equals(value))
-			mav.addObject("services", serviceRepo.getInactive());
+			mav.addObject("services", serviceRepo.getInactive(page));
 		else if ("SPORT".equals(value))
-			mav.addObject("services", serviceRepo.getSports());
+			mav.addObject("services", serviceRepo.getSports(page));
 		else if ("COURSE".equals(value))
-			mav.addObject("services", serviceRepo.getCourses());
+			mav.addObject("services", serviceRepo.getCourses(page));
 		else if ("OTHER".equals(value))
-			mav.addObject("services", serviceRepo.getOthers());
+			mav.addObject("services", serviceRepo.getOthers(page));
 		else if ("LOCKER".equals(value))
-			mav.addObject("services", serviceRepo.getLockers());
+			mav.addObject("services", serviceRepo.getLockers(page));
 		else if ("COMMON".equals(value))
-			mav.addObject("services", serviceRepo.getCommons());
-		else if (search != null) {
-			mav.addObject("services", serviceRepo.search(search));
+			mav.addObject("services", serviceRepo.getCommons(page));
+		else if (search != null && search != "") {
+			mav.addObject("services", serviceRepo.search(search, page));
 			mav.addObject("search", true);
 		} else
-			mav.addObject("services", serviceRepo.getAll());
+			mav.addObject("services", serviceRepo.getAll(page));
 		mav.addObject("list", value);
+		mav.addObject("searchParam", search);
 		return mav;
 	}
 

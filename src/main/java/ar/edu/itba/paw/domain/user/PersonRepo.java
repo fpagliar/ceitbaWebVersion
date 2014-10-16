@@ -24,11 +24,6 @@ public interface PersonRepo {
 	public Person getById(int id);
 	public Person getByLegacy(int legacy);
 	public Person getByDni(String dni);
-	/**
-	 * Returns the unique {@link Person} associated with the username provided.
-	 * @return the {@link Person} or null if it doesn't exist
-	 */
-//	public Person get(String username);
 
 	/**
 	 * Adds the received {@link Person} to the database.

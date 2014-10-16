@@ -22,7 +22,7 @@
 					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
-							<c:if test="${list==null}">
+							<c:if test="${list==null || list==''}">
 								<li class="active"><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
@@ -132,7 +132,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="service" items="${services}"
+								<c:forEach var="service" items="${services.elements}"
 									varStatus="rowCounter">
 									<tr>
 										<td>${service.name}</td>
@@ -159,6 +159,25 @@
 								</c:forEach>
 							</tbody>
 						</table>
+						<div class="row-fluid">
+							<div class="span4">
+								<c:if test="${services.actualPage > 1}">
+									<a href="listAll?page=${services.actualPage-1}&search=${searchParam}&list=${list}"> 
+										<button class="btn-large">Anterior</button> 
+									</a>
+								</c:if>
+							</div>
+							<div class="span4">
+								<h3> Pagina ${services.actualPage} de ${services.totalPage} </h3>
+							</div>
+							<div class="span4">
+								<c:if test="${services.actualPage < services.totalPage}">
+									<a href="listAll?page=${services.actualPage+1}&search=${searchParam}&list=${list}"> 
+										<button class="btn-large">Siguiente</button> 
+									</a>
+								</c:if>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
