@@ -47,6 +47,7 @@
 						</ul>
 					</div>
 					<div class="span10">
+						<!--
 						<h2 class="text-center">Filtrar Busqueda</h2>
 						<form action="listAll" method="get" name="search">
 							<c:if test="${history==true}">
@@ -59,6 +60,7 @@
 									<i class="icon-search"></i>
 								</button>
 						</form>
+						-->
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
@@ -82,7 +84,7 @@
 											<td></td>
 											<td></td>
 										</tr>
-									<c:forEach var="enrollment" items="${historyEnrollments}"
+									<c:forEach var="enrollment" items="${historyEnrollments.elements}"
 										varStatus="rowCounter">
 										<tr>
 											<td>${enrollment.person.legacy}</td>
@@ -95,8 +97,27 @@
 													class="icon-edit"></i></a></td>
 										</tr>
 									</c:forEach>
+									<div class="row-fluid">
+										<div class="span4">
+											<c:if test="${historyEnrollments.actualPage > 1}">
+												<a href="listAll?page=${historyEnrollments.actualPage-1}"> 
+													<button class="btn-large">Anterior</button> 
+												</a>
+											</c:if>
+										</div>
+										<div class="span4">
+											<h3> Pagina ${historyEnrollments.actualPage} de ${historyEnrollments.totalPage} </h3>
+										</div>
+										<div class="span4">
+											<c:if test="${historyEnrollments.actualPage < historyEnrollments.totalPage}">
+												<a href="listAll?page=${historyEnrollments.actualPage+1}"> 
+													<button class="btn-large">Siguiente</button> 
+												</a>
+											</c:if>
+										</div>
+									</div>
 								</c:if>
-								<c:forEach var="enrollment" items="${enrollments}"
+								<c:forEach var="enrollment" items="${enrollments.elements}"
 									varStatus="rowCounter">
 									<tr>
 										<td>${enrollment.person.legacy}</td>
@@ -109,6 +130,7 @@
 												class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
+								<!--
 								<c:if test="${serviceEnrollments!=null}">
 										<tr>
 											<td></td>
@@ -119,7 +141,7 @@
 											<td></td>
 											<td></td>
 										</tr>
-									<c:forEach var="enrollment" items="${serviceEnrollments}"
+									<c:forEach var="enrollment" items="${serviceEnrollments.elements}"
 										varStatus="rowCounter">
 										<tr>
 											<td>${enrollment.person.legacy}</td>
@@ -141,7 +163,7 @@
 											<td></td>
 											<td></td>
 										</tr>
-									<c:forEach var="enrollment" items="${personEnrollments}"
+									<c:forEach var="enrollment" items="${personEnrollments.elements}"
 										varStatus="rowCounter">
 										<tr>
 											<td>${enrollment.person.legacy}</td>
@@ -155,8 +177,51 @@
 										</tr>
 									</c:forEach>
 								</c:if>
+								-->
 							</tbody>
 						</table>
+						<c:if test="${enrollments!=null}">
+							<div class="row-fluid">
+								<div class="span4">
+									<c:if test="${enrollments.actualPage > 1}">
+										<a href="listAll?page=${enrollments.actualPage-1}"> 
+											<button class="btn-large">Anterior</button> 
+										</a>
+									</c:if>
+								</div>
+								<div class="span4">
+									<h3> Pagina ${enrollments.actualPage} de ${enrollments.totalPage} </h3>
+								</div>
+								<div class="span4">
+									<c:if test="${enrollments.actualPage < enrollments.totalPage}">
+										<a href="listAll?page=${enrollments.actualPage+1}"> 
+											<button class="btn-large">Siguiente</button> 
+										</a>
+									</c:if>
+								</div>
+							</div>
+						</c:if>		
+						<c:if test="${historyEnrollments!=null}">
+							<div class="row-fluid">
+								<div class="span4">
+									<c:if test="${historyEnrollments.actualPage > 1}">
+										<a href="listAll?page=${historyEnrollments.actualPage-1}"> 
+											<button class="btn-large">Anterior</button> 
+										</a>
+									</c:if>
+								</div>
+								<div class="span4">
+									<h3> Pagina ${historyEnrollments.actualPage} de ${historyEnrollments.totalPage} </h3>
+								</div>
+								<div class="span4">
+									<c:if test="${historyEnrollments.actualPage < historyEnrollments.totalPage}">
+										<a href="listAll?page=${historyEnrollments.actualPage+1}"> 
+											<button class="btn-large">Siguiente</button> 
+										</a>
+									</c:if>
+								</div>
+							</div>
+						</c:if>		
 					</div>
 				</div>
 			</div>

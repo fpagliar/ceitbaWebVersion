@@ -57,7 +57,8 @@ public class EnrollmentController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listAll(HttpSession session, @RequestParam(value = "list", required = false) String value,
 			@RequestParam(value = "search", required = false) String search,
-			@RequestParam(value = "serviceName", required = false) String serviceName) {
+			@RequestParam(value = "serviceName", required = false) String serviceName, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
@@ -65,20 +66,20 @@ public class EnrollmentController {
 
 		ModelAndView mav = new ModelAndView();
 		if ("history".equals(value)) {
-			mav.addObject("historyEnrollments", enrollmentRepo.getExpired());
+			mav.addObject("historyEnrollments", enrollmentRepo.getExpired(page));
 			mav.addObject("history", true);
 		}
 		if (serviceName != null) {
-			mav.addObject("enrollments", enrollmentRepo.getActive(serviceRepo.get(serviceName)));
+			mav.addObject("enrollments", enrollmentRepo.getActive(serviceRepo.get(serviceName), page));
 			mav.addObject("service", serviceName);
 		}
-		if (search != null) {
-			mav.addObject("personEnrollments", enrollmentRepo.getActivePersonsList(personRepo.search(search, 1).getElements()));
-			mav.addObject("serviceEnrollments", enrollmentRepo.getActiveServiceList(serviceRepo.search(search)));
-			mav.addObject("search", true);
-		}
-		if (value == null && search == null && serviceName == null)
-			mav.addObject("enrollments", enrollmentRepo.getActive());
+//		if (search != null && search != "") {
+//			mav.addObject("personEnrollments", enrollmentRepo.getActivePersonsList(personRepo.search(search, 1).getElements(), page));
+//			mav.addObject("serviceEnrollments", enrollmentRepo.getActiveServiceList(serviceRepo.search(search), page));
+//			mav.addObject("search", true);
+//		}
+		if (value == null && (search == null  || search == "") && serviceName == null)
+			mav.addObject("enrollments", enrollmentRepo.getActive(page));
 		return mav;
 	}
 

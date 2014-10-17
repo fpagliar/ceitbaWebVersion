@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.domain.enrollment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
+import ar.edu.itba.paw.domain.PaginatedResult;
 import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
@@ -18,6 +18,8 @@ import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 @Repository
 public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		EnrollmentRepo {
+
+	private static final int ELEMENTS_PER_PAGE = 15;
 
 	@Autowired
 	public HibernateEnrollmentRepo(SessionFactory sessionFactory) {
@@ -85,13 +87,12 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return (List<Enrollment>) c.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> getExpired() {
+	public PaginatedResult<Enrollment> getExpired(final int page) {
 		updateActive();
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.isNotNull("endDate"));
-		return (List<Enrollment>) c.list();
+		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Enrollment.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -114,13 +115,12 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return (List<Enrollment>) c.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> getActive() {
+	public PaginatedResult<Enrollment> getActive(final int page) {
 		updateActive();
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.isNull("endDate"));
-		return (List<Enrollment>) c.list();
+		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Enrollment.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -133,23 +133,23 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		return (List<Enrollment>) c.list();
 	}
 
-	@Override
-	public List<Enrollment> getActivePersonsList(List<Person> persons) {
-		updateActive();
-		List<Enrollment> all = new ArrayList<Enrollment>();
-		for (Person p : persons)
-			all.addAll(getActive(p));
-		return all;
-	}
-
-	@Override
-	public List<Enrollment> getActiveServiceList(List<Service> services) {
-		updateActive();
-		List<Enrollment> all = new ArrayList<Enrollment>();
-		for (Service s : services)
-			all.addAll(getActive(s));
-		return all;
-	}
+//	@Override
+//	public List<Enrollment> getActivePersonsList(List<Person> persons, final int page) {
+//		updateActive();
+//		List<Enrollment> all = new ArrayList<Enrollment>();
+//		for (Person p : persons)
+//			all.addAll(getActive(p));
+//		return all;
+//	}
+//
+//	@Override
+//	public List<Enrollment> getActiveServiceList(List<Service> services) {
+//		updateActive();
+//		List<Enrollment> all = new ArrayList<Enrollment>();
+//		for (Service s : services)
+//			all.addAll(getActive(s));
+//		return all;
+//	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -211,5 +211,14 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 
 		c.add(Restrictions.between("endDate", start, end));
 		return (List<Enrollment>) c.list();
+	}
+
+	@Override
+	public PaginatedResult<Enrollment> getActive(final Service s, final int page) {
+		updateActive();
+		Criteria c = createCriteria(Enrollment.class).add(
+				Restrictions.isNull("endDate"));
+		c.add(Restrictions.eq("service", s));
+		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Enrollment.class);
 	}
 }
