@@ -150,16 +150,16 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 //			all.addAll(getActive(s));
 //		return all;
 //	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Enrollment> getActive(Service s) {
-		updateActive();
-		Criteria c = createCriteria(Enrollment.class).add(
-				Restrictions.isNull("endDate"));
-		c.add(Restrictions.eq("service", s));
-		return (List<Enrollment>) c.list();
-	}
+//
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<Enrollment> getActive(Service s) {
+//		updateActive();
+//		Criteria c = createCriteria(Enrollment.class).add(
+//				Restrictions.isNull("endDate"));
+//		c.add(Restrictions.eq("service", s));
+//		return (List<Enrollment>) c.list();
+//	}
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -140,10 +140,10 @@
 							</div>
 						</form:form>
 					</div>
-					<div class="span4 pull-right">
+					<div class="span12">
 						<h2>Anotados</h2>
 						<hr />
-						<c:if test="${fn:length(enrollments) == 0}">
+						<c:if test="${fn:length(enrollments.elements) == 0}">
 							<h5>El servicio no tiene subscripciones vigentes</h5>
 						</c:if>
 						<table class="table table-striped pull-right">
@@ -156,7 +156,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="enrollment" items="${enrollments}"
+								<c:forEach var="enrollment" items="${enrollments.elements}"
 									varStatus="rowCounter">
 									<tr>
 										<td>${enrollment.person.legacy}</td>
@@ -168,6 +168,25 @@
 								</c:forEach>
 							</tbody>
 						</table>
+						<div class="row-fluid">
+							<div class="span4">
+								<c:if test="${enrollments.actualPage > 1}">
+									<a href="update?id=${service.id}&page=${enrollments.actualPage-1}"> 
+										<button class="btn-large">Anterior</button> 
+									</a>
+								</c:if>
+							</div>
+							<div class="span4">
+								<h4> Pagina ${enrollments.actualPage} de ${enrollments.totalPage} </h4>
+							</div>
+							<div class="span4">
+								<c:if test="${enrollments.actualPage < enrollments.totalPage}">
+									<a href="update?id=${service.id}&page=${enrollments.actualPage+1}"> 
+										<button class="btn-large">Siguiente</button> 
+									</a>
+								</c:if>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

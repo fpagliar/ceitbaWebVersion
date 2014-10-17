@@ -22,7 +22,7 @@ public interface EnrollmentRepo {
 	public List<Enrollment> getActive(Person p);
 //	public PaginatedResult<Enrollment> getActivePersonsList(List<Person> persons, final int page);
 //	public PaginatedResult<Enrollment> getActiveServiceList(List<Service> services, final int page);
-	public List<Enrollment> getActive(Service s);
+//	public List<Enrollment> getActive(Service s);
 	public PaginatedResult<Enrollment> getActive(Service s, final int page);
 	public List<Enrollment> get(Person p, Service s);
 	

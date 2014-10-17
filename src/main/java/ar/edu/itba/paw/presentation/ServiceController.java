@@ -82,7 +82,8 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView update(@RequestParam("id") Service service, HttpSession session,
 			@RequestParam(value = "success", required = false) Boolean success,
-			@RequestParam(value = "neww", required = false) Boolean neww) {
+			@RequestParam(value = "neww", required = false) Boolean neww, 
+			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
@@ -102,7 +103,7 @@ public class ServiceController {
 			mav.addObject("successmsg", "La informacion se ha modificado correctamente");
 		}
 		mav.addObject("updateServiceForm", new UpdateServiceForm());
-		mav.addObject("enrollments", enrollmentRepo.getActive(service));
+		mav.addObject("enrollments", enrollmentRepo.getActive(service, page));
 		return mav;
 	}
 
