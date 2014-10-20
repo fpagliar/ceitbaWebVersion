@@ -19,7 +19,18 @@
 		<div class="jumbotron">
 			<div class="container-fluid">
 				<div class="row-fluid">
-					<div class="span2">
+					<div class="span1">
+					</div>
+					<div class="span5">
+						<h2>Detalle</h2>
+					</div>
+					<div class="span6">
+						<h2>Anotados</h2>
+					</div>
+				</div>
+						<hr />
+				<div class="row-fluid">
+					<div class="span1">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
 							<li><a href="listAll">Listar Todos</a></li>
@@ -140,9 +151,7 @@
 							</div>
 						</form:form>
 					</div>
-					<div class="span12">
-						<h2>Anotados</h2>
-						<hr />
+					<div class="span6">
 						<c:if test="${fn:length(enrollments.elements) == 0}">
 							<h5>El servicio no tiene subscripciones vigentes</h5>
 						</c:if>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		updateActive();
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.isNotNull("endDate"));
+		c.createAlias("person", "p");
+		c.addOrder(Order.asc("p.legacy"));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Enrollment.class);
 	}
 
@@ -120,6 +123,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		updateActive();
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.isNull("endDate"));
+		c.createAlias("person", "p");
+		c.addOrder(Order.asc("p.legacy"));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Enrollment.class);
 	}
 
@@ -219,6 +224,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.isNull("endDate"));
 		c.add(Restrictions.eq("service", s));
+		c.createAlias("person", "p");
+		c.addOrder(Order.asc("p.legacy"));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Enrollment.class);
 	}
 }
