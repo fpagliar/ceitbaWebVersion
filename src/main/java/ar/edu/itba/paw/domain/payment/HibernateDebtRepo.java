@@ -90,8 +90,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	@Override
 	public List<Debt> removeBilledDebts() {
 		Criteria c = createCriteria(Debt.class);
-		c.createCriteria("person").add(
-				Restrictions.eq("paymentMethod", PaymentMethod.BILL));
+		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.BILL));
 		List<Debt> debts = (List<Debt>) c.list();
 		for (Debt debt : debts) {
 			debt.billed();
@@ -109,8 +108,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 			c.add(Restrictions.gt("billingDate", start));
 		if (end != null)
 			c.add(Restrictions.lt("billingDate", end));
-		c.createCriteria("person").add(
-				Restrictions.eq("paymentMethod", PaymentMethod.CASH));
+		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.CASH));
 		return (List<Debt>) c.list();
 	}
 
