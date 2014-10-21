@@ -189,12 +189,12 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 			Service s, DateTime start, DateTime end) {
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.eq("service", s));
+		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.BILL));
+		c.addOrder(Order.asc("p.legacy"));
 		if (personnel)
-			c.createCriteria("person").add(Restrictions.le("legacy", 10000))
-					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
+			c.add(Restrictions.le("p.legacy", 10000));
 		else
-			c.createCriteria("person").add(Restrictions.ge("legacy", 10000))
-					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
+			c.add(Restrictions.ge("p.legacy", 10000));
 
 		c.add(Restrictions.between("startDate", start, end));
 		c.add(Restrictions.isNull("endDate"));
