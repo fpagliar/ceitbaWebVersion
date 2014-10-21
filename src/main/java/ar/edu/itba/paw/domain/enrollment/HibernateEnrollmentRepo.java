@@ -173,8 +173,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		Criteria c = createCriteria(Enrollment.class).add(
 				Restrictions.isNull("endDate"));
 		c.add(Restrictions.eq("service", s));
-		c.createCriteria("person").add(
-				Restrictions.eq("paymentMethod", PaymentMethod.BILL));
+		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.BILL));
+		c.addOrder(Order.asc("p.legacy"));
 		return (List<Enrollment>) c.list();
 	}
 
