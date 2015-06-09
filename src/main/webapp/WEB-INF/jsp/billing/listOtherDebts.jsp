@@ -47,10 +47,12 @@
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="personnel"> Usuarios </label>
+								<div class="controls">
 									<select name="personnel">
 										<option value="false"> Alumnos </option>
 										<option value="true"> Personal </option>
 									</select>
+								</div>
 							</div>
 							<button type="submit" class="btn">Listar</button>
 						</form>

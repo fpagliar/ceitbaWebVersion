@@ -17,6 +17,8 @@ import ar.edu.itba.paw.lib.DateHelper;
 @Table(name="assistances")
 public class Assistance extends PersistentEntity {
 
+	private static final long serialVersionUID = 4505523288695919067L;
+
 	@ManyToOne(optional=false)
 	private Person person;
 	@ManyToOne(optional=false)

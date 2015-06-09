@@ -18,6 +18,8 @@ import ar.edu.itba.paw.lib.DateHelper;
 @Table(name = "debt")
 public class Debt extends PersistentEntity {
 
+	private static final long serialVersionUID = -3426821981695552326L;
+
 	@ManyToOne(optional = false)
 	private Person person;
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")

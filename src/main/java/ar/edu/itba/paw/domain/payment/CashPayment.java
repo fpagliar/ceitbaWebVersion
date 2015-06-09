@@ -17,6 +17,8 @@ import ar.edu.itba.paw.lib.DateHelper;
 @Table(name = "cash_payment")
 public class CashPayment extends PersistentEntity {
 
+	private static final long serialVersionUID = 7206796959356682879L;
+
 	@ManyToOne(optional = false)
 	private Person person;
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")

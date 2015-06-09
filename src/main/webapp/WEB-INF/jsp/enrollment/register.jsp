@@ -72,12 +72,14 @@
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="inputEmail">Servicio</label>
-										<form:select name="serviceName" path="serviceName">
-											<c:forEach var="service" items="${services}"
-												varStatus="rowCounter">
-												<option value="${service.name}">${service.name}</option>
-											</c:forEach>
-										</form:select>
+										<div class="controls">
+											<form:select name="serviceName" path="serviceName">
+												<c:forEach var="service" items="${services}"
+													varStatus="rowCounter">
+													<option value="${service.name}">${service.name}</option>
+												</c:forEach>
+											</form:select>
+										</div>
 									</div>
 									<div class="control-group">
 										<div class="controls">

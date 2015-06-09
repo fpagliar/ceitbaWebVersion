@@ -92,6 +92,7 @@ public class PersonController {
 		mav.addObject("updatePersonForm", new UpdatePersonForm());
 		mav.addObject("isCash", person.getPaymentMethod().equals(PaymentMethod.CASH));
 		mav.addObject("enrollments", enrollmentRepo.getActive(person));
+		mav.addObject("history", enrollmentRepo.getExpired(person));
 		return mav;
 	}
 

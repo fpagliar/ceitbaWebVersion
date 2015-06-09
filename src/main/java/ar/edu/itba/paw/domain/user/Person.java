@@ -3,13 +3,11 @@ package ar.edu.itba.paw.domain.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -27,6 +25,8 @@ import ar.edu.itba.paw.validators.CeitbaValidator;
 @Table(name = "person")
 public class Person extends PersistentEntity {
 
+	private static final long serialVersionUID = -8435774954046238702L;
+	
 	@Column(name = "first_name", unique = false, nullable = true)
 	private String firstName;
 	@Column(name = "last_name", unique = false, nullable = true)
@@ -47,9 +47,8 @@ public class Person extends PersistentEntity {
 	@Column(name = "registration", nullable = false)
 	private DateTime registration;
 
-	@ManyToMany
-	@JoinTable(name = "person_enrollment", inverseJoinColumns = { @JoinColumn(name = "person_id") }, joinColumns = { @JoinColumn(name = "id") })
-	private List<Enrollment> enrolledServices = new ArrayList<Enrollment>();
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Enrollment> enrollments = new ArrayList<Enrollment>();
 
 	public static enum PaymentMethod {
 		BILL, CASH
@@ -194,7 +193,7 @@ public class Person extends PersistentEntity {
 
 	public List<Enrollment> getActiveEnrollments() {
 		List<Enrollment> ans = new ArrayList<Enrollment>();
-		for (Enrollment e : enrolledServices)
+		for (Enrollment e : enrollments)
 			if (e.isActive())
 				ans.add(e);
 		return ans;
@@ -202,7 +201,7 @@ public class Person extends PersistentEntity {
 
 	public List<Enrollment> getEnrollmentsHistory() {
 		List<Enrollment> ans = new ArrayList<Enrollment>();
-		ans.addAll(enrolledServices);
+		ans.addAll(enrollments);
 		return ans;
 	}
 
@@ -214,14 +213,14 @@ public class Person extends PersistentEntity {
 			throw new IllegalArgumentException("Use consume for type OTHER");
 		}
 			
-		for (Enrollment active : enrolledServices)
+		for (Enrollment active : enrollments)
 			if (active.getService().equals(e.getService()) && e.isActive())
 				return;
-		enrolledServices.add(e);
+		enrollments.add(e);
 	}
 
 	public void unenroll(Service s) {
-		for (Enrollment e : enrolledServices)
+		for (Enrollment e : enrollments)
 			if (e.getService().equals(s))
 				e.cancel();
 	}

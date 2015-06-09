@@ -17,6 +17,8 @@ import ar.edu.itba.paw.domain.enrollment.Enrollment;
 @Table(name = "services")
 public class Service extends PersistentEntity {
 
+	private static final long serialVersionUID = 1458185713348852500L;
+
 	@Column(name = "name", unique = true, nullable = false)
 	private String name;
 	@Column(name = "value", nullable = false)
@@ -42,7 +44,7 @@ public class Service extends PersistentEntity {
 	private int monthsDuration;
 
 	@OneToMany
-	private List<Enrollment> enrolledPeople = new ArrayList<Enrollment>();
+	private List<Enrollment> enrollments = new ArrayList<Enrollment>();
 
 	Service() {
 	}
@@ -76,12 +78,12 @@ public class Service extends PersistentEntity {
 
 	public void deactivate() {
 		this.status = Status.INACTIVE;
-		System.out.println("size:" + enrolledPeople.size());
+		System.out.println("size:" + enrollments.size());
 		concludeSubscriptions();
 	}
 
 	private void concludeSubscriptions() {
-		for (Enrollment e : enrolledPeople) {
+		for (Enrollment e : enrollments) {
 			e.cancel();
 		}
 	}
@@ -115,10 +117,10 @@ public class Service extends PersistentEntity {
 	}
 
 	public void enroll(Enrollment e) {
-		for (Enrollment active : enrolledPeople)
+		for (Enrollment active : enrollments)
 			if (active.getPerson().equals(e.getPerson()) && e.isActive())
 				return;
-		enrolledPeople.add(e);
+		enrollments.add(e);
 	}
 
 	@Override

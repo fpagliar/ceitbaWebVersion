@@ -165,6 +165,32 @@
 							</tbody>
 						</table>
 					</div>
+					<div class="span3 pull-right">
+						<h2>Historial</h2>
+						<hr/>
+						<c:if test="${fn:length(history) == 0}">
+							<h5>El usuario no tiene subscripciones canceladas</h5>
+						</c:if>
+						<table class="table table-striped pull-right">
+							<thead>
+								<tr>
+									<th>Servicio</th>
+									<th>Inicio</th>
+									<th>Fin</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="enrollment" items="${history}"
+									varStatus="rowCounter">
+									<tr>
+										<td>${enrollment.service.name}</td>
+										<td>${enrollment.formatedStartDate}</td>
+										<td>${enrollment.formatedEndDate}</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

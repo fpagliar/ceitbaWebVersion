@@ -69,12 +69,14 @@
 
 							<div class="control-group">
 								<label class="control-label" for="level">Rol</label>
-								<form:select name="level" path="level">
-									<c:forEach var="a_level" items="${levels}"
-										varStatus="rowCounter">
-										<option value="${a_level}">${a_level}</option>
-									</c:forEach>
-								</form:select>
+								<div class="controls">
+									<form:select name="level" path="level">
+										<c:forEach var="a_level" items="${levels}"
+											varStatus="rowCounter">
+											<option value="${a_level}">${a_level}</option>
+										</c:forEach>
+									</form:select>
+								</div>
 							</div>
 
 							<div class="control-group">

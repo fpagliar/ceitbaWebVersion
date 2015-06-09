@@ -17,6 +17,8 @@ import ar.edu.itba.paw.lib.DateHelper;
 @Table(name = "enrollments")
 public class Enrollment extends PersistentEntity {
 
+	private static final long serialVersionUID = -9003737173615892492L;
+
 	@ManyToOne(optional = false)
 	private Person person;
 	@ManyToOne(optional = false)
