@@ -1,17 +1,25 @@
 package ar.edu.itba.paw.presentation;
 
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.domain.enrollment.Enrollment;
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.payment.DebtRepo;
@@ -72,7 +80,7 @@ public class BillingController {
 		mav.addObject("newEnrollments", enrollmentRepo.getBilledNewEnrollments(personnel, service, start, end));
 		return mav;
 	}
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView listCancelledEnrollments(HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,
@@ -151,14 +159,73 @@ public class BillingController {
 		if(!userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("unauthorized");
 
-		if (service == null)
-			service = serviceRepo.get("ceitba");
-
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", " Servicio:" + service.getName() + " Personal:" + personnel);
 		mav.addObject("services", serviceRepo.getActive());
-		mav.addObject("enrolled", enrollmentRepo.getBilledActive(service));
+
+//		if (service == null)
+//			service = serviceRepo.get("ceitba");
+		if (service != null) {
+			mav.addObject("query", " Servicio:" + service.getName() + " Personal:" + personnel);
+			mav.addObject("enrolled", enrollmentRepo.getBilledActive(service));			
+		}
+
 		return mav;
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public void downloadBilling(final HttpServletResponse response, final HttpSession session) throws IOException {
+		response.setHeader("Content-disposition","attachment; filename=facturacion.xls");
+		final HSSFWorkbook workbook = new HSSFWorkbook();
+		createNewEnrollmentsSheet(workbook);
+		createCancelledEnrollmentsSheet(workbook);
+		createEnrollmentsSheet(workbook);
+		
+		workbook.write(response.getOutputStream());
+	}
+	
+	private void createNewEnrollmentsSheet(final HSSFWorkbook workbook) {
+		final Service service = serviceRepo.get("ceitba");
+		final Collection<Enrollment> enrollments = enrollmentRepo.getBilledNewEnrollments(false, service,
+				DateTime.now(), DateTime.now().minusMonths(1));
+		createSheet(workbook, "Altas", enrollments);
+	}
+
+	private void createCancelledEnrollmentsSheet(final HSSFWorkbook workbook) {
+		final Service service = serviceRepo.get("ceitba");
+		final Collection<Enrollment> enrollments = enrollmentRepo.getBilledCancelledEnrollments(false, service,
+				DateTime.now(), DateTime.now().minusMonths(1));
+		createSheet(workbook, "Bajas", enrollments);
+	}
+
+	private void createEnrollmentsSheet(final HSSFWorkbook workbook) {
+		for (final Service service : serviceRepo.getActive()) {
+			final Collection<Enrollment> enrollments = enrollmentRepo.getBilledActive(service);
+			createSheet(workbook, service.getName(), enrollments);
+		}
+	}
+
+	private void createSheet(final HSSFWorkbook workbook, final String name, final Collection<Enrollment> enrollments) {
+		final HSSFSheet sheet = workbook.createSheet(name);
+		//Create a new row in current sheet
+		int rowNum = 0;
+		final HSSFRow firstRow = sheet.createRow(rowNum);
+		firstRow.createCell(0).setCellValue("Legajo");
+		firstRow.createCell(1).setCellValue("Nombre");
+		firstRow.createCell(2).setCellValue("Apellido");
+		firstRow.createCell(3).setCellValue("Inicio");
+		firstRow.createCell(4).setCellValue("Fin");
+
+		for (final Enrollment e : enrollments) {
+			rowNum++;
+			final HSSFRow row = sheet.createRow(rowNum);
+			row.createCell(0).setCellValue(e.getPerson().getLegacy());
+			row.createCell(1).setCellValue(e.getPerson().getFirstName());
+			row.createCell(2).setCellValue(e.getPerson().getLastName());
+			row.createCell(3).setCellValue(e.getFormatedStartDate());
+			row.createCell(4).setCellValue(e.getFormatedEndDate());
+		}
+		return;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

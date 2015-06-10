@@ -88,6 +88,11 @@
 							</form>
 						</div>
 						<div class="row-fluid">
+							<a href="downloadBilling">
+								<button type="submit" class="btn"> Descargar a Excel </button>
+							</a>
+						</div>
+						<div class="row-fluid">
 							<form action="deleteDebts" method="post">
 								<button type="submit" class="btn" onClick='return confirm("Esta accion va a eliminar todas las deudas del mes. Desea seguir?")'>Eliminar otros pagos</button>
 							</form>

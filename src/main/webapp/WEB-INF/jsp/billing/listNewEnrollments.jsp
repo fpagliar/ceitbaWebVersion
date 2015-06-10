@@ -94,7 +94,12 @@
 					<div class="span1">
 						<form action="billCashPayments" method="post">
 							<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
-						<form>
+						</form>
+					</div>
+					<div class="span1">
+						<a href="downloadBilling">
+							<button type="submit" class="btn"> Descargar a Excel </button>
+						</a>
 					</div>
 				</div>
 			</div>
