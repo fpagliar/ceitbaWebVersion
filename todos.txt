@@ -1,7 +1,7 @@
 + arreglar las pantallas de error como unauth
 + arreglar los filtros de facturacion, bajas no funca, anotados considera personal
-+ refactorear la pantalla de facturacion, pensar que se necesita :)
 + update de usuarios no se puede vaciar el nombre, ni 2 email
-+ cuando un form falla, se van las cosas de los selects
++ cuando un form falla, se van las cosas de los selects (en el enrollment form)
 + tienen que desaparecer los alerts desp de 1 seg para detectar cuando las acciones se hacen bien de nuevo
-+ corregir el many to many de person_enrollment y el de services_enrollments
++ la pantalla de acciones de usuarios puede tardar
++ verificar los distintos tipos de servicios, y para que los quiero
