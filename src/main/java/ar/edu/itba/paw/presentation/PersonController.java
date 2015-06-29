@@ -80,7 +80,7 @@ public class PersonController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("person", person);
 		if (neww != null && neww) {
-			mav.addObject("new", true);
+			mav.addObject("neww", true);
 			mav.addObject("newmsg", "Usuario creado correctamente");
 		}
 		if (success == null) {

@@ -22,9 +22,9 @@ public interface ServiceRepo {
 	public List<Service> getActiveCourses();
 	public PaginatedResult<Service> getActiveCourses(final int page);
 	
-	public PaginatedResult<Service> getOthers(final int page);
-	public List<Service> getActiveOthers();
-	public PaginatedResult<Service> getActiveOthers(final int page);
+	public PaginatedResult<Service> getConsumables(final int page);
+	public List<Service> getActiveConsumables();
+	public PaginatedResult<Service> getActiveConsumables(final int page);
 
 	public PaginatedResult<Service> getLockers(final int page);
 	public List<Service> getActiveLockers();

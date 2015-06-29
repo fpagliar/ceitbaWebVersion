@@ -16,6 +16,8 @@ import ar.edu.itba.paw.domain.PersistentEntity;
 @Table(name = "my_user")
 public class User extends PersistentEntity {
 
+	private static final long serialVersionUID = -2341846512770249767L;
+
 	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 	@Column(name = "password", nullable = false)

@@ -29,7 +29,7 @@
 						</ul>
 					</div>
 					<div class="span10">
-						<c:if test="${new==true}">
+						<c:if test="${neww==true}">
 							<div class="alert alert-success">${newmsg}</div>
 						</c:if>
 						<form class="form-horizontal" action="listAll" method="get"

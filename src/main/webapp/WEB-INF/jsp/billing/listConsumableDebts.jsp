@@ -30,7 +30,7 @@
 					</div>
 					<div class="span9">
 						<h2 class="text-center">Filtrar Busqueda</h2>
-						<form action="listOtherDebts" method="get" name="listOtherDebts" class="form-horizontal">
+						<form action="listConsumableDebts" method="get" name="listConsumableDebts" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="start">Inicio</label>
 								<div class="controls">

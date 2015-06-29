@@ -110,7 +110,7 @@ public class BillingController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listOtherDebts(HttpSession session,
+	public ModelAndView listConsumableDebts(HttpSession session,
 			@RequestParam(value = "start", required = false) DateTime start,
 			@RequestParam(value = "end", required = false) DateTime end,
 			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
@@ -146,7 +146,7 @@ public class BillingController {
 		}
 		userActionRepo.add(new UserAction(Action.POST, Debt.class.getName(), ids, null, ControllerType.BILLING,
 				"deleteDebts", userRepo.get(usr.getUsername())));
-		return new ModelAndView("redirect:../billing/listOtherDebts");
+		return new ModelAndView("redirect:../billing/listConsumableDebts");
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

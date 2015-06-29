@@ -44,7 +44,7 @@
 						<c:if test="${success==true}">
 							<div class="alert alert-success">${successmsg}</div>
 						</c:if>
-						<c:if test="${new==true}">
+						<c:if test="${neww==true}">
 							<div class="alert alert-success">${newmsg}</div>
 						</c:if>
 						<form:form method="post" action="update"
@@ -68,21 +68,21 @@
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" />
 											<form:option value="COMMON" />
-											<form:option value="OTHER" />
+											<form:option value="CONSUMABLE" />
 										</c:if>
 										<c:if test="${service.type == 'COURSE'}">
 											<form:option value="SPORT" />
 											<form:option value="COURSE" selected="selected" />
 											<form:option value="LOCKER" />
 											<form:option value="COMMON" />
-											<form:option value="OTHER" />
+											<form:option value="CONSUMABLE" />
 										</c:if>
 										<c:if test="${service.type == 'LOCKER'}">
 											<form:option value="SPORT" />
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" selected="selected" />
 											<form:option value="COMMON" />
-											<form:option value="OTHER" />
+											<form:option value="CONSUMABLE" />
 										</c:if>
 										<c:if
 											test="${service.type == 'COMMON'}">
@@ -90,7 +90,7 @@
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" />
 											<form:option value="COMMON" selected="selected" />
-											<form:option value="OTHER"/>
+											<form:option value="CONSUMABLE"/>
 										</c:if>
 										<c:if
 											test="${service.type != 'LOCKER' && service.type != 'COMMON' && service.type != 'COURSE' && service.type != 'SPORT'}">
@@ -98,7 +98,7 @@
 											<form:option value="COURSE" />
 											<form:option value="LOCKER" />
 											<form:option value="COMMON" />
-											<form:option value="OTHER" selected="selected" />
+											<form:option value="CONSUMABLE" selected="selected" />
 										</c:if>
 									</form:select>
 								</div>

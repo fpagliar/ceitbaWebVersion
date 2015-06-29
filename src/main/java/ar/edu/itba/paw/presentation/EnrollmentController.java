@@ -96,7 +96,7 @@ public class EnrollmentController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("enrollment", enrollment);
 		if (neww != null && neww) {
-			mav.addObject("new", true);
+			mav.addObject("neww", true);
 			mav.addObject("newmsg", "Subscripcion creada correctamente");
 		}
 		mav.addObject("isActive", enrollment.isActive());
@@ -105,7 +105,6 @@ public class EnrollmentController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView register(HttpSession session, RegisterEnrollmentForm form, Errors errors) {
-
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
@@ -117,15 +116,15 @@ public class EnrollmentController {
 		if (errors.hasErrors()) {
 			mav.addObject("courses", serviceRepo.getActiveCourses());
 			mav.addObject("sports", serviceRepo.getActiveSports());
-			mav.addObject("others", serviceRepo.getActiveOthers());
+			mav.addObject("consumables", serviceRepo.getActiveConsumables());
 			mav.addObject("lockers", serviceRepo.getActiveLockers());
 			return mav;
 		}
 		Integer legacy = Integer.parseInt(form.getLegacy());
 		Service service = serviceRepo.get(form.getServiceName());
 		Person person = personRepo.getByLegacy(legacy);
-		if (service.getType().equals(Type.OTHER)) {
-			Debt debt = person.consume(service);
+		if (service.getType().equals(Type.CONSUMABLE)) {
+			final Debt debt = person.consume(service);
 			debtRepo.add(debt);
 			userActionRepo.add(new UserAction(Action.CREATE, Debt.class.getName(), null, debt.toString(),
 					ControllerType.ENROLLMENT, "register", userRepo.get(usr.getUsername())));
@@ -156,9 +155,9 @@ public class EnrollmentController {
 		} else if ("course".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveCourses());
 			mav.addObject("course", "course");
-		} else if ("other".equals(serviceCategory)) {
-			mav.addObject("services", serviceRepo.getActiveOthers());
-			mav.addObject("other", "other");
+		} else if ("consumable".equals(serviceCategory)) {
+			mav.addObject("services", serviceRepo.getActiveConsumables());
+			mav.addObject("consumable", "consumable");
 		} else if ("common".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveCommons());
 			mav.addObject("common", "common");

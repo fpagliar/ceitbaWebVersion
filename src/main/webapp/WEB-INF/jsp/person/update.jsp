@@ -31,7 +31,7 @@
 						<c:if test="${success==true}">
 							<div class="alert alert-success">${successmsg}</div>
 						</c:if>
-						<c:if test="${new==true}">
+						<c:if test="${neww==true}">
 							<div class="alert alert-success">${newmsg}</div>
 						</c:if>
 						<form:form method="post" action="update"
@@ -149,7 +149,8 @@
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
-									<th></th>
+									<th>Servicio</th>
+									<th>Inicio</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -158,6 +159,7 @@
 									varStatus="rowCounter">
 									<tr>
 										<td>${enrollment.service.name}</td>
+										<td>${enrollment.formatedStartDate}</td>
 										<td><a href="../enrollment/show?id=${enrollment.id}"><i
 												class="icon-remove"></i></a></td>
 									</tr>

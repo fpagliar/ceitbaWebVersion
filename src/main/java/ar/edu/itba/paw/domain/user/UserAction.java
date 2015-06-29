@@ -15,6 +15,8 @@ import ar.edu.itba.paw.lib.DateHelper;
 @Entity
 public class UserAction extends PersistentEntity {
 
+	private static final long serialVersionUID = -2355432962049717351L;
+
 	@ManyToOne(optional = false)
 	private User user;
 

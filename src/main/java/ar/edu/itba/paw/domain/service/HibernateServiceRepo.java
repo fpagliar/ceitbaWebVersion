@@ -81,18 +81,18 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 	}
 
 	@Override
-	public PaginatedResult<Service> getOthers(final int page) {
-		return getByType(Service.Type.OTHER, page);
+	public PaginatedResult<Service> getConsumables(final int page) {
+		return getByType(Service.Type.CONSUMABLE, page);
 	}
 
 	@Override
-	public PaginatedResult<Service> getActiveOthers(final int page) {
-		return getActiveByType(Service.Type.OTHER, page);
+	public PaginatedResult<Service> getActiveConsumables(final int page) {
+		return getActiveByType(Service.Type.CONSUMABLE, page);
 	}
 	
 	@Override
-	public List<Service> getActiveOthers() {
-		return getActiveByType(Service.Type.OTHER);
+	public List<Service> getActiveConsumables() {
+		return getActiveByType(Service.Type.CONSUMABLE);
 	}
 
 	@Override

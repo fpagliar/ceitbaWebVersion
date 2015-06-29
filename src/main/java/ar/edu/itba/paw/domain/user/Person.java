@@ -209,8 +209,8 @@ public class Person extends PersistentEntity {
 	 * SHOULD ONLY BE CALLED BY THE ENROLLMENT REPO!!!
 	 */
 	public void enroll(Enrollment e) {
-		if(e.getService().getType().equals(ar.edu.itba.paw.domain.service.Service.Type.OTHER)){
-			throw new IllegalArgumentException("Use consume for type OTHER");
+		if(e.getService().getType().equals(Service.Type.CONSUMABLE)){
+			throw new IllegalArgumentException("Use consume for type CONSUMABLE");
 		}
 			
 		for (Enrollment active : enrollments)

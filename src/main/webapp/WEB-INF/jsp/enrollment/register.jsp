@@ -49,11 +49,11 @@
 							<c:if test="${common!=null}">
 								<li class="active"><a href="#">Estandar</a></li>
 							</c:if>
-							<c:if test="${other==null}">
-								<li><a href="?service=other">Otro</a></li>
+							<c:if test="${consumable==null}">
+								<li><a href="?service=consumable">Consumibles</a></li>
 							</c:if>
-							<c:if test="${other!=null}">
-								<li class="active"><a href="#">Otro</a></li>
+							<c:if test="${consumable!=null}">
+								<li class="active"><a href="#">Consumibles</a></li>
 							</c:if>
 						</ul>
 						<div id="content">

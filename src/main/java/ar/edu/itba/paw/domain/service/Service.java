@@ -25,7 +25,7 @@ public class Service extends PersistentEntity {
 	private double value;
 
 	public static enum Type {
-		SPORT, COURSE, LOCKER, OTHER, COMMON
+		SPORT, COURSE, LOCKER, CONSUMABLE, COMMON
 	};
 
 	@Enumerated(EnumType.STRING)

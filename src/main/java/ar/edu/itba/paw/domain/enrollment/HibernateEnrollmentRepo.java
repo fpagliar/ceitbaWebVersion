@@ -42,8 +42,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements
 		List<Enrollment> list = (List<Enrollment>) c.list();
 		for (Enrollment e : list)
 			if (e.isActive()
-					&& !Service.Type.OTHER.equals(e.getService().getType())) {
-				return; // The subscriptions typed OTHER can have unlimited
+					&& !Service.Type.CONSUMABLE.equals(e.getService().getType())) {
+				return; // The subscriptions typed CONSUMABLE can have unlimited
 						// active enrollments in the same period
 			}
 		save(enrollment);

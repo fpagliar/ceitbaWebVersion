@@ -25,7 +25,7 @@
 							<li><a href="listNewEnrollments">Altas</a></li>
 							<li><a href="listCancelledEnrollments">Bajas</a></li>
 							<li class="active"><a href="#">Anotados</a></li>
-							<li><a href="listOtherDebts">Otras Deudas</a></li>
+							<li><a href="listConsumableDebts">Consumibles</a></li>
 						</ul>
 					</div>
 					<div class="span9">

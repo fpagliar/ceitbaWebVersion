@@ -63,8 +63,8 @@ public class ServiceController {
 			mav.addObject("services", serviceRepo.getSports(page));
 		else if ("COURSE".equals(value))
 			mav.addObject("services", serviceRepo.getCourses(page));
-		else if ("OTHER".equals(value))
-			mav.addObject("services", serviceRepo.getOthers(page));
+		else if ("CONSUMABLE".equals(value))
+			mav.addObject("services", serviceRepo.getConsumables(page));
 		else if ("LOCKER".equals(value))
 			mav.addObject("services", serviceRepo.getLockers(page));
 		else if ("COMMON".equals(value))
@@ -93,7 +93,7 @@ public class ServiceController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("service", service);
 		if (neww != null && neww) {
-			mav.addObject("new", true);
+			mav.addObject("neww", true);
 			mav.addObject("newmsg", "Servicio creado correctamente");
 		}
 		if (success == null) {
@@ -143,7 +143,7 @@ public class ServiceController {
 		else if (form.getType().equals("COMMON"))
 			updatedService.setType(Service.Type.COMMON);
 		else
-			updatedService.setType(Service.Type.OTHER);
+			updatedService.setType(Service.Type.CONSUMABLE);
 
 		userActionRepo.add(new UserAction(Action.UPDATE, Service.class.getName(), previousService, updatedService
 				.toString(), ControllerType.SERVICE, "update", userRepo.get(usr.getUsername())));
@@ -168,13 +168,13 @@ public class ServiceController {
 			type = Service.Type.COURSE;
 		if (form.getType().equals("LOCKER"))
 			type = Service.Type.LOCKER;
-		if (form.getType().equals("OTHER"))
-			type = Service.Type.OTHER;
+		if (form.getType().equals("CONSUMABLE"))
+			type = Service.Type.CONSUMABLE;
 		if (form.getType().equals("SPORT"))
 			type = Service.Type.SPORT;
 		if (form.getType().equals("COMMON"))
 			type = Service.Type.COMMON;
-		Service s = new Service(form.getName(), Double.parseDouble(form.getValue()), type, Integer.parseInt(form
+		final Service s = new Service(form.getName(), Double.parseDouble(form.getValue()), type, Integer.parseInt(form
 				.getMonthsDuration()));
 		serviceRepo.add(s);
 
