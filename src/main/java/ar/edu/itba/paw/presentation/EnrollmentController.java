@@ -104,7 +104,7 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView register(HttpSession session, RegisterEnrollmentForm form, Errors errors) {
+	public ModelAndView register(final HttpSession session, final RegisterEnrollmentForm form, final Errors errors) {
 		UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
@@ -114,15 +114,12 @@ public class EnrollmentController {
 		ModelAndView mav = new ModelAndView();
 		validator.validate(form, errors);
 		if (errors.hasErrors()) {
-			mav.addObject("courses", serviceRepo.getActiveCourses());
-			mav.addObject("sports", serviceRepo.getActiveSports());
 			mav.addObject("consumables", serviceRepo.getActiveConsumables());
-			mav.addObject("lockers", serviceRepo.getActiveLockers());
 			return mav;
 		}
-		Integer legacy = Integer.parseInt(form.getLegacy());
-		Service service = serviceRepo.get(form.getServiceName());
-		Person person = personRepo.getByLegacy(legacy);
+		final Integer legacy = Integer.parseInt(form.getLegacy());
+		final Service service = serviceRepo.get(form.getServiceName());
+		final Person person = personRepo.getByLegacy(legacy);
 		if (service.getType().equals(Type.CONSUMABLE)) {
 			final Debt debt = person.consume(service);
 			debtRepo.add(debt);
@@ -130,7 +127,7 @@ public class EnrollmentController {
 					ControllerType.ENROLLMENT, "register", userRepo.get(usr.getUsername())));
 			return new ModelAndView("redirect:../payment/listAll?legacy=" + person.getLegacy());
 		} else {
-			Enrollment e = new Enrollment(person, service);
+			final Enrollment e = new Enrollment(person, service);
 			enrollmentRepo.add(e);
 			userActionRepo.add(new UserAction(Action.CREATE, Enrollment.class.getName(), null, e.toString(),
 					ControllerType.ENROLLMENT, "register", userRepo.get(usr.getUsername())));
@@ -149,18 +146,12 @@ public class EnrollmentController {
 			return new ModelAndView("unauthorized");
 
 		ModelAndView mav = new ModelAndView();
-		if ("sport".equals(serviceCategory)) {
-			mav.addObject("services", serviceRepo.getActiveSports());
-			mav.addObject("sport", "sport");
-		} else if ("course".equals(serviceCategory)) {
-			mav.addObject("services", serviceRepo.getActiveCourses());
-			mav.addObject("course", "course");
-		} else if ("consumable".equals(serviceCategory)) {
+		if ("consumable".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveConsumables());
 			mav.addObject("consumable", "consumable");
-		} else if ("common".equals(serviceCategory)) {
-			mav.addObject("services", serviceRepo.getActiveCommons());
-			mav.addObject("common", "common");
+		} else if ("subscribable".equals(serviceCategory)) {
+			mav.addObject("services", serviceRepo.getActiveSubscribables());
+			mav.addObject("subscribable", "subscribable");
 		} else {
 			mav.addObject("services", serviceRepo.getActive());
 			mav.addObject("all", "all");

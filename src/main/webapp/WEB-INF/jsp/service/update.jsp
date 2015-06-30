@@ -63,41 +63,14 @@
 								<label class="control-label" for="inputEmail">Tipo</label>
 								<div class="controls">
 									<form:select name="type" path="type">
-										<c:if test="${service.type == 'SPORT'}">
-											<form:option value="SPORT" selected="selected" />
-											<form:option value="COURSE" />
-											<form:option value="LOCKER" />
-											<form:option value="COMMON" />
-											<form:option value="CONSUMABLE" />
-										</c:if>
-										<c:if test="${service.type == 'COURSE'}">
-											<form:option value="SPORT" />
-											<form:option value="COURSE" selected="selected" />
-											<form:option value="LOCKER" />
-											<form:option value="COMMON" />
-											<form:option value="CONSUMABLE" />
-										</c:if>
-										<c:if test="${service.type == 'LOCKER'}">
-											<form:option value="SPORT" />
-											<form:option value="COURSE" />
-											<form:option value="LOCKER" selected="selected" />
-											<form:option value="COMMON" />
-											<form:option value="CONSUMABLE" />
-										</c:if>
 										<c:if
-											test="${service.type == 'COMMON'}">
-											<form:option value="SPORT" />
-											<form:option value="COURSE" />
-											<form:option value="LOCKER" />
-											<form:option value="COMMON" selected="selected" />
+											test="${service.type == 'SUBSCRIBABLE'}">
+											<form:option value="SUBSCRIBABLE" selected="selected" />
 											<form:option value="CONSUMABLE"/>
 										</c:if>
 										<c:if
-											test="${service.type != 'LOCKER' && service.type != 'COMMON' && service.type != 'COURSE' && service.type != 'SPORT'}">
-											<form:option value="SPORT" />
-											<form:option value="COURSE" />
-											<form:option value="LOCKER" />
-											<form:option value="COMMON" />
+											test="${service.type != 'SUBSCRIBABLE'}">
+											<form:option value="SUBSCRIBABLE" />
 											<form:option value="CONSUMABLE" selected="selected" />
 										</c:if>
 									</form:select>

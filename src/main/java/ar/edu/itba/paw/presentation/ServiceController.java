@@ -59,16 +59,10 @@ public class ServiceController {
 			mav.addObject("services", serviceRepo.getActive(page));
 		else if ("inactive".equals(value))
 			mav.addObject("services", serviceRepo.getInactive(page));
-		else if ("SPORT".equals(value))
-			mav.addObject("services", serviceRepo.getSports(page));
-		else if ("COURSE".equals(value))
-			mav.addObject("services", serviceRepo.getCourses(page));
 		else if ("CONSUMABLE".equals(value))
 			mav.addObject("services", serviceRepo.getConsumables(page));
-		else if ("LOCKER".equals(value))
-			mav.addObject("services", serviceRepo.getLockers(page));
-		else if ("COMMON".equals(value))
-			mav.addObject("services", serviceRepo.getCommons(page));
+		else if ("SUBSCRIBABLE".equals(value))
+			mav.addObject("services", serviceRepo.getSubscribables(page));
 		else if (search != null && search != "") {
 			mav.addObject("services", serviceRepo.search(search, page));
 			mav.addObject("search", true);
@@ -134,14 +128,8 @@ public class ServiceController {
 		else
 			updatedService.deactivate();
 
-		if (form.getType().equals("SPORT"))
-			updatedService.setType(Service.Type.SPORT);
-		else if (form.getType().equals("COURSE"))
-			updatedService.setType(Service.Type.COURSE);
-		else if (form.getType().equals("LOCKER"))
-			updatedService.setType(Service.Type.LOCKER);
-		else if (form.getType().equals("COMMON"))
-			updatedService.setType(Service.Type.COMMON);
+		if (form.getType().equals("SUBSCRIBABLE"))
+			updatedService.setType(Service.Type.SUBSCRIBABLE);
 		else
 			updatedService.setType(Service.Type.CONSUMABLE);
 
@@ -164,16 +152,10 @@ public class ServiceController {
 			return null;
 		}
 		Service.Type type = null;
-		if (form.getType().equals("COURSE"))
-			type = Service.Type.COURSE;
-		if (form.getType().equals("LOCKER"))
-			type = Service.Type.LOCKER;
 		if (form.getType().equals("CONSUMABLE"))
 			type = Service.Type.CONSUMABLE;
-		if (form.getType().equals("SPORT"))
-			type = Service.Type.SPORT;
-		if (form.getType().equals("COMMON"))
-			type = Service.Type.COMMON;
+		if (form.getType().equals("SUBSCRIBABLE"))
+			type = Service.Type.SUBSCRIBABLE;
 		final Service s = new Service(form.getName(), Double.parseDouble(form.getValue()), type, Integer.parseInt(form
 				.getMonthsDuration()));
 		serviceRepo.add(s);

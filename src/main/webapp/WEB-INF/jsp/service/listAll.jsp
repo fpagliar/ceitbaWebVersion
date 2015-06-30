@@ -26,10 +26,7 @@
 								<li class="active"><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
+								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
 							<c:if test="${list=='active'}">
@@ -37,10 +34,7 @@
 								<li class="active"><a href="listAll?list=active">Listar
 										Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
+								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
 							<c:if test="${list=='inactive'}">
@@ -48,63 +42,21 @@
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li class="active"><a href="listAll?list=inactive">Listar
 										Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
+								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
-							<c:if test="${list=='SPORT'}">
+							<c:if test="${list=='SUBSCRIBABLE'}">
 								<li><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li class="active"><a href="listAll?list=SPORT">Listar
-										Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
-							</c:if>
-							<c:if test="${list=='COURSE'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li class="active"><a href="listAll?list=COURSE">Listar
-										Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
-							</c:if>
-							<c:if test="${list=='LOCKER'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li class="active"><a href="listAll?list=LOCKER">Listar
-										Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
-							</c:if>
-							<c:if test="${list=='COMMON'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li class="active"><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
+								<li class="active"><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
 								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
 							<c:if test="${list=='CONSUMABLE'}">
 								<li><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SPORT">Listar Deportes</a></li>
-								<li><a href="listAll?list=COURSE">Listar Cursos</a></li>
-								<li><a href="listAll?list=LOCKER">Listar Lockers</a></li>
-								<li><a href="listAll?list=COMMON">Listar Servicios Estandar</a></li>
+								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
 								<li class="active"><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
 							<li><a href="register">Nuevo Servicio</a></li>
@@ -137,16 +89,7 @@
 										<c:if test="${service.type == 'CONSUMABLE'}">
 											<td>Consumible</td>
 										</c:if>
-										<c:if test="${service.type == 'SPORT'}">
-											<td>Deporte</td>
-										</c:if>
-										<c:if test="${service.type == 'COURSE'}">
-											<td>Curso</td>
-										</c:if>
-										<c:if test="${service.type == 'LOCKER'}">
-											<td>Locker</td>
-										</c:if>
-										<c:if test="${service.type == 'COMMON'}">
+										<c:if test="${service.type == 'SUBSCRIBABLE'}">
 											<td>Estandar</td>
 										</c:if>
 										<td>${service.value}</td>

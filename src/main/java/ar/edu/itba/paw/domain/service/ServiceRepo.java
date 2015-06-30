@@ -14,25 +14,13 @@ public interface ServiceRepo {
 
 	public PaginatedResult<Service> getAll(final int page);
 
-	public PaginatedResult<Service> getSports(final int page);
-	public List<Service> getActiveSports();
-	public PaginatedResult<Service> getActiveSports(final int page);
-
-	public PaginatedResult<Service> getCourses(final int page);
-	public List<Service> getActiveCourses();
-	public PaginatedResult<Service> getActiveCourses(final int page);
-	
 	public PaginatedResult<Service> getConsumables(final int page);
 	public List<Service> getActiveConsumables();
 	public PaginatedResult<Service> getActiveConsumables(final int page);
 
-	public PaginatedResult<Service> getLockers(final int page);
-	public List<Service> getActiveLockers();
-	public PaginatedResult<Service> getActiveLockers(final int page);
-	
-	public PaginatedResult<Service> getCommons(final int page);
-	public List<Service> getActiveCommons();
-	public PaginatedResult<Service> getActiveCommons(final int page);
+	public PaginatedResult<Service> getSubscribables(final int page);
+	public List<Service> getActiveSubscribables();
+	public PaginatedResult<Service> getActiveSubscribables(final int page);
 
 	public List<Service> getActive();
 	public PaginatedResult<Service> getActive(final int page);

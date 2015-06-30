@@ -25,7 +25,7 @@ public class Service extends PersistentEntity {
 	private double value;
 
 	public static enum Type {
-		SPORT, COURSE, LOCKER, CONSUMABLE, COMMON
+		CONSUMABLE, SUBSCRIBABLE
 	};
 
 	@Enumerated(EnumType.STRING)
@@ -49,8 +49,7 @@ public class Service extends PersistentEntity {
 	Service() {
 	}
 
-	// IMPORTANT: if the duration is set to 0, the service is suppossed to be
-	// infinite,
+	// IMPORTANT: if the duration is set to 0, the service is suppossed to be infinite,
 	// the enrollments do not end if not cancelled!!!
 	public Service(String name, Double value, Type type, int monthsDuration) {
 		this.name = name;
@@ -78,7 +77,6 @@ public class Service extends PersistentEntity {
 
 	public void deactivate() {
 		this.status = Status.INACTIVE;
-		System.out.println("size:" + enrollments.size());
 		concludeSubscriptions();
 	}
 
@@ -135,8 +133,7 @@ public class Service extends PersistentEntity {
 	
 	@Override
 	public String toString() {
-		return "id: " + getId() + " name: " + name + " type: " + type
-				+ " value: " + value + " duration: " + monthsDuration
+		return "id: " + getId() + " name: " + name + " type: " + type + " value: " + value + " duration: " + monthsDuration
 				+ " status: " + status;
 	}
 }

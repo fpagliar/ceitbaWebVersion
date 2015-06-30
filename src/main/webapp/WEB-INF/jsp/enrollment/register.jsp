@@ -31,22 +31,10 @@
 							<c:if test="${all!=null}">
 								<li class="active"><a href="#">Todos</a></li>
 							</c:if>
-							<c:if test="${sport==null}">
-								<li><a href="?service=sport">Deporte</a></li>
+							<c:if test="${subscribable==null}">
+								<li><a href="?service=subscribable">Estandar</a></li>
 							</c:if>
-							<c:if test="${sport!=null}">
-								<li class="active"><a href="#">Deporte</a></li>
-							</c:if>
-							<c:if test="${course==null}">
-								<li><a href="?service=course">Curso</a></li>
-							</c:if>
-							<c:if test="${course!=null}">
-								<li class="active"><a href="#">Curso</a></li>
-							</c:if>
-							<c:if test="${common==null}">
-								<li><a href="?service=common">Estandar</a></li>
-							</c:if>
-							<c:if test="${common!=null}">
+							<c:if test="${subscribable!=null}">
 								<li class="active"><a href="#">Estandar</a></li>
 							</c:if>
 							<c:if test="${consumable==null}">

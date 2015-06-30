@@ -39,8 +39,7 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 
 	@Override
 	public Service get(String name) {
-		Criteria c = createCriteria(Service.class).add(
-				Restrictions.eq("name", name));
+		Criteria c = createCriteria(Service.class).add(Restrictions.eq("name", name));
 		return (Service) c.uniqueResult();
 	}
 
@@ -48,36 +47,6 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 	public PaginatedResult<Service> getAll(final int page) {
 		Criteria c = createCriteria(Service.class);
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
-	}
-
-	@Override
-	public PaginatedResult<Service> getSports(final int page) {
-		return getByType(Service.Type.SPORT, page);
-	}
-
-	@Override
-	public PaginatedResult<Service> getActiveSports(final int page) {
-		return getActiveByType(Service.Type.SPORT, page);
-	}
-
-	@Override
-	public List<Service> getActiveSports() {
-		return getActiveByType(Service.Type.SPORT);
-	}
-
-	@Override
-	public PaginatedResult<Service> getCourses(final int page) {
-		return getByType(Service.Type.COURSE, page);
-	}
-
-	@Override
-	public PaginatedResult<Service> getActiveCourses(final int page) {
-		return getActiveByType(Service.Type.COURSE, page);
-	}
-
-	@Override
-	public List<Service> getActiveCourses() {
-		return getActiveByType(Service.Type.COURSE);
 	}
 
 	@Override
@@ -96,33 +65,18 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 	}
 
 	@Override
-	public PaginatedResult<Service> getLockers(final int page) {
-		return getByType(Service.Type.LOCKER, page);
+	public PaginatedResult<Service> getSubscribables(final int page) {
+		return getByType(Service.Type.SUBSCRIBABLE, page);
 	}
 
 	@Override
-	public PaginatedResult<Service> getActiveLockers(final int page) {
-		return getActiveByType(Service.Type.LOCKER, page);
+	public PaginatedResult<Service> getActiveSubscribables(final int page) {
+		return getActiveByType(Service.Type.SUBSCRIBABLE, page);
 	}
 	
 	@Override
-	public List<Service> getActiveLockers() {
-		return getActiveByType(Service.Type.LOCKER);
-	}
-
-	@Override
-	public PaginatedResult<Service> getCommons(final int page) {
-		return getByType(Service.Type.COMMON, page);
-	}
-
-	@Override
-	public PaginatedResult<Service> getActiveCommons(final int page) {
-		return getActiveByType(Service.Type.COMMON, page);
-	}
-	
-	@Override
-	public List<Service> getActiveCommons() {
-		return getActiveByType(Service.Type.COMMON);
+	public List<Service> getActiveSubscribables() {
+		return getActiveByType(Service.Type.SUBSCRIBABLE);
 	}
 
 	private PaginatedResult<Service> getByType(final Service.Type type, final int page) {

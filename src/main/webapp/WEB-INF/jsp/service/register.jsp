@@ -43,10 +43,7 @@
 								<label class="control-label" for="inputEmail">Tipo</label>
 								<div class="controls">
 									<form:select name="type" path="type">
-										<form:option value="SPORT"> Deporte </form:option>
-										<form:option value="COURSE"> Curso </form:option>
-										<form:option value="LOCKER"> Locker </form:option>
-										<form:option value="COMMON"> Estandar </form:option>
+										<form:option value="SUBSCRIBABLE"> Estandar </form:option>
 										<form:option value="CONSUMABLE"> Consumible </form:option>
 									</form:select>
 								</div>
