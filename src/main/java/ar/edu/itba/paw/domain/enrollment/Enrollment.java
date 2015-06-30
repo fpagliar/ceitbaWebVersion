@@ -33,7 +33,7 @@ public class Enrollment extends PersistentEntity {
 	Enrollment() {
 	}
 
-	public Enrollment(Person person, Service service) {
+	public Enrollment(final Person person, final Service service) {
 		this.person = person;
 		this.service = service;
 		this.startDate = DateTime.now();

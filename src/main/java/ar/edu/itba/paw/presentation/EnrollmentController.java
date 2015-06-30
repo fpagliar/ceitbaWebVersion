@@ -111,7 +111,7 @@ public class EnrollmentController {
 		if(!userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("unauthorized");
 
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		validator.validate(form, errors);
 		if (errors.hasErrors()) {
 			mav.addObject("consumables", serviceRepo.getActiveConsumables());
@@ -127,6 +127,7 @@ public class EnrollmentController {
 					ControllerType.ENROLLMENT, "register", userRepo.get(usr.getUsername())));
 			return new ModelAndView("redirect:../payment/listAll?legacy=" + person.getLegacy());
 		} else {
+			addCeitbaEnrollmentIfNecessary(person, usr.getUsername());
 			final Enrollment e = new Enrollment(person, service);
 			enrollmentRepo.add(e);
 			userActionRepo.add(new UserAction(Action.CREATE, Enrollment.class.getName(), null, e.toString(),
@@ -134,12 +135,24 @@ public class EnrollmentController {
 			return new ModelAndView("redirect:show?id=" + e.getId() + "&neww=true");
 		}
 	}
+	
+	private void addCeitbaEnrollmentIfNecessary(final Person person, final String username) {
+		for (final Enrollment e : person.getActiveEnrollments()) {
+			if (e.getService().getName().equals("ceitba")) {
+				return; // Already enrolled.
+			}
+		}
+		final Service ceitba = serviceRepo.get("ceitba");
+		final Enrollment e = new Enrollment(person, ceitba);
+		enrollmentRepo.add(e);
+		userActionRepo.add(new UserAction(Action.CREATE, Enrollment.class.getName(), null, e.toString(),
+				ControllerType.ENROLLMENT, "register", userRepo.get(username)));
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView register(HttpSession session,
-			@RequestParam(value = "service", required = false) String serviceCategory) {
-
-		UserManager usr = new SessionManager(session);
+	public ModelAndView register(final HttpSession session, 
+			@RequestParam(value = "service", required = false) final String serviceCategory) {
+		final UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		if(!userRepo.get(usr.getUsername()).isModerator())
@@ -162,17 +175,16 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView delete(HttpSession session, @RequestParam(value = "person", required = true) Person person,
-			@RequestParam(value = "service", required = true) Service service) {
-
-		UserManager usr = new SessionManager(session);
+	public ModelAndView delete(HttpSession session, @RequestParam(value = "person", required = true) final Person person,
+			@RequestParam(value = "service", required = true) final Service service) {
+		final UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 		if(!userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("unauthorized");
 
 		String ids = "";
-		List<Enrollment> enrollments;
+		final List<Enrollment> enrollments;
 		if (service.getName().equals("ceitba")) {
 			// If it is ceitba, cancel all the enrollments
 			enrollments = enrollmentRepo.get(person);
@@ -180,8 +192,7 @@ public class EnrollmentController {
 			enrollments = enrollmentRepo.get(person, service);
 		}
 		for (Enrollment e : enrollments) {
-			e.cancel(); // cancels all the subscriptions instead of looking for
-						// the active one
+			e.cancel(); // cancels all the subscriptions instead of looking for the active one
 			ids += e.getId() + "-";
 		}
 
