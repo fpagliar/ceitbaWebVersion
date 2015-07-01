@@ -41,9 +41,9 @@ public class EnrollmentController {
 	private UserActionRepo userActionRepo;
 
 	@Autowired
-	public EnrollmentController(UserRepo userRepo, EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo,
-			PersonRepo personRepo, DebtRepo debtRepo, RegisterEnrollmentFormValidator validator,
-			UserActionRepo userActionRepo) {
+	public EnrollmentController(final UserRepo userRepo, final EnrollmentRepo enrollmentRepo, final ServiceRepo serviceRepo,
+			final PersonRepo personRepo, final DebtRepo debtRepo, final RegisterEnrollmentFormValidator validator,
+			final UserActionRepo userActionRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.enrollmentRepo = enrollmentRepo;
@@ -55,16 +55,16 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session, @RequestParam(value = "list", required = false) String value,
-			@RequestParam(value = "search", required = false) String search,
-			@RequestParam(value = "serviceName", required = false) String serviceName, 
+	public ModelAndView listAll(final HttpSession session, @RequestParam(value = "list", required = false) final String value,
+			@RequestParam(value = "search", required = false) final String search,
+			@RequestParam(value = "serviceName", required = false) final String serviceName, 
 			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 
-		UserManager usr = new SessionManager(session);
+		final UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		if ("history".equals(value)) {
 			mav.addObject("historyEnrollments", enrollmentRepo.getExpired(page));
 			mav.addObject("history", true);
@@ -84,16 +84,16 @@ public class EnrollmentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView show(@RequestParam("id") Enrollment enrollment, HttpSession session,
-			@RequestParam(value = "neww", required = false) Boolean neww) {
+	public ModelAndView show(@RequestParam("id") final Enrollment enrollment, final HttpSession session,
+			@RequestParam(value = "neww", required = false) final Boolean neww) {
 
-		UserManager usr = new SessionManager(session);
+		final UserManager usr = new SessionManager(session);
 		if (!usr.existsUser())
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
 
 		if (enrollment == null)
 			return new ModelAndView("redirect:listAll");
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		mav.addObject("enrollment", enrollment);
 		if (neww != null && neww) {
 			mav.addObject("neww", true);
@@ -114,6 +114,7 @@ public class EnrollmentController {
 		final ModelAndView mav = new ModelAndView();
 		validator.validate(form, errors);
 		if (errors.hasErrors()) {
+			mav.addObject("consumables", serviceRepo.getActiveConsumables());
 			mav.addObject("consumables", serviceRepo.getActiveConsumables());
 			return mav;
 		}
@@ -158,7 +159,7 @@ public class EnrollmentController {
 		if(!userRepo.get(usr.getUsername()).isModerator())
 			return new ModelAndView("unauthorized");
 
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		if ("consumable".equals(serviceCategory)) {
 			mav.addObject("services", serviceRepo.getActiveConsumables());
 			mav.addObject("consumable", "consumable");

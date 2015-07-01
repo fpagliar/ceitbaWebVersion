@@ -18,19 +18,18 @@
 		<!-- Jumbotron -->
 		<div class="jumbotron">
 			<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span2">
+						</div>
+						<div class="span5">
+							<h2>Detalle</h2>
+						</div>
+						<div class="span5">
+							<h2>Anotados</h2>
+						</div>
+					</div>
 				<div class="row-fluid">
-					<div class="span1">
-					</div>
-					<div class="span5">
-						<h2>Detalle</h2>
-					</div>
-					<div class="span6">
-						<h2>Anotados</h2>
-					</div>
-				</div>
-						<hr />
-				<div class="row-fluid">
-					<div class="span1">
+					<div class="span2">
 						<ul class="nav nav-list pull-left">
 							<li class="nav-header">Opciones</li>
 							<li><a href="listAll">Listar Todos</a></li>
@@ -40,7 +39,7 @@
 							<li class="active"><a href="#">Editar</a></li>
 						</ul>
 					</div>
-					<div class="span5">
+					<div class="span5" text-align= "center">
 						<c:if test="${success==true}">
 							<div class="alert alert-success">${successmsg}</div>
 						</c:if>
@@ -52,8 +51,7 @@
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Nombre</label>
 								<div class="controls">
-									<form:input name="name" path="name" type="text"
-										value="${service.name}" />
+									<form:input name="name" path="name" type="text" value="${service.name}" />
 								</div>
 							</div>
 							<div class="control-group">
@@ -124,7 +122,7 @@
 							</div>
 						</form:form>
 					</div>
-					<div class="span6">
+					<div class="span5">
 						<c:if test="${fn:length(enrollments.elements) == 0}">
 							<h5>El servicio no tiene subscripciones vigentes</h5>
 						</c:if>
@@ -144,8 +142,7 @@
 										<td>${enrollment.person.legacy}</td>
 										<td>${enrollment.person.firstName}</td>
 										<td>${enrollment.person.lastName}</td>
-										<td><a href="../enrollment/show?id=${enrollment.id}"><i
-												class="icon-remove"></i></a></td>
+										<td><a href="../enrollment/show?id=${enrollment.id}"><i class="icon-remove"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

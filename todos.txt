@@ -4,5 +4,4 @@
 + cuando un form falla, se van las cosas de los selects (en el enrollment form)
 + tienen que desaparecer los alerts desp de 1 seg para detectar cuando las acciones se hacen bien de nuevo
 + la pantalla de acciones de usuarios puede tardar
-+ verificar los distintos tipos de servicios, y para que los quiero
 + verificar la pantalla y las queries de pagos y deudas.
