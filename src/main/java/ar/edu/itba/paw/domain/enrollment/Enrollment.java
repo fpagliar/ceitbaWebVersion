@@ -77,8 +77,7 @@ public class Enrollment extends PersistentEntity {
 		// It means that the service is infinite, the enrollment does not expire
 		if (service.getMonthsDuration() == 0)
 			return;
-		DateTime expirationDate = startDate.plusMonths(service
-				.getMonthsDuration());
+		final DateTime expirationDate = startDate.plusMonths(service.getMonthsDuration());
 		if (DateTime.now().isAfter(expirationDate)) {
 			endDate = expirationDate;
 		}
@@ -94,7 +93,7 @@ public class Enrollment extends PersistentEntity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null)
 			return false;
 		if (!(obj instanceof Enrollment))
@@ -107,8 +106,7 @@ public class Enrollment extends PersistentEntity {
 	
 	@Override
 	public String toString() {
-		return "id: " + getId() + " start_date: "
-				+ DateHelper.getDateString(startDate) + " end_date: "
+		return "id: " + getId() + " start_date: " + DateHelper.getDateString(startDate) + " end_date: " 
 				+ DateHelper.getDateString(endDate);
 	}
 }

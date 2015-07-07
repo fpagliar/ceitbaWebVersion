@@ -40,17 +40,6 @@
  										<form:errors path="name" class="error alert alert-error"/>
  							</div>
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Tipo</label>
-								<div class="controls">
-									<form:select name="type" path="type">
-										<form:option value="SUBSCRIBABLE"> Estandar </form:option>
-										<form:option value="CONSUMABLE"> Consumible </form:option>
-									</form:select>
-								</div>
-							</div>
-							<div class="control-group">
-							</div>
-							<div class="control-group">
 								<label class="control-label" for="inputEmail">Precio</label>
 								<div class="controls">
 									<form:input name="value" path="value" type="text" placeholder="Precio"/>
@@ -60,7 +49,7 @@
 									<form:errors path="value" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Duracion(meses)</label>
+								<label class="control-label" for="inputEmail">Duracion (meses)</label>
 								<div class="controls">
 									<form:input name="monthsDuration" path="monthsDuration" type="text" placeholder="Duracion" value="0"/>
 								</div>

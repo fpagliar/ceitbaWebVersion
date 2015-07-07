@@ -5,7 +5,6 @@ public class RegisterServiceForm {
 
 	String name;
 	String value;
-	String type;
 	String status;
 	String monthsDuration;
 
@@ -24,12 +23,6 @@ public class RegisterServiceForm {
 	}
 	public void setValue(String value) {
 		this.value = value;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
 	public String getStatus() {
 		return status;

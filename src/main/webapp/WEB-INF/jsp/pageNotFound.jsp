@@ -127,12 +127,11 @@ body {
           <div class="navbar-inner">
             <div class="container">
               <ul class="nav">
-                <li><a href="data/person/listAll">Usuarios</a></li>
-                <li><a href="data/service/listAll">Servicios</a></li>
-				<li><a href="data/enrollment/listAll">Subscripciones</a></li>
-				<li><a href="data/payment/listAll">Pagos</a></li>
-				<li><a href="data/billing/listNewEnrollments">Facturacion</a></li>
-				<li><a href="data/user/update">Perfil</a></li>
+                <li><a href="/sibadac/data/person/listAll">Usuarios</a></li>
+                <li><a href="/sibadac/data/service/listAll">Servicios</a></li>
+				<li><a href="/sibadac/data/payment/listAll">Pagos</a></li>
+				<li><a href="/sibadac/data/billing/listNewEnrollments">Facturacion</a></li>
+				<li><a href="/sibadac/data/user/update">Perfil</a></li>
               </ul>
             </div>
           </div>

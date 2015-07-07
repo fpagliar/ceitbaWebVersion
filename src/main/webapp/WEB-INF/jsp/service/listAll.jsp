@@ -26,38 +26,17 @@
 								<li class="active"><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
 							<c:if test="${list=='active'}">
 								<li><a href="listAll">Listar Todos</a></li>
 								<li class="active"><a href="listAll?list=active">Listar
 										Activos</a></li>
 								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
 							</c:if>
 							<c:if test="${list=='inactive'}">
 								<li><a href="listAll">Listar Todos</a></li>
 								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li class="active"><a href="listAll?list=inactive">Listar
-										Inactivos</a></li>
-								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
-							</c:if>
-							<c:if test="${list=='SUBSCRIBABLE'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li class="active"><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
-								<li><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
-							</c:if>
-							<c:if test="${list=='CONSUMABLE'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-								<li><a href="listAll?list=SUBSCRIBABLE">Listar Servicios Estandar</a></li>
-								<li class="active"><a href="listAll?list=CONSUMABLE">Listar Consumibles</a></li>
+								<li class="active"><a href="listAll?list=inactive">Listar Inactivos</a></li>
 							</c:if>
 							<li><a href="register">Nuevo Servicio</a></li>
 						</ul>
@@ -75,7 +54,6 @@
 							<thead>
 								<tr>
 									<th>Nombre</th>
-									<th>Tipo</th>
 									<th>Precio</th>
 									<th>Estado</th>
 									<th></th>
@@ -86,16 +64,9 @@
 									varStatus="rowCounter">
 									<tr>
 										<td>${service.name}</td>
-										<c:if test="${service.type == 'CONSUMABLE'}">
-											<td>Consumible</td>
-										</c:if>
-										<c:if test="${service.type == 'SUBSCRIBABLE'}">
-											<td>Estandar</td>
-										</c:if>
 										<td>${service.value}</td>
 										<td>${service.status}</td>
-										<td><a href="update?id=${service.id}"><i
-												class="icon-edit"></i></a></td>
+										<td><a href="update?id=${service.id}"><i class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

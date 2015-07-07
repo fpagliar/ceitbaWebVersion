@@ -58,8 +58,7 @@
 										<td>${person.legacy}</td>
 										<td>${person.firstName}</td>
 										<td>${person.lastName}</td>
-										<td><a href="update?id=${person.id}"><i
-												class="icon-edit"></i></a></td>
+										<td><a href="state?id=${person.id}"><i class="icon-edit"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>

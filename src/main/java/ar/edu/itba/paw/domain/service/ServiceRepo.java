@@ -14,14 +14,6 @@ public interface ServiceRepo {
 
 	public PaginatedResult<Service> getAll(final int page);
 
-	public PaginatedResult<Service> getConsumables(final int page);
-	public List<Service> getActiveConsumables();
-	public PaginatedResult<Service> getActiveConsumables(final int page);
-
-	public PaginatedResult<Service> getSubscribables(final int page);
-	public List<Service> getActiveSubscribables();
-	public PaginatedResult<Service> getActiveSubscribables(final int page);
-
 	public List<Service> getActive();
 	public PaginatedResult<Service> getActive(final int page);
 	public PaginatedResult<Service> getInactive(final int page);

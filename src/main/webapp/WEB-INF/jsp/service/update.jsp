@@ -58,24 +58,6 @@
 								<form:errors path="name" class="error alert alert-error" />
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="inputEmail">Tipo</label>
-								<div class="controls">
-									<form:select name="type" path="type">
-										<c:if
-											test="${service.type == 'SUBSCRIBABLE'}">
-											<form:option value="SUBSCRIBABLE" selected="selected" />
-											<form:option value="CONSUMABLE"/>
-										</c:if>
-										<c:if
-											test="${service.type != 'SUBSCRIBABLE'}">
-											<form:option value="SUBSCRIBABLE" />
-											<form:option value="CONSUMABLE" selected="selected" />
-										</c:if>
-									</form:select>
-								</div>
-							</div>
-							<div class="control-group"></div>
-							<div class="control-group">
 								<label class="control-label" for="inputEmail">Precio</label>
 								<div class="controls">
 									<form:input name="value" path="value" type="text"

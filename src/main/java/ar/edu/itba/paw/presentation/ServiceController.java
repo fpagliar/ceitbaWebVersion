@@ -26,16 +26,17 @@ import ar.edu.itba.paw.presentation.command.validator.UpdateServiceFormValidator
 @Controller
 public class ServiceController {
 
-	private ServiceRepo serviceRepo;
-	private UpdateServiceFormValidator updateValidator;
-	private RegisterServiceFormValidator registerValidator;
-	private EnrollmentRepo enrollmentRepo;
-	private UserRepo userRepo;
-	private UserActionRepo userActionRepo;
+	private final ServiceRepo serviceRepo;
+	private final UpdateServiceFormValidator updateValidator;
+	private final RegisterServiceFormValidator registerValidator;
+	private final EnrollmentRepo enrollmentRepo;
+	private final UserRepo userRepo;
+	private final UserActionRepo userActionRepo;
 
 	@Autowired
-	public ServiceController(UserRepo userRepo, ServiceRepo serviceRepo, UpdateServiceFormValidator updateValidator,
-			RegisterServiceFormValidator registerValidator, EnrollmentRepo enrollmentRepo, UserActionRepo userActionRepo) {
+	public ServiceController(final UserRepo userRepo, final ServiceRepo serviceRepo, 
+			final UpdateServiceFormValidator updateValidator, final RegisterServiceFormValidator registerValidator, 
+			final EnrollmentRepo enrollmentRepo, final UserActionRepo userActionRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.serviceRepo = serviceRepo;
@@ -46,45 +47,45 @@ public class ServiceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listAll(HttpSession session, @RequestParam(value = "list", required = false) String value,
-			@RequestParam(value = "search", required = false) String search, 
+	public ModelAndView listAll(final HttpSession session, @RequestParam(value = "list", required = false) final String value,
+			@RequestParam(value = "search", required = false) final String search, 
 			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
 
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		final UserManager usr = new SessionManager(session);
+		if (!usr.existsUser()) {
+			return new ModelAndView("redirect:../user/login?error=unauthorized");			
+		}
 
-		ModelAndView mav = new ModelAndView();
-		if ("active".equals(value))
+		final ModelAndView mav = new ModelAndView();
+		if ("active".equals(value)) {
 			mav.addObject("services", serviceRepo.getActive(page));
-		else if ("inactive".equals(value))
+		} else if ("inactive".equals(value)) {
 			mav.addObject("services", serviceRepo.getInactive(page));
-		else if ("CONSUMABLE".equals(value))
-			mav.addObject("services", serviceRepo.getConsumables(page));
-		else if ("SUBSCRIBABLE".equals(value))
-			mav.addObject("services", serviceRepo.getSubscribables(page));
-		else if (search != null && search != "") {
+		} else if (search != null && search != "") {
 			mav.addObject("services", serviceRepo.search(search, page));
 			mav.addObject("search", true);
-		} else
+		} else {
 			mav.addObject("services", serviceRepo.getAll(page));
+		}
 		mav.addObject("list", value);
 		mav.addObject("searchParam", search);
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView update(@RequestParam("id") Service service, HttpSession session,
-			@RequestParam(value = "success", required = false) Boolean success,
-			@RequestParam(value = "neww", required = false) Boolean neww, 
+	public ModelAndView update(@RequestParam("id") final Service service, final HttpSession session,
+			@RequestParam(value = "success", required = false) final Boolean success,
+			@RequestParam(value = "neww", required = false) final Boolean neww, 
 			@RequestParam(value = "page", required = false, defaultValue = "1") final int page) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
+		final UserManager usr = new SessionManager(session);
+		if (!usr.existsUser()) {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
+		}
+		if (!userRepo.get(usr.getUsername()).isModerator()) {
+			return new ModelAndView("unauthorized");			
+		}
 
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		mav.addObject("service", service);
 		if (neww != null && neww) {
 			mav.addObject("neww", true);
@@ -102,17 +103,20 @@ public class ServiceController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView update(HttpSession session, UpdateServiceForm form, Errors errors) {
+	public ModelAndView update(final HttpSession session, final UpdateServiceForm form, final Errors errors) {
 
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
+		final UserManager usr = new SessionManager(session);
+		if (!usr.existsUser()) {
+			return new ModelAndView("redirect:../user/login?error=unauthorized");			
+		}
+
+		if(!userRepo.get(usr.getUsername()).isModerator()) {
+			return new ModelAndView("unauthorized");			
+		}
 
 		updateValidator.validate(form, errors);
 
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		Service updatedService = serviceRepo.get(form.getId());
 		String previousService = updatedService.toString();
 
@@ -123,41 +127,33 @@ public class ServiceController {
 		updatedService.setName(form.getName());
 		updatedService.setValue(Double.parseDouble(form.getValue()));
 		updatedService.setMonthsDuration(Integer.parseInt(form.getMonthsDuration()));
-		if (form.getStatus().equals("ACTIVE"))
+		if (form.getStatus().equals("ACTIVE")) {
 			updatedService.activate();
-		else
+		} else {
 			updatedService.deactivate();
-
-		if (form.getType().equals("SUBSCRIBABLE"))
-			updatedService.setType(Service.Type.SUBSCRIBABLE);
-		else
-			updatedService.setType(Service.Type.CONSUMABLE);
-
-		userActionRepo.add(new UserAction(Action.UPDATE, Service.class.getName(), previousService, updatedService
-				.toString(), ControllerType.SERVICE, "update", userRepo.get(usr.getUsername())));
+		}
+		userActionRepo.add(new UserAction(Action.UPDATE, Service.class.getName(), previousService, updatedService.toString(), 
+				ControllerType.SERVICE, "update", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:update?id=" + updatedService.getId() + "&success=true");
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView register(HttpSession session, RegisterServiceForm form, Errors errors) {
+	public ModelAndView register(final HttpSession session, final RegisterServiceForm form, final Errors errors) {
 
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
+		final UserManager usr = new SessionManager(session);
+		if (!usr.existsUser()) {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
+		}
+		if (!userRepo.get(usr.getUsername()).isModerator()) {
 			return new ModelAndView("unauthorized");
+		}
 
 		registerValidator.validate(form, errors);
 		if (errors.hasErrors()) {
 			return null;
 		}
-		Service.Type type = null;
-		if (form.getType().equals("CONSUMABLE"))
-			type = Service.Type.CONSUMABLE;
-		if (form.getType().equals("SUBSCRIBABLE"))
-			type = Service.Type.SUBSCRIBABLE;
-		final Service s = new Service(form.getName(), Double.parseDouble(form.getValue()), type, Integer.parseInt(form
-				.getMonthsDuration()));
+		final Service s = new Service(form.getName(), Double.parseDouble(form.getValue()), 
+				Integer.parseInt(form.getMonthsDuration()));
 		serviceRepo.add(s);
 
 		userActionRepo.add(new UserAction(Action.CREATE, Service.class.getName(), null, s.toString(),
@@ -166,14 +162,16 @@ public class ServiceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView register(HttpSession session) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
+	public ModelAndView register(final HttpSession session) {
+		final UserManager usr = new SessionManager(session);
+		if (!usr.existsUser()) {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
+		}
+		if (!userRepo.get(usr.getUsername()).isModerator()) {
 			return new ModelAndView("unauthorized");
+		}
 
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		mav.addObject("registerServiceForm", new RegisterServiceForm());
 		return mav;
 	}

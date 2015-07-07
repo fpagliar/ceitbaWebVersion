@@ -24,14 +24,6 @@ public class Service extends PersistentEntity {
 	@Column(name = "value", nullable = false)
 	private double value;
 
-	public static enum Type {
-		CONSUMABLE, SUBSCRIBABLE
-	};
-
-	@Enumerated(EnumType.STRING)
-	@Column(name = "type", nullable = false)
-	private Type type;
-
 	public static enum Status {
 		ACTIVE, INACTIVE
 	};
@@ -51,10 +43,9 @@ public class Service extends PersistentEntity {
 
 	// IMPORTANT: if the duration is set to 0, the service is suppossed to be infinite,
 	// the enrollments do not end if not cancelled!!!
-	public Service(String name, Double value, Type type, int monthsDuration) {
+	public Service(final String name, final Double value, final int monthsDuration) {
 		this.name = name;
 		this.value = value;
-		this.type = type;
 		this.status = Status.ACTIVE;
 		this.monthsDuration = monthsDuration;
 	}
@@ -65,10 +56,6 @@ public class Service extends PersistentEntity {
 
 	public void setValue(double value) {
 		this.value = value;
-	}
-
-	public void setType(Type type) {
-		this.type = type;
 	}
 
 	public void activate() {
@@ -96,10 +83,6 @@ public class Service extends PersistentEntity {
 
 	public double getValue() {
 		return value;
-	}
-
-	public Type getType() {
-		return type;
 	}
 
 	public boolean isActive() {
@@ -133,7 +116,6 @@ public class Service extends PersistentEntity {
 	
 	@Override
 	public String toString() {
-		return "id: " + getId() + " name: " + name + " type: " + type + " value: " + value + " duration: " + monthsDuration
-				+ " status: " + status;
+		return "id: " + getId() + " name: " + name + " value: " + value + " duration: " + monthsDuration + " status: " + status;
 	}
 }

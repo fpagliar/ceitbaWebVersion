@@ -50,54 +50,6 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 	}
 
 	@Override
-	public PaginatedResult<Service> getConsumables(final int page) {
-		return getByType(Service.Type.CONSUMABLE, page);
-	}
-
-	@Override
-	public PaginatedResult<Service> getActiveConsumables(final int page) {
-		return getActiveByType(Service.Type.CONSUMABLE, page);
-	}
-	
-	@Override
-	public List<Service> getActiveConsumables() {
-		return getActiveByType(Service.Type.CONSUMABLE);
-	}
-
-	@Override
-	public PaginatedResult<Service> getSubscribables(final int page) {
-		return getByType(Service.Type.SUBSCRIBABLE, page);
-	}
-
-	@Override
-	public PaginatedResult<Service> getActiveSubscribables(final int page) {
-		return getActiveByType(Service.Type.SUBSCRIBABLE, page);
-	}
-	
-	@Override
-	public List<Service> getActiveSubscribables() {
-		return getActiveByType(Service.Type.SUBSCRIBABLE);
-	}
-
-	private PaginatedResult<Service> getByType(final Service.Type type, final int page) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq("type", type));
-		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
-	}
-
-	private PaginatedResult<Service> getActiveByType(final Service.Type type, final int page) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq("type", type));
-		c.add(Restrictions.eq("status", Service.Status.ACTIVE));
-		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Service> getActiveByType(final Service.Type type) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq("type", type));
-		c.add(Restrictions.eq("status", Service.Status.ACTIVE));
-		return (List<Service>) c.list();
-	}
-
-	@Override
 	public PaginatedResult<Service> getActive(final int page) {
 		Criteria c = createCriteria(Service.class).add(Restrictions.eq("status", Service.Status.ACTIVE));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);

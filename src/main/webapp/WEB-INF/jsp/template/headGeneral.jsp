@@ -121,6 +121,18 @@ body {
 }
 
 </style>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+	window.setTimeout(function() {
+	    $(".alert-success").fadeTo(1500, 0).slideUp(500, function(){
+	        $(this).remove(); 
+	    });
+	}, 5000); 
+});
+</script>
+
 <link href="/sibadac/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->

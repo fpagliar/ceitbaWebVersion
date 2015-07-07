@@ -7,7 +7,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 
 public class Start {
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 		Server server = new Server();
 		SocketConnector connector = new SocketConnector();
 		connector.setSoLingerTime(-1);
@@ -26,7 +26,7 @@ public class Start {
 			}
 			server.stop();
 			server.join();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			System.exit(100);
 		}

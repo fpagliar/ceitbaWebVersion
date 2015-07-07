@@ -34,13 +34,11 @@
 						<c:if test="${neww==true}">
 							<div class="alert alert-success">${newmsg}</div>
 						</c:if>
-						<form:form method="post" action="update"
-							commandName="updatePersonForm" class="form-horizontal">
+						<form:form method="post" action="update" commandName="updatePersonForm" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Legajo</label>
 								<div class="controls">
-									<form:input name="legacy" path="legacy" type="text"
-										value="${person.legacy}" />
+									<form:input name="legacy" path="legacy" type="text" value="${person.legacy}" />
 								</div>
 							</div>
 							<div class="control-group">
@@ -160,8 +158,7 @@
 									<tr>
 										<td>${enrollment.service.name}</td>
 										<td>${enrollment.formatedStartDate}</td>
-										<td><a href="../enrollment/show?id=${enrollment.id}"><i
-												class="icon-remove"></i></a></td>
+										<td><a href="../enrollment/show?id=${enrollment.id}"><i class="icon-remove"></i></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -188,6 +185,29 @@
 										<td>${enrollment.service.name}</td>
 										<td>${enrollment.formatedStartDate}</td>
 										<td>${enrollment.formatedEndDate}</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+					<div class="span3 pull-right">
+						<h2>Productos</h2>
+						<hr/>
+						<c:if test="${fn:length(purchases) == 0}">
+							<h5>El usuario no tiene productos comprados </h5>
+						</c:if>
+						<table class="table table-striped pull-right">
+							<thead>
+								<tr>
+									<th>Producto</th>
+									<th>Fecha</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="purchase" items="${purchases}" varStatus="rowCounter">
+									<tr>
+										<td>${purchase.product.name}</td>
+										<td>${purchase.formatedDate}</td>
 									</tr>
 								</c:forEach>
 							</tbody>

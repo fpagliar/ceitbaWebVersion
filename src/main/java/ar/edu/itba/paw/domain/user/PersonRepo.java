@@ -14,22 +14,22 @@ public interface PersonRepo {
 	/**
 	 * Lists all the registered {@link Person}.
 	 */
-	public PaginatedResult<Person> getAll(final int page);
-	public PaginatedResult<Person> search(final String s, final int page);
+	PaginatedResult<Person> getAll(final int page);
+	PaginatedResult<Person> search(final String s, final int page);
 
 	/**
 	 * Returns the unique {@link Person} associated with a specific id.
 	 * @return the {@link Person} or null if it doesn't exist
 	 */
-	public Person getById(int id);
-	public Person getByLegacy(int legacy);
-	public Person getByDni(String dni);
+	Person getById(final int id);
+	Person getByLegacy(final int legacy);
+	Person getByDni(final String dni);
 
 	/**
 	 * Adds the received {@link Person} to the database.
 	 */
-	public void add(Person person);
+	void add(final Person person);
 	
-	public List<Debt> billCashPayments();
+	List<Debt> billCashPayments();
 	
 }

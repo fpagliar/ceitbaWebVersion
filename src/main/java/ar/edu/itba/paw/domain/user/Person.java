@@ -16,9 +16,12 @@ import org.joda.time.DateTime;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
 import ar.edu.itba.paw.domain.enrollment.Enrollment;
+import ar.edu.itba.paw.domain.enrollment.Purchase;
 import ar.edu.itba.paw.domain.payment.CashPayment;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.service.Service;
+import ar.edu.itba.paw.presentation.command.RegisterPersonForm;
+import ar.edu.itba.paw.presentation.command.UpdatePersonForm;
 import ar.edu.itba.paw.validators.CeitbaValidator;
 
 @Entity
@@ -50,6 +53,9 @@ public class Person extends PersistentEntity {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Enrollment> enrollments = new ArrayList<Enrollment>();
 
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Purchase> purchases = new ArrayList<Purchase>();
+	
 	public static enum PaymentMethod {
 		BILL, CASH
 	};
@@ -67,24 +73,41 @@ public class Person extends PersistentEntity {
 	Person() {
 	}
 
-	public Person(Integer legacy) {
+	public Person(final Integer legacy) {
 		this.legacy = legacy;
 		this.registration = DateTime.now();
 	}
 
-	public Person(String firstName, String lastName, Integer legacy) {
+	public Person(final String firstName, final String lastName, final Integer legacy) {
 		this(legacy);
 		setFirstName(firstName);
 		setLastName(lastName);
+	}
+	
+	public Person(final RegisterPersonForm form) {
+		this(form.getFirstName(), form.getLastName(), Integer.valueOf(form.getLegacy()));
+		setCellphone(form.getCellphone());
+		setDni(form.getDni());
+		setEmail(form.getEmail());
+		setEmail2(form.getEmail2());
+		setPhone(form.getPhone());
+		if (form.getPaymentMethod().equals(PaymentMethod.CASH.toString())) {
+			setPaymentMethod(PaymentMethod.CASH);
+		} else {
+			setPaymentMethod(PaymentMethod.BILL);
+		}
 	}
 
 	public String getEmail2() {
 		return email2;
 	}
 
-	public void setEmail2(String email2) {
-		if(!isEmpty(email2))
+	public void setEmail2(final String email2) {
+		if(isEmpty(email2)) {
+			this.email2 = null;
+		} else {			
 			this.email2 = email2;
+		}
 	}
 
 	public String getEmail() {
@@ -95,12 +118,12 @@ public class Person extends PersistentEntity {
 		return dni;
 	}
 
-	public void setDni(String dni) {
+	public void setDni(final String dni) {
 		if(!isEmpty(dni))
 			this.dni = dni;
 	}
 
-	public void setLegacy(int legacy) {
+	public void setLegacy(final int legacy) {
 		this.legacy = legacy;
 	}
 
@@ -143,31 +166,37 @@ public class Person extends PersistentEntity {
 
 	/* Setters */
 
-	public void setFirstName(String name) {
-		if(!isEmpty(name))
+	public void setFirstName(final String name) {
+		if(isEmpty(name)) {
+			this.firstName = null;			
+		} else {			
 			this.firstName = name;
+		}
 	}
 
-	public void setLastName(String lastName) {
-		if(!isEmpty(lastName))
+	public void setLastName(final String lastName) {
+		if(isEmpty(lastName)) {
+			this.lastName = null;			
+		} else {			
 			this.lastName = lastName;
+		}
 	}
 
-	public void setEmail(String mail) {
+	public void setEmail(final String mail) {
 		if (!CeitbaValidator.validateMail(mail)) {
 			throw new IllegalArgumentException();
 		}
 		this.email = mail;
 	}
 
-	public void setPhone(String phone) {
+	public void setPhone(final String phone) {
 		if (!CeitbaValidator.validatePhone(phone)) {
 			throw new IllegalArgumentException();
 		}
 		this.phone = phone;
 	}
 
-	public void setCellphone(String phone) {
+	public void setCellphone(final String phone) {
 		if (!CeitbaValidator.validatePhone(phone)) {
 			throw new IllegalArgumentException();
 		}
@@ -175,10 +204,11 @@ public class Person extends PersistentEntity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		Person user = (Person) obj;
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;			
+		}
+		final Person user = (Person) obj;
 		return this.legacy == (user.getLegacy());
 	}
 
@@ -187,20 +217,22 @@ public class Person extends PersistentEntity {
 		return legacy;
 	}
 
-	private boolean isEmpty(String s) {
+	private boolean isEmpty(final String s) {
 		return s == null || s.length() == 0;
 	}
 
 	public List<Enrollment> getActiveEnrollments() {
-		List<Enrollment> ans = new ArrayList<Enrollment>();
-		for (Enrollment e : enrollments)
-			if (e.isActive())
+		final List<Enrollment> ans = new ArrayList<Enrollment>();
+		for (Enrollment e : enrollments) {			
+			if (e.isActive()) {				
 				ans.add(e);
+			}
+		}
 		return ans;
 	}
 
 	public List<Enrollment> getEnrollmentsHistory() {
-		List<Enrollment> ans = new ArrayList<Enrollment>();
+		final List<Enrollment> ans = new ArrayList<Enrollment>();
 		ans.addAll(enrollments);
 		return ans;
 	}
@@ -208,32 +240,38 @@ public class Person extends PersistentEntity {
 	/**
 	 * SHOULD ONLY BE CALLED BY THE ENROLLMENT REPO!!!
 	 */
-	public void enroll(Enrollment e) {
-		if(e.getService().getType().equals(Service.Type.CONSUMABLE)){
-			throw new IllegalArgumentException("Use consume for type CONSUMABLE");
-		}
-			
-		for (Enrollment active : enrollments)
-			if (active.getService().equals(e.getService()) && e.isActive())
+	public void enroll(final Enrollment e) {
+		for (final Enrollment active : enrollments) {			
+			if (active.getService().equals(e.getService()) && e.isActive()) {				
 				return;
+			}
+		}
 		enrollments.add(e);
 	}
 
-	public void unenroll(Service s) {
-		for (Enrollment e : enrollments)
-			if (e.getService().equals(s))
-				e.cancel();
-	}
-	
-	public Debt consume(Service s) {
-		Debt d = new Debt(this, s.getValue(), DateTime.now(), s.getName());
-		debts.add(d);
-		return d;
+//	public void unenroll(final Service s) {
+//		for (Enrollment e : enrollments)
+//			if (e.getService().equals(s))
+//				e.cancel();
+//	}
+		
+//	public Debt consume(final Service s) {
+//		Debt d = new Debt(this, s.getValue(), DateTime.now(), s.getName());
+//		debts.add(d);
+//		return d;
+//	}
+
+	public void purchase(final Purchase p) {
+		purchases.add(p);
 	}
 
-	public CashPayment pay(Debt debt, DateTime paymentDate) {
+	public void reimburse(final Purchase p) {
+		purchases.remove(p);
+	}
+
+	public CashPayment pay(final Debt debt, final DateTime paymentDate) {
 		debts.remove(debt);
-		CashPayment payment = new CashPayment(debt, paymentDate);
+		final CashPayment payment = new CashPayment(debt, paymentDate);
 		payments.add(payment);
 		return payment;
 	}
@@ -242,7 +280,36 @@ public class Person extends PersistentEntity {
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
+	public void setPaymentMethod(final PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
+	}
+	
+	public void update(final UpdatePersonForm form) {
+		setLegacy(Integer.parseInt(form.getLegacy()));
+		setFirstName(form.getFirstName());
+		setLastName(form.getLastName());
+		setEmail(form.getEmail());
+		setPhone(form.getPhone());
+		setCellphone(form.getCellphone());
+		setDni(form.getDni());
+		setEmail2(form.getEmail2());
+		if (form.getPaymentMethod().equals(PaymentMethod.CASH.toString())) {
+			setPaymentMethod(PaymentMethod.CASH);
+		} else {
+			setPaymentMethod(PaymentMethod.BILL);
+		}
+	}
+	
+	public List<Purchase> getPurchases() {
+		return new ArrayList<Purchase>(purchases);
+	}
+	
+	public void unsubscribe(final Service service) {
+		for (final Enrollment e : enrollments) {
+			if (e.isActive() && e.getService().equals(service)) {
+				e.cancel();
+				return;
+			}
+		}
 	}
 }

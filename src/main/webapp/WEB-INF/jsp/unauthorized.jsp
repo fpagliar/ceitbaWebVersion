@@ -20,7 +20,6 @@
               <ul class="nav">
                 <li><a href="/sibadac/data/person/listAll">Usuarios</a></li>
                 <li><a href="/sibadac/data/service/listAll">Servicios</a></li>
-				<li><a href="/sibadac/data/enrollment/listAll">Subscripciones</a></li>
 				<li><a href="/sibadac/data/payment/listAll">Pagos</a></li>
 				<li><a href="/sibadac/data/billing/listNewEnrollments">Facturacion</a></li>
 				<li><a href="/sibadac/data/user/update">Perfil</a></li>
