@@ -223,7 +223,7 @@ public class Person extends PersistentEntity {
 
 	public List<Enrollment> getActiveEnrollments() {
 		final List<Enrollment> ans = new ArrayList<Enrollment>();
-		for (Enrollment e : enrollments) {			
+		for (final Enrollment e : enrollments) {			
 			if (e.isActive()) {				
 				ans.add(e);
 			}

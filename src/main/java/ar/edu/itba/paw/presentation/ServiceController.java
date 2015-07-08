@@ -59,13 +59,17 @@ public class ServiceController {
 		final ModelAndView mav = new ModelAndView();
 		if ("active".equals(value)) {
 			mav.addObject("services", serviceRepo.getActive(page));
+			mav.addObject("menu", "listActive");
 		} else if ("inactive".equals(value)) {
 			mav.addObject("services", serviceRepo.getInactive(page));
+			mav.addObject("menu", "listInactive");
 		} else if (search != null && search != "") {
 			mav.addObject("services", serviceRepo.search(search, page));
 			mav.addObject("search", true);
+			mav.addObject("menu", "listAll");
 		} else {
 			mav.addObject("services", serviceRepo.getAll(page));
+			mav.addObject("menu", "listAll");
 		}
 		mav.addObject("list", value);
 		mav.addObject("searchParam", search);
@@ -99,12 +103,12 @@ public class ServiceController {
 		}
 		mav.addObject("updateServiceForm", new UpdateServiceForm());
 		mav.addObject("enrollments", enrollmentRepo.getActive(service, page));
+		mav.addObject("menu", "update");
 		return mav;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView update(final HttpSession session, final UpdateServiceForm form, final Errors errors) {
-
 		final UserManager usr = new SessionManager(session);
 		if (!usr.existsUser()) {
 			return new ModelAndView("redirect:../user/login?error=unauthorized");			
@@ -117,8 +121,8 @@ public class ServiceController {
 		updateValidator.validate(form, errors);
 
 		final ModelAndView mav = new ModelAndView();
-		Service updatedService = serviceRepo.get(form.getId());
-		String previousService = updatedService.toString();
+		final Service updatedService = serviceRepo.get(form.getId());
+		final String previousService = updatedService.toString();
 
 		if (errors.hasErrors()) {
 			mav.addObject("service", serviceRepo.get(form.getId()));
@@ -173,6 +177,7 @@ public class ServiceController {
 
 		final ModelAndView mav = new ModelAndView();
 		mav.addObject("registerServiceForm", new RegisterServiceForm());
+		mav.addObject("menu", "newService");
 		return mav;
 	}
 }

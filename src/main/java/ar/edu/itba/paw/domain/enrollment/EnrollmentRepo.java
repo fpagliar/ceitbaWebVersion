@@ -10,7 +10,7 @@ import ar.edu.itba.paw.domain.user.Person;
 
 public interface EnrollmentRepo {
 
-	public void add(Enrollment enrollment);
+	public boolean add(final Enrollment enrollment);
 	public Enrollment get(int id);
 	public List<Enrollment> get(Person p);
 	public List<Enrollment> get(Service s);
@@ -20,9 +20,6 @@ public interface EnrollmentRepo {
 	public List<Enrollment> getExpired(Service s);
 	public PaginatedResult<Enrollment> getActive(final int page);
 	public List<Enrollment> getActive(Person p);
-//	public PaginatedResult<Enrollment> getActivePersonsList(List<Person> persons, final int page);
-//	public PaginatedResult<Enrollment> getActiveServiceList(List<Service> services, final int page);
-//	public List<Enrollment> getActive(Service s);
 	public PaginatedResult<Enrollment> getActive(Service s, final int page);
 	public List<Enrollment> get(Person p, Service s);
 	

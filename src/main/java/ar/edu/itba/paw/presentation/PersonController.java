@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.presentation;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,7 @@ public class PersonController {
 
 		final ModelAndView mav = new ModelAndView();
 		mav.addObject("person", person);
+		mav.addObject("enrollments", enrollmentRepo.getActive(person));
 		mav.addObject("success", success);
 		return mav;
 	}
@@ -101,6 +104,7 @@ public class PersonController {
 
 		final ModelAndView mav = new ModelAndView();
 		mav.addObject("person", person);
+		mav.addObject("enrollments", enrollmentRepo.getExpired(person));
 		return mav;
 	}
 	
@@ -222,6 +226,7 @@ public class PersonController {
 		final ModelAndView mav = new ModelAndView();
 		mav.addObject("person", person);
 		mav.addObject("services", serviceRepo.getActive());
+		mav.addObject("enrollments", enrollmentRepo.getActive(person));
 		mav.addObject("success", success);
 		return mav;
 	}
@@ -236,10 +241,24 @@ public class PersonController {
 		if (!userRepo.get(usr.getUsername()).isModerator()) {
 			return new ModelAndView("unauthorized");
 		}
-		
-		enrollmentRepo.add(new Enrollment(person, service));
+
+		enroll(person, service);
 		final String msg = "La subscripcion fue realizada con exito";
 		return new ModelAndView("redirect:subscribe?id=" + person.getId() + "&success=" + msg);
+	}
+	
+	private void enroll(final Person person, final Service service) {
+		if (!service.getName().equals("ceitba")) {
+			boolean ceitbaEnrolled = false;
+			for (final Enrollment e : enrollmentRepo.getActive(person)) {
+				ceitbaEnrolled = ceitbaEnrolled || e.getService().getName().equals("ceitba");
+			}
+			if (!ceitbaEnrolled) {
+				final Service ceitba = serviceRepo.get("ceitba");
+				enrollmentRepo.add(new Enrollment(person, ceitba));				
+			}
+		}
+		enrollmentRepo.add(new Enrollment(person, service));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -253,7 +272,16 @@ public class PersonController {
 			return new ModelAndView("unauthorized");
 		}
 		
-		person.unsubscribe(service);
+		final List<Enrollment> enrollments;
+		if (service.getName().equals("ceitba")) {
+			enrollments = enrollmentRepo.get(person); // If it is ceitba, cancel all the enrollments
+		} else {
+			enrollments = enrollmentRepo.get(person, service);
+		}
+		for (final Enrollment e : enrollments) {
+			e.cancel(); // cancels all the subscriptions instead of looking for the active one
+		}
+		
 		final String msg = "La subscripcion fue cancelada con exito";
 		return new ModelAndView("redirect:state?id=" + person.getId() + "&success=" + msg);
 	}

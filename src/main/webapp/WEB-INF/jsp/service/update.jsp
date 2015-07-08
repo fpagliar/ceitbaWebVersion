@@ -18,36 +18,19 @@
 		<!-- Jumbotron -->
 		<div class="jumbotron">
 			<div class="container-fluid">
-					<div class="row-fluid">
-						<div class="span2">
-						</div>
-						<div class="span5">
-							<h2>Detalle</h2>
-						</div>
-						<div class="span5">
-							<h2>Anotados</h2>
-						</div>
-					</div>
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="listAll?list=active">Listar Activos</a></li>
-							<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-							<li><a href="register">Nuevo Servicio</a></li>
-							<li class="active"><a href="#">Editar</a></li>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span5" text-align= "center">
+						<h2>Detalle</h2>
 						<c:if test="${success==true}">
 							<div class="alert alert-success">${successmsg}</div>
 						</c:if>
 						<c:if test="${neww==true}">
 							<div class="alert alert-success">${newmsg}</div>
 						</c:if>
-						<form:form method="post" action="update"
-							commandName="updateServiceForm" class="form-horizontal">
+						<form:form method="post" action="update" commandName="updateServiceForm" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Nombre</label>
 								<div class="controls">
@@ -105,6 +88,7 @@
 						</form:form>
 					</div>
 					<div class="span5">
+						<h2>Anotados</h2>
 						<c:if test="${fn:length(enrollments.elements) == 0}">
 							<h5>El servicio no tiene subscripciones vigentes</h5>
 						</c:if>

@@ -26,26 +26,22 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements En
 		super(sessionFactory);
 	}
 
-	/**
-	 * @param person
-	 *            - the user that has to be added.
-	 * @throws DuplicatedUserException
-	 *             if the username or mail already exists for another user
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void add(final Enrollment enrollment) {
+	public boolean add(final Enrollment enrollment) {
 		final Criteria c = createCriteria(Enrollment.class);
 		c.add(Restrictions.eq("person", enrollment.getPerson()));
 		c.add(Restrictions.eq("service", enrollment.getService()));
 		final List<Enrollment> list = (List<Enrollment>) c.list();
-		for (Enrollment e : list)
-			if (e.isActive())
-				return; // The subscriptions typed CONSUMABLE can have unlimited
-						// active enrollments in the same period
+		for (final Enrollment e : list) {
+			if (e.isActive()) {
+				return false;		
+			}
+		}
 		save(enrollment);
 		enrollment.getPerson().enroll(enrollment);
 		enrollment.getService().enroll(enrollment);
+		return true;
 	}
 
 	@Override

@@ -20,35 +20,14 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<c:if test="${list==null || list==''}">
-								<li class="active"><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-							</c:if>
-							<c:if test="${list=='active'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li class="active"><a href="listAll?list=active">Listar
-										Activos</a></li>
-								<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-							</c:if>
-							<c:if test="${list=='inactive'}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="listAll?list=active">Listar Activos</a></li>
-								<li class="active"><a href="listAll?list=inactive">Listar Inactivos</a></li>
-							</c:if>
-							<li><a href="register">Nuevo Servicio</a></li>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span10">
-						<form class="form-search" action="listAll" method="get"
-							name="search">
-							<input type="text" class="input-medium search-query"
-								placeholder="Filtrar resultados" name="search">
-								<button type="submit">
-									<i class="icon-search"></i>
-								</button>
+						<form class="form-search" action="listAll" method="get" name="search">
+							<input type="text" class="input-medium search-query" placeholder="Filtrar resultados" name="search"/>
+							<button type="submit">
+								<i class="icon-search"></i>
+							</button>
 						</form>
 						<table class="table table-striped pull-right">
 							<thead>

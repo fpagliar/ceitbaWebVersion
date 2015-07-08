@@ -20,15 +20,9 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="listAll?list=active">Listar Activos</a></li>
-							<li><a href="listAll?list=inactive">Listar Inactivos</a></li>
-							<li class="active"><a href="register">Nuevo Servicio</a></li>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
-					<div class="span10">
+					<div class="span9">
 						<form:form method="post" action="register" commandName="registerServiceForm" class="form-horizontal">
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Nombre</label>

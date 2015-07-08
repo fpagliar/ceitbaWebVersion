@@ -39,10 +39,10 @@
 					<div class="span8">
 						<h2>Historial de subscripciones</h2>
 						<hr/>
-						<c:if test="${fn:length(person.enrollmentsHistory) == 0}">
+						<c:if test="${fn:length(enrollments) == 0}">
 							<h5>El usuario no tiene subscripciones anteriores</h5>
 						</c:if>
-						<c:if test="${fn:length(person.enrollmentsHistory) != 0}">
+						<c:if test="${fn:length(enrollments) != 0}">
 							<table class="table table-striped pull-right">
 								<thead>
 									<tr>
@@ -52,7 +52,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach var="enrollment" items="${person.enrollmentsHistory}" varStatus="rowCounter">
+									<c:forEach var="enrollment" items="${enrollments}" varStatus="rowCounter">
 										<tr>
 											<td>${enrollment.service.name}</td>
 											<td>${enrollment.formatedStartDate}</td>
