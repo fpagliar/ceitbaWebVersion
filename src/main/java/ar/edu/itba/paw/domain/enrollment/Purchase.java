@@ -59,4 +59,9 @@ public class Purchase extends PersistentEntity {
 	public String getFormattedDate() {
 		return DateHelper.getDateString(date);
 	}
+	
+	@Override
+	public String toString() {
+		return "personId: " + person + " product: " + product + " date: " + date + " billed: " + billed;
+	}
 }

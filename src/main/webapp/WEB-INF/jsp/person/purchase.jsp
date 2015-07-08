@@ -22,46 +22,60 @@
 					<div class="span2">
 						<%@ include file="sideMenu.jsp"%>
 					</div>
-					<div class="span5">
-						<h2> Comprar </h2>
-						<form class="form-horizontal" action="purchase" method="post">
-							<input name="id" path="id" type="hidden" value="${person.id}" />
-							<select name="product" path="product" class="form-control">
-								<c:forEach var="product" items="${products}" varStatus="rowCounter">
-									<option value="${product.id}">${product.name}</option>
-								</c:forEach>
-							</select>
-					    	<button type="submit" class="btn btn-default">Comprar</button>
-						</form>
+					<div class="span10">					
+						<c:if test="${msg!=null}">
+							<c:if test="${success}">
+								<div class="alert alert-success">${msg}</div>
+							</c:if>
+							<c:if test="${not success}">
+								<div class="alert alert-error">${msg}</div>
+							</c:if>
+						</c:if>
+					<div class="row-fluid">
+						<div class="span5">
+							<h2> Comprar </h2>
+							<form class="form-horizontal" action="purchase" method="post">
+								<input name="id" path="id" type="hidden" value="${person.id}" />
+								<div class="control-group">
+									<select name="product" path="product" class="form-control">
+										<c:forEach var="product" items="${products}" varStatus="rowCounter">
+											<option value="${product.id}">${product.name}</option>
+										</c:forEach>
+									</select>
+								</div>
+						    	<button type="submit" class="btn btn-default">Comprar</button>
+							</form>
+						</div>
+						<div class="span5">
+							<h2> Nuevo Producto </h2>
+							<form:form method="post" action="newProduct" commandName="productForm" class="form-horizontal">
+								<form:input name="personId" path="personId" type="hidden" value="${person.id}"/>
+								<div class="control-group">
+									<label class="control-label" for="inputName">Nombre</label>
+									<div class="controls">
+											<form:input name="name" path="name" type="text"/>
+									</div>
+								</div>
+								<div class="control-group">
+	 								<form:errors path="name" class="error alert alert-error"/>
+	 							</div>
+								<div class="control-group">
+									<label class="control-label" for="inputValue">Precio</label>
+									<div class="controls">
+											<form:input name="value" path="value" type="text"/>
+									</div>
+								</div>
+								<div class="control-group">
+									<form:errors path="value" class="error alert alert-error" />
+								</div>
+								<div class="control-group">
+									<div class="controls">
+										<button type="submit" class="btn">Crear</button>
+									</div>
+								</div>
+							</form:form>
+						</div>
 					</div>
-					<div class="span5">
-						<h2> Nuevo Producto </h2>
-						<form:form method="post" action="newProduct" commandName="productForm" class="form-horizontal">
-							<form:input name="personId" path="personId" type="hidden" value="${person.id}"/>
-							<div class="control-group">
-								<label class="control-label" for="inputName">Nombre</label>
-								<div class="controls">
-										<form:input name="name" path="name" type="text"/>
-								</div>
-							</div>
-							<div class="control-group">
- 								<form:errors path="name" class="error alert alert-error"/>
- 							</div>
-							<div class="control-group">
-								<label class="control-label" for="inputValue">Precio</label>
-								<div class="controls">
-										<form:input name="value" path="value" type="text"/>
-								</div>
-							</div>
-							<div class="control-group">
-								<form:errors path="value" class="error alert alert-error" />
-							</div>
-							<div class="control-group">
-								<div class="controls">
-									<button type="submit" class="btn">Crear</button>
-								</div>
-							</div>
-						</form:form>
 					</div>
 				</div>
 			</div>

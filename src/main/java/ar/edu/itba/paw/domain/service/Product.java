@@ -46,5 +46,10 @@ public class Product extends PersistentEntity {
 	public void setValue(final double value) {
 		this.value = value;
 	}
+	
+	@Override
+	public String toString() {
+		return "name: " + name + " value:" + value;
+	}
 
 }

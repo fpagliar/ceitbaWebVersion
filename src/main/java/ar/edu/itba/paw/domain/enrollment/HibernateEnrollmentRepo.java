@@ -65,9 +65,11 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements En
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> get(final Person p, final Service s) {
-		final Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("person", p));
+	public List<Enrollment> getActive(final Person p, final Service s) {
+		final Criteria c = createCriteria(Enrollment.class);
+		c.add(Restrictions.eq("person", p));
 		c.add(Restrictions.eq("service", s));
+		c.add(Restrictions.isNotNull("endDate"));
 		return (List<Enrollment>) c.list();
 	}
 

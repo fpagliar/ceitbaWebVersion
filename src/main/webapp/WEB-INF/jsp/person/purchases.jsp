@@ -20,6 +20,14 @@
 						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span8">
+						<c:if test="${msg!=null}">
+							<c:if test="${success}">
+								<div class="alert alert-success">${msg}</div>
+							</c:if>
+							<c:if test="${not success}">
+								<div class="alert alert-error">${msg}</div>
+							</c:if>
+						</c:if>
 						<h2>Productos pendientes</h2>
 						<hr/>
 						<c:if test="${fn:length(pendingPurchases) == 0}">
@@ -54,7 +62,9 @@
 								</tbody>
 							</table>
 						</c:if>
-
+						<div>
+							&nbsp;
+						</div>
 						<h2>Historial de productos</h2>
 						<hr/>
 						<c:if test="${fn:length(billedPurchases) == 0}">

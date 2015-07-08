@@ -23,6 +23,9 @@ import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 import ar.edu.itba.paw.domain.user.PersonRepo;
+import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.UserAction.Action;
+import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
 import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
 import ar.edu.itba.paw.presentation.command.ProductForm;
@@ -117,7 +120,9 @@ public class PersonController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView purchases(final HttpSession session, @RequestParam("id") final Person person) {
+	public ModelAndView purchases(final HttpSession session, @RequestParam("id") final Person person, 
+			@RequestParam(value="success", required = false) final Boolean success, 
+			@RequestParam(value="msg", required=false) final String msg) {
 		final ModelAndView moderatorCheck = checkForModerator(session);
 		if (moderatorCheck != null) {
 			return moderatorCheck;
@@ -128,11 +133,17 @@ public class PersonController {
 		mav.addObject("menu", "purchases");
 		mav.addObject("pendingPurchases", purchaseRepo.getPending(person));
 		mav.addObject("billedPurchases", purchaseRepo.getBilled(person));
+		if (msg != null) {
+			mav.addObject("success", success);
+			mav.addObject("msg", msg);
+		}
 		return mav;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView purchase(final HttpSession session, @RequestParam("id") final Person person) {
+	public ModelAndView purchase(final HttpSession session, @RequestParam("id") final Person person, 
+			@RequestParam(value="success", required = false) final Boolean success, 
+			@RequestParam(value="msg", required=false) final String msg) {
 		final ModelAndView moderatorCheck = checkForModerator(session);
 		if (moderatorCheck != null) {
 			return moderatorCheck;
@@ -143,6 +154,12 @@ public class PersonController {
 		mav.addObject("menu", "purchase");
 		mav.addObject("products", productRepo.getAll());
 		mav.addObject("productForm", new ProductForm());
+		
+		if (msg != null) {
+			mav.addObject("success", success);
+			mav.addObject("msg", msg);
+		}
+
 		return mav;
 	}
 
@@ -153,10 +170,15 @@ public class PersonController {
 		if (moderatorCheck != null) {
 			return moderatorCheck;
 		}
-		
+				
 		final Purchase purchase = new Purchase(person, product);
 		purchaseRepo.save(purchase);
-		return new ModelAndView("redirect:purchase?id=" + person.getId());
+
+		userActionRepo.add(new UserAction(Action.CREATE, Purchase.class.getName(), null, purchase.toString(),
+				ControllerType.PERSON, "purchase", userRepo.get(new SessionManager(session).getUsername())));
+
+		final String msg = "La compra se ha realizado on exito";
+		return new ModelAndView("redirect:purchase?id=" + person.getId() + "&success=true&msg=" + msg);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -166,8 +188,12 @@ public class PersonController {
 			return moderatorCheck;
 		}
 		purchaseRepo.delete(purchase);
+		
+		userActionRepo.add(new UserAction(Action.DELETE, Purchase.class.getName(), purchase.toString(), null,
+				ControllerType.PERSON, "reimburse", userRepo.get(new SessionManager(session).getUsername())));
 
-		return new ModelAndView("redirect:purchases?id=" + purchase.getPerson().getId());
+		final String msg = "La compra se ha cancelado con exito";
+		return new ModelAndView("redirect:purchases?id=" + purchase.getPerson().getId() + "&success=true&msg=" + msg);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -179,10 +205,17 @@ public class PersonController {
 
 		productValidator.validate(form, errors);
 		if (errors.hasErrors()) {
-			return new ModelAndView("redirect:purchase?id=" + form.getPersonId());
+			final String msg = "No se puede crear el producto, informacion no valida";
+			return new ModelAndView("redirect:purchase?id=" + form.getPersonId() + "&success=false&msg="  + msg);
 		}
-		productRepo.save(new Product(form));
-		return new ModelAndView("redirect:purchase?id=" + form.getPersonId());
+		final Product product = new Product(form);
+		productRepo.save(product);
+
+		userActionRepo.add(new UserAction(Action.CREATE, Product.class.getName(), null, product.toString(),
+				ControllerType.PERSON, "newProduct", userRepo.get(new SessionManager(session).getUsername())));
+
+		final String msg = "El producto fue creado correctamente";
+		return new ModelAndView("redirect:purchase?id=" + form.getPersonId() + "&success=true&msg="  + msg);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -227,8 +260,8 @@ public class PersonController {
 		final String personBeforeUpdate = updatedPerson.toString();
 		updatedPerson.update(form);
 		
-//		userActionRepo.add(new UserAction(Action.UPDATE, Person.class.getName(), personBeforeUpdate, updatedPerson.toString(), 
-//				ControllerType.PERSON, "update", userRepo.get(usr.getUsername())));
+		userActionRepo.add(new UserAction(Action.UPDATE, Person.class.getName(), personBeforeUpdate, updatedPerson.toString(), 
+				ControllerType.PERSON, "update", userRepo.get(new SessionManager(session).getUsername())));
 		return new ModelAndView("redirect:update?id=" + updatedPerson.getId() + "&success=true");
 	}
 
@@ -246,8 +279,8 @@ public class PersonController {
 		final Person p = new Person(form);
 		personRepo.add(p);
 
-//		userActionRepo.add(new UserAction(Action.CREATE, Person.class.getName(), null, p.toString(),
-//				ControllerType.PERSON, "register", userRepo.get(usr.getUsername())));
+		userActionRepo.add(new UserAction(Action.CREATE, Person.class.getName(), null, p.toString(),
+				ControllerType.PERSON, "register", userRepo.get(new SessionManager(session).getUsername())));
 		return new ModelAndView("redirect:update?id=" + p.getId() + "&success=false&neww=true");
 	}
 
@@ -289,12 +322,13 @@ public class PersonController {
 			return moderatorCheck;
 		}
 
-		enroll(person, service);
+		enroll(session, person, service);
+		
 		final String msg = "La subscripcion fue realizada con exito";
 		return new ModelAndView("redirect:subscribe?id=" + person.getId() + "&success=" + msg);
 	}
 	
-	private void enroll(final Person person, final Service service) {
+	private void enroll(final HttpSession session, final Person person, final Service service) {
 		if (!service.getName().equals("ceitba")) {
 			boolean ceitbaEnrolled = false;
 			for (final Enrollment e : enrollmentRepo.getActive(person)) {
@@ -302,10 +336,16 @@ public class PersonController {
 			}
 			if (!ceitbaEnrolled) {
 				final Service ceitba = serviceRepo.get("ceitba");
-				enrollmentRepo.add(new Enrollment(person, ceitba));				
+				final Enrollment ceitbaEnrollment = new Enrollment(person, ceitba);
+				enrollmentRepo.add(ceitbaEnrollment);
+				userActionRepo.add(new UserAction(Action.CREATE, Enrollment.class.getName(), null, ceitbaEnrollment.toString(),
+						ControllerType.PERSON, "subscribe", userRepo.get(new SessionManager(session).getUsername())));
 			}
 		}
-		enrollmentRepo.add(new Enrollment(person, service));
+		final Enrollment enrollment = new Enrollment(person, service);
+		enrollmentRepo.add(enrollment);
+		userActionRepo.add(new UserAction(Action.CREATE, Enrollment.class.getName(), null, enrollment.toString(),
+				ControllerType.PERSON, "subscribe", userRepo.get(new SessionManager(session).getUsername())));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -318,12 +358,17 @@ public class PersonController {
 		
 		final List<Enrollment> enrollments;
 		if (service.getName().equals("ceitba")) {
-			enrollments = enrollmentRepo.get(person); // If it is ceitba, cancel all the enrollments
+			enrollments = enrollmentRepo.getActive(person); // If it is ceitba, cancel all the enrollments
 		} else {
-			enrollments = enrollmentRepo.get(person, service);
+			enrollments = enrollmentRepo.getActive(person, service);
 		}
 		for (final Enrollment e : enrollments) {
-			e.cancel(); // cancels all the subscriptions instead of looking for the active one
+			if (e.isActive()) {
+				final String previous = e.toString();
+				e.cancel();
+				userActionRepo.add(new UserAction(Action.UPDATE, Enrollment.class.getName(), previous, e.toString(),
+						ControllerType.PERSON, "unsubscribe", userRepo.get(new SessionManager(session).getUsername())));
+			}
 		}
 		
 		final String msg = "La subscripcion fue cancelada con exito";
