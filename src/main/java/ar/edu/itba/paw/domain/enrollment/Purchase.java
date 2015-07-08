@@ -26,6 +26,8 @@ public class Purchase extends PersistentEntity {
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	@Column(name = "date", nullable = false)
 	private DateTime date;
+	@Column(name = "billed", nullable = false)
+	private boolean billed;
 
 	// Default constructor for hibernate
 	Purchase() {
@@ -35,6 +37,7 @@ public class Purchase extends PersistentEntity {
 		this.person = person;
 		this.product = product;
 		this.date = DateTime.now();
+		this.billed = false;
 	}
 
 	public Person getPerson() {
@@ -47,6 +50,10 @@ public class Purchase extends PersistentEntity {
 
 	public DateTime getDate() {
 		return date;
+	}
+	
+	public void bill() {
+		this.billed = true;
 	}
 
 	public String getFormattedDate() {

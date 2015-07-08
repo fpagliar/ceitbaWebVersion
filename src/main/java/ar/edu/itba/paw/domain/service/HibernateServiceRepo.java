@@ -20,12 +20,12 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 	private static final int ELEMENTS_PER_PAGE = 15;
 
 	@Autowired
-	public HibernateServiceRepo(SessionFactory sessionFactory) {
+	public HibernateServiceRepo(final SessionFactory sessionFactory) {
 		super(sessionFactory);
 	}
 
 	@Override
-	public void add(Service service) {
+	public void add(final Service service) {
 		if (duplicatedData("name", service.getName())) {
 			throw new DuplicatedDataException(service);
 		}
@@ -33,25 +33,25 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 	}
 
 	@Override
-	public Service get(int id) {
+	public Service get(final int id) {
 		return get(Service.class, id);
 	}
 
 	@Override
-	public Service get(String name) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq("name", name));
+	public Service get(final String name) {
+		final Criteria c = createCriteria(Service.class).add(Restrictions.eq("name", name));
 		return (Service) c.uniqueResult();
 	}
 
 	@Override
 	public PaginatedResult<Service> getAll(final int page) {
-		Criteria c = createCriteria(Service.class);
+		final Criteria c = createCriteria(Service.class);
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
 	}
 
 	@Override
 	public PaginatedResult<Service> getActive(final int page) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq("status", Service.Status.ACTIVE));
+		final Criteria c = createCriteria(Service.class).add(Restrictions.eq("status", Service.Status.ACTIVE));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
 	}
 
@@ -64,13 +64,13 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 
 	@Override
 	public PaginatedResult<Service> getInactive(final int page) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq("status", Service.Status.INACTIVE));
+		final Criteria c = createCriteria(Service.class).add(Restrictions.eq("status", Service.Status.INACTIVE));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
 	}
 
 	@Override
 	public PaginatedResult<Service> search(final String s, final int page) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
+		final Criteria c = createCriteria(Service.class).add(Restrictions.ilike("name", s, MatchMode.ANYWHERE));
 		return getPaginated(c, page - 1, ELEMENTS_PER_PAGE, Service.class);
 	}
 
@@ -81,9 +81,8 @@ public class HibernateServiceRepo extends AbstractHibernateRepo implements
 		return (List<Service>) c.list();
 	}
 
-
-	private boolean duplicatedData(String field, String value) {
-		Criteria c = createCriteria(Service.class).add(Restrictions.eq(field, value));
+	private boolean duplicatedData(final String field, final String value) {
+		final Criteria c = createCriteria(Service.class).add(Restrictions.eq(field, value));
 		return ! c.list().isEmpty();
 	}
 }

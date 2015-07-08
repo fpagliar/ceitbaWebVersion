@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import ar.edu.itba.paw.domain.PersistentEntity;
+import ar.edu.itba.paw.presentation.command.ProductForm;
 
 @Entity
 @Table(name = "products")
@@ -24,6 +25,10 @@ public class Product extends PersistentEntity {
 	public Product(final String name, final double value) {
 		this.name = name;
 		this.value = value;
+	}
+	
+	public Product(final ProductForm form) {
+		this(form.getName(), Double.valueOf(form.getValue()));
 	}
 	
 	public String getName() {

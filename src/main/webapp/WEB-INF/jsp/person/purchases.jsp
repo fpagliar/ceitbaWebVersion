@@ -17,52 +17,71 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="register">Nuevo Usuario</a></li>
-							<li class="active"><a href="#">Detalles</a></li>
-						</ul>
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">&nbsp;</li>
-						</ul>
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Detalles</li>
-							<li><a href="state?id=${person.id}">Estado</a></li>
-							<li><a href="history?id=${person.id}">Historial</a></li>
-							<li class="active"><a href="#">Porductos</a></li>
-							<li><a href="">Nueva Subscripcion</a></li>
-							<li><a href="">Nuevo Producto</a></li>
-							<li><a href="update?id=${person.id}">Editar</a></li>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span8">
+						<h2>Productos pendientes</h2>
+						<hr/>
+						<c:if test="${fn:length(pendingPurchases) == 0}">
+							<h5>El usuario no tiene productos pendientes</h5>
+						</c:if>
+						<c:if test="${fn:length(pendingPurchases) != 0}">
+							<table class="table table-striped pull-right">
+								<thead>
+									<tr>
+										<th>Nombre</th>
+										<th>Fecha</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="purchase" items="${pendingPurchases}" varStatus="rowCounter">
+										<tr>
+											<td>${purchase.product.name}</td>
+											<td>${purchase.formattedDate}</td>
+											<td>
+												<form action="reimburse" method="post">
+													<input name="id" path="id" type="hidden" value="${purchase.id}" />
+													<button type="submit" class="btn btn-default" 
+													    onClick='return confirm("Esta seguro que desea eliminar esta compra?")'
+													    style="border:none; background:none; padding:0;">
+														<i class="icon-remove"></i>
+													</button>
+												<form>
+											</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</c:if>
+
 						<h2>Historial de productos</h2>
 						<hr/>
-						<c:if test="${fn:length(purchases) == 0}">
-							<h5>El usuario no tiene subscripciones anteriores</h5>
+						<c:if test="${fn:length(billedPurchases) == 0}">
+							<h5>El usuario no tiene productos historicos</h5>
 						</c:if>
-						<table class="table table-striped pull-right">
-							<thead>
-								<tr>
-									<th>Elemento</th>
-									<th>Fecha</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach var="purchase" items="${person.purchases}" varStatus="rowCounter">
+						<c:if test="${fn:length(billedPurchases) != 0}">
+							<table class="table table-striped pull-right">
+								<thead>
 									<tr>
-										<td>${purchase.product.name}</td>
-										<td>${purchase.formatedDate}</td>
+										<th>Elemento</th>
+										<th>Fecha</th>
 									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									<c:forEach var="purchase" items="${billedPurchases}" varStatus="rowCounter">
+										<tr>
+											<td>${purchase.product.name}</td>
+											<td>${purchase.formatedDate}</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</c:if>
 					</div>
 				</div>
 			</div>
 		</div>
-
 		<div class="footer">
 			<p>CEITBA 2014</p>
 		</div>

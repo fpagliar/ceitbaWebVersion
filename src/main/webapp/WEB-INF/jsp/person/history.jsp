@@ -17,24 +17,7 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li><a href="register">Nuevo Usuario</a></li>
-							<li class="active"><a href="#">Detalles</a></li>
-						</ul>
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">&nbsp;</li>
-						</ul>
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Detalles</li>
-							<li><a href="state?id=${person.id}">Estado</a></li>
-							<li class="active"><a href="#">Historial</a></li>
-							<li><a href="">Porductos</a></li>
-							<li><a href="subscribe?id=${person.id}">Nueva Subscripcion</a></li>
-							<li><a href="">Nuevo Producto</a></li>
-							<li><a href="update?id=${person.id}">Editar</a></li>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span8">
 						<h2>Historial de subscripciones</h2>

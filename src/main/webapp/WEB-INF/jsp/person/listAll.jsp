@@ -20,18 +20,7 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<c:if test="${search==true}">
-								<li><a href="listAll">Listar Todos</a></li>
-								<li><a href="register">Nuevo Usuario</a></li>
-								<li class="active"><a href="#">Busqueda</a></li>
-							</c:if>
-							<c:if test="${search!=true}">
-								<li class="active"><a href="listAll">Listar Todos</a></li>
-								<li><a href="register">Nuevo Usuario</a></li>
-							</c:if>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span10">
 						<form class="form-search" action="listAll" method="get"

@@ -20,11 +20,7 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<ul class="nav nav-list pull-left">
-							<li class="nav-header">Opciones</li>
-							<li><a href="listAll">Listar Todos</a></li>
-							<li class="active"><a href="#">Nuevo Usuario</a></li>
-						</ul>
+						<%@ include file="sideMenu.jsp"%>
 					</div>
 					<div class="span10">
 						<form:form method="post" action="register" commandName="registerPersonForm" class="form-horizontal">
