@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 public class CookieUserManager implements UserManager {
 	private static String NAME_ID = "name";
 
-	private HttpServletRequest request;
-	private HttpServletResponse response;
+	private final HttpServletRequest request;
+	private final HttpServletResponse response;
 
-	public CookieUserManager ( HttpServletRequest request, HttpServletResponse response) {
+	public CookieUserManager (final HttpServletRequest request, final HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
 	}
@@ -28,26 +28,26 @@ public class CookieUserManager implements UserManager {
 		return getByID(NAME_ID);
 	}
 
-	public void setUser(String username) {
+	public void setUser(final String username) {
 		setCookie(NAME_ID, username, false);
 	}
 
-	public void resetUser(String username) {
+	public void resetUser(final String username) {
 		setCookie(NAME_ID, username, true);
 	}
 
-	private void setCookie(String name, String value, boolean delete) {
-		Cookie cookie = new Cookie(name, value);
+	private void setCookie(final String name, final String value, final boolean delete) {
+		final Cookie cookie = new Cookie(name, value);
 		if (delete) {
 			cookie.setMaxAge(0);
 		}
 		response.addCookie(cookie);
 	}
 
-	private Cookie getCookie(String name) {
-		Cookie[] cookies = request.getCookies();
+	private Cookie getCookie(final String name) {
+		final Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
-			for( Cookie c: cookies) {
+			for (Cookie c : cookies) {
 				if (c.getName().equals(name)) {
 					return c;
 				}
@@ -56,8 +56,8 @@ public class CookieUserManager implements UserManager {
 		return null;
 	}
 
-	private String getByID(String id) {
-		Cookie c = getCookie(id);
+	private String getByID(final String id) {
+		final Cookie c = getCookie(id);
 		if (c != null) {
 			return c.getValue();
 		} else {

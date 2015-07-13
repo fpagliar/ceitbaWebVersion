@@ -21,6 +21,14 @@ public class HibernatePurchaseRepo extends AbstractHibernateRepo implements Purc
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<Purchase> getPending() {
+		final Criteria criteria = createCriteria(Purchase.class);
+		criteria.add(Restrictions.eq("billed", false));
+		return (List<Purchase>) criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<Purchase> getPending(final Person p) {
 		final Criteria criteria = createCriteria(Purchase.class);
 		criteria.add(Restrictions.eq("person", p));

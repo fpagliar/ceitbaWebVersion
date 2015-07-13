@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.presentation;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.domain.enrollment.Enrollment;
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
+import ar.edu.itba.paw.domain.enrollment.PurchaseRepo;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.payment.DebtRepo;
 import ar.edu.itba.paw.domain.service.Service;
@@ -31,144 +28,106 @@ import ar.edu.itba.paw.domain.user.UserAction.Action;
 import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
 import ar.edu.itba.paw.domain.user.UserActionRepo;
 import ar.edu.itba.paw.domain.user.UserRepo;
-import ar.edu.itba.paw.lib.DateHelper;
 
 @Controller
 public class BillingController {
 
-	private EnrollmentRepo enrollmentRepo;
-	private ServiceRepo serviceRepo;
-	private DebtRepo debtRepo;
-	private PersonRepo personRepo;
-	private UserActionRepo userActionRepo;
-	private UserRepo userRepo;
+	private final EnrollmentRepo enrollmentRepo;
+	private final ServiceRepo serviceRepo;
+	private final DebtRepo debtRepo;
+	private final PersonRepo personRepo;
+	private final PurchaseRepo purchaseRepo;
+	private final UserActionRepo userActionRepo;
+	private final UserRepo userRepo;
+	private final ControllerUtils controllerUtils;
 
 	@Autowired
-	public BillingController(EnrollmentRepo enrollmentRepo, ServiceRepo serviceRepo, DebtRepo debtRepo,
-			PersonRepo personRepo, UserActionRepo userActionRepo, UserRepo userRepo) {
+	public BillingController(final EnrollmentRepo enrollmentRepo, final ServiceRepo serviceRepo, final DebtRepo debtRepo,
+			final PersonRepo personRepo, final PurchaseRepo purchaseRepo, final UserActionRepo userActionRepo, 
+			final UserRepo userRepo, final ControllerUtils controllerUtils) {
 		this.enrollmentRepo = enrollmentRepo;
 		this.serviceRepo = serviceRepo;
 		this.personRepo = personRepo;
 		this.debtRepo = debtRepo;
+		this.purchaseRepo = purchaseRepo;
 		this.userActionRepo = userActionRepo;
 		this.userRepo = userRepo;
+		this.controllerUtils = controllerUtils;
+	}
+	
+	private ModelAndView checkForModerator(final UserManager user) {
+		if (!user.existsUser()) {
+			return new ModelAndView("redirect:../user/login?error=unauthorized");
+		}
+		if (!userRepo.get(user.getUsername()).isModerator()) {
+			return new ModelAndView("unauthorized");
+		}
+		return null;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listNewEnrollments(HttpSession session,
+	public ModelAndView listNewEnrollments(final HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,
 			@RequestParam(value = "start", required = false) DateTime start,
 			@RequestParam(value = "end", required = false) DateTime end,
-			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
-
-		if (service == null)
-			service = serviceRepo.get("ceitba");
-
-		if (start == null)
+			@RequestParam(value = "personnel", required = false, defaultValue = "false") final Boolean personnel) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		if (service == null) {
+			service = serviceRepo.get("ceitba");			
+		}
+		if (start == null) {
 			start = DateTime.now().minusMonths(1);
-		if (end == null)
+		}
+		if (end == null) {
 			end = DateTime.now();
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start) + " Fin:" + DateHelper.getDateString(end)
-				+ " Servicio:" + service.getName() + " Personal:" + personnel);
+		}
+		final ModelAndView mav = new ModelAndView();
 		mav.addObject("services", serviceRepo.getActive());
-		mav.addObject("newEnrollments", enrollmentRepo.getBilledNewEnrollments(personnel, service, start, end));
+		mav.addObject("newEnrollments", enrollmentRepo.getBilledNewEnrollments(service, start, end));
 		return mav;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listCancelledEnrollments(HttpSession session,
+	public ModelAndView listCancelledEnrollments(final HttpSession session,
 			@RequestParam(value = "service_id", required = false) Service service,
 			@RequestParam(value = "start", required = false) DateTime start,
-			@RequestParam(value = "end", required = false) DateTime end,
-			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
-
-		if (service == null)
-			service = serviceRepo.get("ceitba");
-
-		if (start == null)
-			start = DateTime.now().minusMonths(1);
-		if (end == null)
-			end = DateTime.now();
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start) + " Fin:" + DateHelper.getDateString(end)
-				+ " Servicio:" + service.getName() + " Personal:" + personnel);
-		mav.addObject("services", serviceRepo.getActive());
-		mav.addObject("cancelledEnrollments",
-				enrollmentRepo.getBilledCancelledEnrollments(personnel, service, start, end));
-		return mav;
-	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listConsumableDebts(HttpSession session,
-			@RequestParam(value = "start", required = false) DateTime start,
-			@RequestParam(value = "end", required = false) DateTime end,
-			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
-
-		if (start == null)
-			start = DateTime.now().minusMonths(1);
-		if (end == null)
-			end = DateTime.now();
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("query", "Inicio: " + DateHelper.getDateString(start) + " Fin:" + DateHelper.getDateString(end)
-				+ " Personal:" + personnel);
-		mav.addObject("debts", debtRepo.getBilledDebts(personnel, start, end));
-		return mav;
-	}
-
-	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView deleteDebts(HttpSession session) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
-
-		List<Debt> debts = debtRepo.removeBilledDebts();
-		String ids = "";
-		for (Debt debt : debts) {
-			ids += debt.getId() + "-";
+			@RequestParam(value = "end", required = false) DateTime end) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
 		}
-		userActionRepo.add(new UserAction(Action.POST, Debt.class.getName(), ids, null, ControllerType.BILLING,
-				"deleteDebts", userRepo.get(usr.getUsername())));
-		return new ModelAndView("redirect:../billing/listConsumableDebts");
-	}
+		
+		if (service == null) {
+			service = serviceRepo.get("ceitba");
+		}
+		if (start == null) {
+			start = DateTime.now().minusMonths(1);
+		}
+		if (end == null) {
+			end = DateTime.now();
+		}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView listEnrolled(HttpSession session,
-			@RequestParam(value = "service_id", required = false) Service service,
-			@RequestParam(value = "personnel", required = false, defaultValue = "false") Boolean personnel) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
-
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		mav.addObject("services", serviceRepo.getActive());
-
-//		if (service == null)
-//			service = serviceRepo.get("ceitba");
+		mav.addObject("cancelledEnrollments", enrollmentRepo.getBilledCancelledEnrollments(service, start, end));
+		return mav;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView listEnrolled(final HttpSession session, 
+			@RequestParam(value = "service_id", required = false) final Service service) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		final ModelAndView mav = new ModelAndView();
+		mav.addObject("services", serviceRepo.getActive());
 		if (service != null) {
-			mav.addObject("query", " Servicio:" + service.getName() + " Personal:" + personnel);
 			mav.addObject("enrolled", enrollmentRepo.getBilledActive(service));			
 		}
-
 		return mav;
 	}
 
@@ -177,66 +136,37 @@ public class BillingController {
 	public void downloadBilling(final HttpServletResponse response, final HttpSession session) throws IOException {
 		response.setHeader("Content-disposition","attachment; filename=facturacion.xls");
 		final HSSFWorkbook workbook = new HSSFWorkbook();
-		createNewEnrollmentsSheet(workbook);
-		createCancelledEnrollmentsSheet(workbook);
-		createEnrollmentsSheet(workbook);
-		
+		controllerUtils.createNewEnrollmentsSheet(workbook);
+		controllerUtils.createCancelledEnrollmentsSheet(workbook);
+		controllerUtils.createActiveEnrollmentsSheet(workbook);
+		controllerUtils.createPurchaseSheet(workbook);
 		workbook.write(response.getOutputStream());
 	}
 	
-	private void createNewEnrollmentsSheet(final HSSFWorkbook workbook) {
-		final Service service = serviceRepo.get("ceitba");
-		final Collection<Enrollment> enrollments = enrollmentRepo.getBilledNewEnrollments(false, service,
-				DateTime.now(), DateTime.now().minusMonths(1));
-		createSheet(workbook, "Altas", enrollments);
-	}
-
-	private void createCancelledEnrollmentsSheet(final HSSFWorkbook workbook) {
-		final Service service = serviceRepo.get("ceitba");
-		final Collection<Enrollment> enrollments = enrollmentRepo.getBilledCancelledEnrollments(false, service,
-				DateTime.now(), DateTime.now().minusMonths(1));
-		createSheet(workbook, "Bajas", enrollments);
-	}
-
-	private void createEnrollmentsSheet(final HSSFWorkbook workbook) {
-		for (final Service service : serviceRepo.getActive()) {
-			final Collection<Enrollment> enrollments = enrollmentRepo.getBilledActive(service);
-			createSheet(workbook, service.getName(), enrollments);
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView pendingProducts(final HttpSession session) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
 		}
+		final ModelAndView mav = new ModelAndView();
+		mav.addObject("products", purchaseRepo.getPending());
+		return mav;
 	}
-
-	private void createSheet(final HSSFWorkbook workbook, final String name, final Collection<Enrollment> enrollments) {
-		final HSSFSheet sheet = workbook.createSheet(name);
-		//Create a new row in current sheet
-		int rowNum = 0;
-		final HSSFRow firstRow = sheet.createRow(rowNum);
-		firstRow.createCell(0).setCellValue("Legajo");
-		firstRow.createCell(1).setCellValue("Nombre");
-		firstRow.createCell(2).setCellValue("Apellido");
-		firstRow.createCell(3).setCellValue("Inicio");
-		firstRow.createCell(4).setCellValue("Fin");
-
-		for (final Enrollment e : enrollments) {
-			rowNum++;
-			final HSSFRow row = sheet.createRow(rowNum);
-			row.createCell(0).setCellValue(e.getPerson().getLegacy());
-			row.createCell(1).setCellValue(e.getPerson().getFirstName());
-			row.createCell(2).setCellValue(e.getPerson().getLastName());
-			row.createCell(3).setCellValue(e.getFormatedStartDate());
-			row.createCell(4).setCellValue(e.getFormatedEndDate());
-		}
-		return;
-	}
-
+	
+	// Cash Payments
+	
+	/**
+	 * Selects the people who pay in cash, and creates them a debt for each service enrolled.
+	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView billCashPayments(HttpSession session) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
+	public ModelAndView billCashPayments(final HttpSession session) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
 
-		List<Debt> debts = personRepo.billCashPayments();
+		final List<Debt> debts = personRepo.billCashPayments();
 		debtRepo.add(debts);
 		String ids = "";
 		for (Debt debt : debts) {
@@ -244,19 +174,57 @@ public class BillingController {
 		}
 		userActionRepo.add(new UserAction(Action.POST, Debt.class.getName(), null, ids, ControllerType.BILLING,
 				"billCashPayments", userRepo.get(usr.getUsername())));
-		return new ModelAndView("redirect:bill");
+		return new ModelAndView("redirect:bill?msg=Se ha facturado con exito");
 	}
-
+	
+	/**
+	 * Lists all the pending debts, that is, the ones that haven't been payed.
+	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView bill(HttpSession session) {
-		UserManager usr = new SessionManager(session);
-		if (!usr.existsUser())
-			return new ModelAndView("redirect:../user/login?error=unauthorized");
-		if(!userRepo.get(usr.getUsername()).isModerator())
-			return new ModelAndView("unauthorized");
-
-		ModelAndView mav = new ModelAndView();
+	public ModelAndView listDebts(final HttpSession session,
+			@RequestParam(value = "start", required = false) DateTime start,
+			@RequestParam(value = "end", required = false) DateTime end) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		if (start == null) {
+			start = DateTime.now().minusMonths(1);
+		}
+		if (end == null) {
+			end = DateTime.now();
+		}
+		final ModelAndView mav = new ModelAndView();
+		mav.addObject("debts", debtRepo.getPendingDebts(start, end));
 		return mav;
 	}
+	
+	/**
+	 * Deletes a specific debt.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView deleteDebt(final HttpSession session, @RequestParam(value = "debt") final Debt debt) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		debtRepo.delete(debt);
+		userActionRepo.add(new UserAction(Action.DELETE, Debt.class.getName(), debt.toString(), null, ControllerType.BILLING,
+				"deleteDebt", userRepo.get(usr.getUsername())));
+		return new ModelAndView("redirect:bill?msg=Deuda eliminada con exito");
+	}
 
+	/**
+	 * Informs with success msg.
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView bill(final HttpSession session, @RequestParam(value = "msg") final String msg) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		final ModelAndView mav = new ModelAndView();
+		mav.addObject("message", msg);
+		return mav;
+	}
 }

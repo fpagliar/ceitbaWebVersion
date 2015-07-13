@@ -25,8 +25,7 @@
 					<div class="span10">
 						<form class="form-search" action="listAll" method="get"
 							name="search">
-							<input type="text" class="input-medium search-query"
-								placeholder="Filtrar resultados" name="search">
+							<input type="text" class="input-medium search-query" placeholder="Filtrar resultados" name="search">
 								<button type="submit">
 									<i class="icon-search"></i>
 								</button>

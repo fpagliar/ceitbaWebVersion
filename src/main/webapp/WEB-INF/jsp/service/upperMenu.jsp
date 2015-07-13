@@ -7,8 +7,7 @@
 						<ul class="nav">
 							<li><a href="../person/listAll">Usuarios</a></li>
 							<li class="active"><a href="#">Servicios</a></li>
-							<li><a href="../enrollment/listAll">Subscripciones</a></li>
-								<li><a href="../payment/listAll">Pagos</a></li>
+							<li><a href="../payment/listAll">Pagos</a></li>
 							<li><a href="../billing/listNewEnrollments">Facturacion</a></li>
 							<li><a href="../user/update">Perfil</a></li>
 						</ul>

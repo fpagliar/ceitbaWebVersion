@@ -8,7 +8,6 @@
 							<c:if test="${!basicUser}">
 								<li><a href="../person/listAll">Usuarios</a></li>
 								<li><a href="../service/listAll">Servicios</a></li>
-								<li><a href="../enrollment/listAll">Subscripciones</a></li>
 							</c:if>
 							<c:if test="${!basicUser}">
 								<li class="active"><a href="listAll">Pagos</a></li>

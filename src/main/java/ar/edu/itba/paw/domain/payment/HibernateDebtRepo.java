@@ -15,11 +15,10 @@ import ar.edu.itba.paw.domain.user.Person;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 
 @Repository
-public class HibernateDebtRepo extends AbstractHibernateRepo implements
-		DebtRepo {
+public class HibernateDebtRepo extends AbstractHibernateRepo implements DebtRepo {
 
 	@Autowired
-	public HibernateDebtRepo(SessionFactory sessionFactory) {
+	public HibernateDebtRepo(final SessionFactory sessionFactory) {
 		super(sessionFactory);
 	}
 
@@ -33,17 +32,16 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Debt> get(Person person) {
-		Criteria c = createCriteria(Debt.class).add(
-				Restrictions.eq("person", person));
+	public List<Debt> get(final Person person) {
+		final Criteria c = createCriteria(Debt.class).add(Restrictions.eq("person", person));
 		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		return (List<Debt>) c.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Debt> get(DateTime start, DateTime end) {
-		Criteria c = createCriteria(Debt.class);
+	public List<Debt> get(final DateTime start, final DateTime end) {
+		final Criteria c = createCriteria(Debt.class);
 		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
@@ -54,8 +52,8 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Debt> get(Person p, DateTime start, DateTime end) {
-		Criteria c = createCriteria(Debt.class);
+	public List<Debt> get(final Person p, final DateTime start, final DateTime end) {
+		final Criteria c = createCriteria(Debt.class);
 		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (p != null)
 			c.add(Restrictions.eq("person", p));
@@ -68,41 +66,37 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Debt> getBilledDebts(Boolean personnel, DateTime start,
-			DateTime end) {
-		Criteria c = createCriteria(Debt.class);
+	public List<Debt> getPendingDebts(final DateTime start, final DateTime end) {
+		final Criteria c = createCriteria(Debt.class);
 		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
 		if (end != null)
 			c.add(Restrictions.lt("billingDate", end));
-		if (personnel) {
-			c.createCriteria("person").add(Restrictions.le("legacy", 10000))
-					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
-		} else {
-			c.createCriteria("person").add(Restrictions.ge("legacy", 10000))
-					.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));
-		}
 		return (List<Debt>) c.list();
 	}
 
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<Debt> removeBilledDebts() {
+//		final Criteria c = createCriteria(Debt.class);
+//		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.BILL));
+//		final List<Debt> debts = (List<Debt>) c.list();
+//		for (final Debt debt : debts) {
+//			debt.billed();
+//			update(debt);
+//		}
+//		return debts;
+//	}
 	@Override
-	public List<Debt> removeBilledDebts() {
-		Criteria c = createCriteria(Debt.class);
-		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.BILL));
-		List<Debt> debts = (List<Debt>) c.list();
-		for (Debt debt : debts) {
-			debt.billed();
-			update(debt);
-		}
-		return debts;
+	public void delete(final Debt debt) {
+		super.delete(debt);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Debt> getCashedDebts(DateTime start, DateTime end) {
-		Criteria c = createCriteria(Debt.class);
+	public List<Debt> getCashedDebts(final DateTime start, final DateTime end) {
+		final Criteria c = createCriteria(Debt.class);
 		c.add(Restrictions.eq("status", DebtStatus.PENDING));
 		if (start != null)
 			c.add(Restrictions.gt("billingDate", start));
@@ -113,13 +107,13 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 	}
 
 	@Override
-	public void add(Debt debt) {
+	public void add(final Debt debt) {
 		save(debt);
 	}
 
 	@Override
-	public void add(List<Debt> debts) {
-		for (Debt debt : debts) {
+	public void add(final List<Debt> debts) {
+		for (final Debt debt: debts) {
 			add(debt);
 		}
 	}
@@ -138,7 +132,7 @@ public class HibernateDebtRepo extends AbstractHibernateRepo implements
 //	}
 
 	@Override
-	public Debt get(int id) {
+	public Debt get(final int id) {
 		return get(Debt.class, id);
 	}
 

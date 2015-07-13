@@ -25,7 +25,7 @@
 							<li><a href="listNewEnrollments">Altas</a></li>
 							<li><a href="listCancelledEnrollments">Bajas</a></li>
 							<li class="active"><a href="#">Anotados</a></li>
-							<li><a href="listConsumableDebts">Consumibles</a></li>
+							<li><a href="listDebts">Deudas en efectivo</a></li>
 						</ul>
 					</div>
 					<div class="span9">
@@ -34,15 +34,13 @@
 							<div class="control-group">
 								<label class="control-label" for="start">Inicio</label>
 								<div class="controls">
-									<input type="text" class="form-control"
-										placeholder="formato dd/mm/aaaa" name="start">
+									<input type="text" class="form-control" placeholder="formato dd/mm/aaaa" name="start">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="end">Fin</label>
 								<div class="controls">
-									<input type="text" class="form-control"
-										placeholder="formato dd/mm/aaaa" name="end">
+									<input type="text" class="form-control" placeholder="formato dd/mm/aaaa" name="end">
 								</div>
 							</div>
 							<div class="control-group">
@@ -52,15 +50,6 @@
 										<c:forEach var="service" items="${services}" varStatus="rowCounter">
 											<option value="${service.id}"> ${service.name} </option>
 										</c:forEach>
-									</select>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="personnel"> Usuarios </label>
-								<div class="controls">
-									<select name="personnel">
-										<option value="false"> Alumnos </option>
-										<option value="true"> Personal </option>
 									</select>
 								</div>
 							</div>
@@ -92,14 +81,17 @@
 						</table>
 					</div>
 					<div class="span1">
-						<form action="billCashPayments" method="post">
-							<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
-						<form>
-					</div>
-					<div class="span1">
 						<a href="downloadBilling">
 							<button type="submit" class="btn"> Descargar a Excel </button>
 						</a>
+					</div>
+					<div>
+						&nbsp;
+					</div>
+					<div class="span1">
+						<form action="billCashPayments" method="post">
+							<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
+						<form>
 					</div>
 				</div>
 			</div>

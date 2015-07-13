@@ -25,10 +25,11 @@
 							<li><a href="listNewEnrollments">Altas</a></li>
 							<li><a href="listCancelledEnrollments">Bajas</a></li>
 							<li><a href="listEnrolled">Anotados</a></li>
+							<li><a href="listDebts">Deudas en efectivo</a></li>
 						</ul>
 					</div>
 					<div class="span10">
-						<div class="alert alert-success" role="alert"> Se ha facturado con exito </div>
+						<div class="alert alert-success" role="alert"> ${message} </div>
 					</div>
 				</div>
 			</div>

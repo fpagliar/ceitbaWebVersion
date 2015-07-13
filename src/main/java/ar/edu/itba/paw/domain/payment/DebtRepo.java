@@ -8,27 +8,28 @@ import ar.edu.itba.paw.domain.user.Person;
 
 public interface DebtRepo {
 
-	public List<Debt> getAll();
+	List<Debt> getAll();
 
-	public List<Debt> get(Person person);
+	List<Debt> get(final Person person);
 
-	public List<Debt> get(DateTime start, DateTime end);
+	List<Debt> get(final DateTime start, final DateTime end);
 	
-	public List<Debt> get(Person p, DateTime start, DateTime end);
+	List<Debt> get(final Person p, final DateTime start, final DateTime end);
 
-	public List<Debt> getBilledDebts(Boolean personnel, DateTime start, DateTime end);
+	List<Debt> getPendingDebts(final DateTime start, final DateTime end);
 
-	public List<Debt> removeBilledDebts();
+//	List<Debt> removeBilledDebts();
+	List<Debt> getCashedDebts(final DateTime start, final DateTime end);
 
-	public List<Debt> getCashedDebts(DateTime start, DateTime end);
+	void delete(final Debt debt);
 
-	public void add(Debt debt);
+	void add(final Debt debt);
 
-	public void add(List<Debt> debt);
+	void add(final List<Debt> debt);
 	
 //	public void pay(Debt debt, DateTime date);
 //	
 //	public void pay(Debt debt);
 
-	public Debt get(int id);
+	Debt get(final int id);
 }

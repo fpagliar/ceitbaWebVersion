@@ -16,7 +16,12 @@ import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.DuplicatedDataException;
 import ar.edu.itba.paw.domain.PaginatedResult;
 import ar.edu.itba.paw.domain.enrollment.Enrollment;
+import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
+import ar.edu.itba.paw.domain.enrollment.Purchase;
+import ar.edu.itba.paw.domain.enrollment.PurchaseRepo;
 import ar.edu.itba.paw.domain.payment.Debt;
+import ar.edu.itba.paw.domain.service.Product;
+import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 
 @Repository
@@ -25,9 +30,15 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 	
 	private static final int ELEMENTS_PER_PAGE = 15;
 
+	private final EnrollmentRepo enrollmentRepo;
+	private final PurchaseRepo purchaseRepo;
+	
 	@Autowired
-	public HibernatePersonRepo(SessionFactory sessionFactory) {
+	public HibernatePersonRepo(final SessionFactory sessionFactory, final EnrollmentRepo enrollmentRepo, 
+			final PurchaseRepo purchaseRepo) {
 		super(sessionFactory);
+		this.enrollmentRepo = enrollmentRepo;
+		this.purchaseRepo = purchaseRepo;
 	}
 
 	/**
@@ -87,20 +98,29 @@ public class HibernatePersonRepo extends AbstractHibernateRepo implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Debt> billCashPayments() {
-		Criteria c = createCriteria(Person.class).add(
-				Restrictions.eq("paymentMethod", PaymentMethod.CASH));
-		List<Person> list = (List<Person>) c.list();
-		List<Debt> debts = new ArrayList<Debt>();
-		for (Person p : list) {
+		final Criteria c = createCriteria(Person.class).add(Restrictions.eq("paymentMethod", PaymentMethod.CASH));
+		final List<Person> list = (List<Person>) c.list();
+		final List<Debt> debts = new ArrayList<Debt>();
+		for (final Person p : list) {
 			double total = 0;
 			String reason = "";
-			for(Enrollment e : p.getActiveEnrollments())
-				if (e.getService().getValue() > 0){
-					total += e.getService().getValue();
-					reason += e.getService().getName() + " ";
-				}
-			if(total > 0)
+			for (final Enrollment e : enrollmentRepo.getActive(p)) {
+				if (e.getService().getValue() > 0) {
+					final Service service = e.getService();
+					total += service.getValue();
+					reason += service.getName() + ":" + service.getValue() + " ";
+				}				
+			}
+			for (final Purchase purchase : purchaseRepo.getPending(p)) {
+				final Product product = purchase.getProduct();
+				total += product.getValue();
+				reason += product.getName() + ":" + product.getValue() + " ";
+				purchase.bill();
+				purchaseRepo.save(purchase);
+			}
+			if(total > 0) {
 				debts.add(new Debt(p, total, DateTime.now(), reason));						
+			}
 		}
 		return debts;
 	}

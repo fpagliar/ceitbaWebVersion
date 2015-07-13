@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ConnectionErrorServlet extends HttpServlet{
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setStatus(500);
 		req.getRequestDispatcher("/WEB-INF/jsp/connectionError.jsp").forward(req, resp);

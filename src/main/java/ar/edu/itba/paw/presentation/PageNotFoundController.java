@@ -9,7 +9,7 @@ public class PageNotFoundController {
 
 	@RequestMapping
 	public ModelAndView pageNotFound() {
-		ModelAndView mav = new ModelAndView();
+		final ModelAndView mav = new ModelAndView();
 		mav.setViewName("pageNotFound");
 		return mav;
 	}

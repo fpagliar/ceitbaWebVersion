@@ -144,16 +144,11 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements En
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> getBilledNewEnrollments(final Boolean personnel, final Service s, final DateTime start, 
+	public List<Enrollment> getBilledNewEnrollments(final Service s, final DateTime start, 
 			final DateTime end) {
 		final Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("service", s));
 		c.createAlias("person", "p").add(Restrictions.eq("p.paymentMethod", PaymentMethod.BILL));
 		c.addOrder(Order.asc("p.legacy"));
-		if (personnel) {
-			c.add(Restrictions.le("p.legacy", 10000));			
-		} else {
-			c.add(Restrictions.ge("p.legacy", 10000));			
-		}
 		c.add(Restrictions.between("startDate", start, end));
 		c.add(Restrictions.isNull("endDate"));
 		return (List<Enrollment>) c.list();
@@ -161,17 +156,8 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements En
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Enrollment> getBilledCancelledEnrollments(final Boolean personnel, final Service s, final DateTime start, 
-			final DateTime end) {
+	public List<Enrollment> getBilledCancelledEnrollments(final Service s, final DateTime start, final DateTime end) {
 		final Criteria c = createCriteria(Enrollment.class).add(Restrictions.eq("service", s));
-		if (personnel) {
-			c.createCriteria("person").add(Restrictions.le("legacy", 10000))
-				.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));			
-		} else {
-			c.createCriteria("person").add(Restrictions.ge("legacy", 10000))
-				.add(Restrictions.eq("paymentMethod", PaymentMethod.BILL));			
-		}
-
 		c.add(Restrictions.between("endDate", start, end));
 		return (List<Enrollment>) c.list();
 	}

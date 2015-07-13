@@ -10,18 +10,18 @@ import ar.edu.itba.paw.domain.user.PersonRepo;
 @Component
 public class PersonConverter implements Converter<String, Person> {
 
-	private PersonRepo persons;
+	private PersonRepo personRepo;
 
 	@Autowired
-	public PersonConverter(PersonRepo persons) {
-		this.persons = persons;
+	public PersonConverter(final PersonRepo persons) {
+		this.personRepo = persons;
 	}
 
 	@Override
-	public Person convert(String source) {
+	public Person convert(final String source) {
 		try {
-			return persons.getById(Integer.valueOf(source));
-		} catch (NumberFormatException e) {
+			return personRepo.getById(Integer.valueOf(source));
+		} catch (final NumberFormatException e) {
 			return null;
 		}
 	}
