@@ -25,6 +25,7 @@
 							<li><a href="listNewEnrollments">Altas</a></li>
 							<li><a href="listCancelledEnrollments">Bajas</a></li>
 							<li><a href="listEnrolled">Anotados</a></li>
+							<li><a href="pendingPurchases">Compras Pendientes</a></li>
 							<li><a href="listDebts">Deudas en efectivo</a></li>
 						</ul>
 					</div>

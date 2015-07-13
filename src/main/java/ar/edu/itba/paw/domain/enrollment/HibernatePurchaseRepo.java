@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.domain.AbstractHibernateRepo;
 import ar.edu.itba.paw.domain.user.Person;
+import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 
 @Repository
 public class HibernatePurchaseRepo extends AbstractHibernateRepo implements PurchaseRepo {
@@ -24,6 +25,15 @@ public class HibernatePurchaseRepo extends AbstractHibernateRepo implements Purc
 	public List<Purchase> getPending() {
 		final Criteria criteria = createCriteria(Purchase.class);
 		criteria.add(Restrictions.eq("billed", false));
+		return (List<Purchase>) criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Purchase> getPending(final PaymentMethod method) {
+		final Criteria criteria = createCriteria(Purchase.class);
+		criteria.add(Restrictions.eq("billed", false));
+		criteria.createAlias("person", "person").add(Restrictions.eq("person.paymentMethod", method));
 		return (List<Purchase>) criteria.list();
 	}
 
@@ -48,6 +58,11 @@ public class HibernatePurchaseRepo extends AbstractHibernateRepo implements Purc
 	@Override
 	public void save(final Purchase purchase) {
 		super.save(purchase);
+	}
+
+	@Override
+	public void update(final Purchase purchase) {
+		super.update(purchase);
 	}
 
 	@Override

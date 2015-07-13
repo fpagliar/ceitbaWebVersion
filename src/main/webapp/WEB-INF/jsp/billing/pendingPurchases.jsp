@@ -25,59 +25,57 @@
 							<li><a href="listNewEnrollments">Altas</a></li>
 							<li><a href="listCancelledEnrollments">Bajas</a></li>
 							<li><a href="listEnrolled">Anotados</a></li>
-							<li><a href="pendingPurchases">Compras Pendientes</a></li>
-							<li class="active"><a href="listDebts">Deudas en efectivo</a></li>
+							<li class="active"><a href="pendingPurchases">Compras Pendientes</a></li>
+							<li><a href="listDebts">Deudas en efectivo</a></li>
 						</ul>
 					</div>
 					<div class="span9">
-						<h2 class="text-center">Filtrar Busqueda</h2>
-						<form action="listConsumableDebts" method="get" name="listConsumableDebts" class="form-horizontal">
-							<div class="control-group">
-								<label class="control-label" for="start">Inicio</label>
-								<div class="controls">
-									<input type="text" class="form-control" placeholder="formato dd/mm/aaaa" name="start">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="end">Fin</label>
-								<div class="controls">
-									<input type="text" class="form-control" placeholder="formato dd/mm/aaaa" name="end">
-								</div>
-							</div>
-							<button type="submit" class="btn">Listar</button>
-						</form>
-						<h4 class="text-center">Busqueda: ${query} </h4>
 						<table class="table table-striped pull-right">
 							<thead>
 								<tr>
 									<th>Legajo</th>
 									<th>Nombre</th>
 									<th>Apellido</th>
-									<th>Fecha de deuda</th>
+									<th>Fecha de Compra</th>
 									<th>Monto</th>
 									<th>Motivo</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="debt" items="${debts}"
-									varStatus="rowCounter">
+								<tr>
+									<td>FACTURA</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<c:forEach var="purchase" items="${billPurchases}" varStatus="rowCounter">
 									<tr>
-										<td>${debt.person.legacy}</td>
-										<td>${debt.person.firstName}</td>
-										<td>${debt.person.lastName}</td>
-										<td>${debt.formatedDate}</td>
-										<td>$${debt.amount}</td>
-										<td>${debt.reason}</td>
-										<td>
-											<form action="deleteDebt" method="post">
-												<input name="debt" path="id" type="hidden" value="${debt.id}" />
-												<button type="submit" class="btn btn-default" 
-												    onClick='return confirm("Esta seguro que desea eliminar esta deuda?")'
-												    style="border:none; background:none; padding:0;">
-													<i class="icon-remove"></i>
-												</button>
-											<form>
-										</td>
+										<td>${purchase.person.legacy}</td>
+										<td>${purchase.person.firstName}</td>
+										<td>${purchase.person.lastName}</td>
+										<td>${purchase.formattedDate}</td>
+										<td>${purchase.product.value}</td>
+										<td>${purchase.product.name}</td>
+									</tr>
+								</c:forEach>
+								<tr>
+									<td>EFECTIVO</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<c:forEach var="purchase" items="${cashPurchases}" varStatus="rowCounter">
+									<tr>
+										<td>${purchase.person.legacy}</td>
+										<td>${purchase.person.firstName}</td>
+										<td>${purchase.person.lastName}</td>
+										<td>${purchase.formattedDate}</td>
+										<td>${purchase.product.value}</td>
+										<td>${purchase.product.name}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -97,8 +95,10 @@
 								<button type="submit" class="btn" onClick='return confirm("Esta accion va facturar a todos las personas que estan anotadas en un servicio y abonan en efectivo. Desea seguir?")'>Facturar efectivo</button>
 							</form>
 						</div>
-						<div>
-							&nbsp;
+						<div class="row-fluid">
+							<form action="clearBilledPurchases" method="post">
+								<button type="submit" class="btn" onClick='return confirm("Esta accion va a archivar todas las compras efectuadas excepto las compras que se abonan en efectivo. Desea seguir?")'>Archivar compras facturadas</button>
+							</form>
 						</div>
 					</div>
 				</div>

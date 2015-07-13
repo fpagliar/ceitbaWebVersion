@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.domain.enrollment.EnrollmentRepo;
+import ar.edu.itba.paw.domain.enrollment.Purchase;
 import ar.edu.itba.paw.domain.enrollment.PurchaseRepo;
 import ar.edu.itba.paw.domain.payment.Debt;
 import ar.edu.itba.paw.domain.payment.DebtRepo;
@@ -24,6 +25,7 @@ import ar.edu.itba.paw.domain.service.Service;
 import ar.edu.itba.paw.domain.service.ServiceRepo;
 import ar.edu.itba.paw.domain.user.PersonRepo;
 import ar.edu.itba.paw.domain.user.UserAction;
+import ar.edu.itba.paw.domain.user.Person.PaymentMethod;
 import ar.edu.itba.paw.domain.user.UserAction.Action;
 import ar.edu.itba.paw.domain.user.UserAction.ControllerType;
 import ar.edu.itba.paw.domain.user.UserActionRepo;
@@ -154,6 +156,55 @@ public class BillingController {
 		return mav;
 	}
 	
+	/**
+	 * Informs with success msg.
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView bill(final HttpSession session, @RequestParam(value = "msg") final String msg) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		final ModelAndView mav = new ModelAndView();
+		mav.addObject("message", msg);
+		return mav;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView pendingPurchases(final HttpSession session) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		final ModelAndView mav = new ModelAndView();
+		mav.addObject("billPurchases", purchaseRepo.getPending(PaymentMethod.BILL));
+		mav.addObject("cashPurchases", purchaseRepo.getPending(PaymentMethod.CASH));
+		return mav;
+	}
+	
+	/**
+	 * Clears all the purchases made by people that get charged by bill.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView clearBilledPurchases(final HttpSession session) {
+		final UserManager usr = new SessionManager(session);
+		if (checkForModerator(usr) != null) {
+			return checkForModerator(usr);
+		}
+		
+		String ids = "";
+		for (final Purchase p : purchaseRepo.getPending()) {
+			if (p.getPerson().getPaymentMethod() == PaymentMethod.BILL) {
+				ids += p.getId() + "-";				
+				p.bill();
+				purchaseRepo.update(p);
+			}
+		}
+		userActionRepo.add(new UserAction(Action.POST, Purchase.class.getName(), null, ids, ControllerType.BILLING,
+				"clearBilledPurchases", userRepo.get(usr.getUsername())));
+		return new ModelAndView("redirect:bill?msg=Las compras facturadas se han archivado correctamente.");
+	}
+	
 	// Cash Payments
 	
 	/**
@@ -169,7 +220,7 @@ public class BillingController {
 		final List<Debt> debts = personRepo.billCashPayments();
 		debtRepo.add(debts);
 		String ids = "";
-		for (Debt debt : debts) {
+		for (final Debt debt : debts) {
 			ids += debt.getId() + "-";
 		}
 		userActionRepo.add(new UserAction(Action.POST, Debt.class.getName(), null, ids, ControllerType.BILLING,
@@ -212,19 +263,5 @@ public class BillingController {
 		userActionRepo.add(new UserAction(Action.DELETE, Debt.class.getName(), debt.toString(), null, ControllerType.BILLING,
 				"deleteDebt", userRepo.get(usr.getUsername())));
 		return new ModelAndView("redirect:bill?msg=Deuda eliminada con exito");
-	}
-
-	/**
-	 * Informs with success msg.
-	 */
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView bill(final HttpSession session, @RequestParam(value = "msg") final String msg) {
-		final UserManager usr = new SessionManager(session);
-		if (checkForModerator(usr) != null) {
-			return checkForModerator(usr);
-		}
-		final ModelAndView mav = new ModelAndView();
-		mav.addObject("message", msg);
-		return mav;
 	}
 }
