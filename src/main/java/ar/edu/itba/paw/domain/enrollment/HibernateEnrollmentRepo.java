@@ -69,7 +69,7 @@ public class HibernateEnrollmentRepo extends AbstractHibernateRepo implements En
 		final Criteria c = createCriteria(Enrollment.class);
 		c.add(Restrictions.eq("person", p));
 		c.add(Restrictions.eq("service", s));
-		c.add(Restrictions.isNotNull("endDate"));
+		c.add(Restrictions.isNull("endDate"));
 		return (List<Enrollment>) c.list();
 	}
 

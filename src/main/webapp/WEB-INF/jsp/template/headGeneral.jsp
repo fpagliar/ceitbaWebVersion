@@ -133,6 +133,18 @@ $(document).ready(function () {
 });
 </script>
 
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $(".unsubscribe-table-button").click(function(){
+		if(confirm("Esta seguro que desea eliminar esta subscripcion?")) {
+			$("#unsubscribe-table-service")[0].value = $(this).data('value');
+			$("#unsubscribe-table-form").submit();
+		}
+	});
+});
+</script>
+
 <link href="/sibadac/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
 <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
